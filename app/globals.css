@@ -703,7 +703,8 @@ main { min-height: 60vh; }
 }
 .city-score-section,
 .city-signal-section,
-.city-tip-section {
+.city-tip-section,
+.city-source-box {
   padding: 24px;
   border: 1px solid var(--line);
   border-radius: 28px;
@@ -780,6 +781,35 @@ main { min-height: 60vh; }
 .city-data-note {
   display: block;
   margin-top: 10px;
+}
+.city-source-review-note {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f7fafc, #fff);
+  border: 1px solid var(--line);
+}
+.city-source-list {
+  margin: 0;
+  padding-left: 18px;
+}
+.city-source-list li + li {
+  margin-top: 14px;
+}
+.city-source-list a,
+.city-source-list strong {
+  display: block;
+}
+.city-source-list span,
+.city-source-list em {
+  display: block;
+  margin-top: 4px;
+}
+.city-source-list em {
+  font-style: normal;
+  color: var(--muted);
 }
 .article-content-card {
   padding: 24px;

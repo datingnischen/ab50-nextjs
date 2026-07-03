@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
-import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip } from "@/lib/wordpress";
+import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpSourceItem } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -165,6 +165,10 @@ function normalizeScore(value?: string | number | null) {
   return Number.isFinite(numeric) ? numeric : null;
 }
 
+function normalizeSources(sources?: WpSourceItem[] | null) {
+  return (sources || []).filter((source) => source?.title || source?.url || source?.publisher || source?.note);
+}
+
 export async function generateStaticParams() {
   const slugs: string[] = await getAllPublicCitySlugs();
   return slugs.map((citySlug) => ({ slug: citySlug }));
@@ -209,6 +213,46 @@ function TableOfContents({ items }: { items: TocItem[] }) {
   );
 }
 
+function SourceBox({
+  sources,
+  intro,
+  reviewedAt,
+  reviewNote,
+  displayMode,
+}: {
+  sources: WpSourceItem[];
+  intro?: string | null;
+  reviewedAt?: string | null;
+  reviewNote?: string | null;
+  displayMode?: string | null;
+}) {
+  if (displayMode === "hidden" || (!sources.length && !reviewedAt && !reviewNote)) return null;
+
+  return (
+    <section className={`city-source-box city-source-box-${displayMode || "auto"}`} aria-label="Quellen und Aktualität">
+      <p className="eyebrow">Quellen, Bilder & Aktualität</p>
+      {intro ? <p>{intro}</p> : <p>Diese Seite wird redaktionell gepflegt. Die folgenden Quellen stützen Stadtprofil, Zahlen und lokale Einordnung.</p>}
+      {reviewedAt || reviewNote ? (
+        <div className="city-source-review-note">
+          {reviewedAt ? <strong>Geprüft am {reviewedAt}</strong> : null}
+          {reviewNote ? <span>{reviewNote}</span> : null}
+        </div>
+      ) : null}
+      {sources.length ? (
+        <ul className="city-source-list">
+          {sources.map((source, index) => (
+            <li key={`${source.title || source.url || "source"}-${index}`}>
+              {source.url ? <a href={source.url} rel="nofollow noopener noreferrer" target="_blank">{source.title || source.url}</a> : <strong>{source.title || source.publisher || "Quelle"}</strong>}
+              {[source.publisher, source.date].filter(Boolean).length ? <span>{[source.publisher, source.date].filter(Boolean).join(" · ")}</span> : null}
+              {source.note ? <em>{source.note}</em> : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}
+
 export default async function PartnersucheCityPage({ params }: PageProps) {
   const { slug } = await params;
   const [city, allCities, publicCitySlugs] = await Promise.all([
@@ -229,6 +273,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const safeHtml = sanitizeContent(city.content, tocItems, cityName);
   const lastUpdated = city.modified ? formatGermanDate(city.modified) : null;
   const reviewDate = city.acf?.content_reviewed_at ? formatGermanDate(city.acf.content_reviewed_at) : null;
+  const sourceIntro = city.acf?.sources_intro || null;
+  const sourceDisplayMode = city.acf?.sources_display_mode || "auto";
+  const sources = normalizeSources(city.acf?.sources);
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
   const score = normalizeScore(city.acf?.flirt_factor_score);
@@ -492,6 +539,14 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <div className="article-content-card">
               <div className="article-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
             </div>
+
+            <SourceBox
+              sources={sources}
+              intro={sourceIntro}
+              reviewedAt={reviewDate}
+              reviewNote={city.acf?.content_review_note}
+              displayMode={sourceDisplayMode}
+            />
 
             <section className="magazine-author-box city-author-box" aria-label="Autor und Einordnung">
               <div className="magazine-author-avatar" aria-hidden="true">

@@ -55,6 +55,14 @@ export type WpCityTip = {
   text?: string | null;
 };
 
+export type WpSourceItem = {
+  title?: string | null;
+  url?: string | null;
+  publisher?: string | null;
+  date?: string | null;
+  note?: string | null;
+};
+
 export type WpCityAcf = {
   template_variant?: string | null;
   city_name?: string | null;
@@ -87,6 +95,9 @@ export type WpCityAcf = {
   local_tips_title?: string | null;
   local_tips_intro?: string | null;
   local_tips?: WpCityTip[] | null;
+  sources_intro?: string | null;
+  sources_display_mode?: string | null;
+  sources?: WpSourceItem[] | null;
   hero_eyebrow?: string | null;
   hero_title?: string | null;
   hero_lead?: string | null;
