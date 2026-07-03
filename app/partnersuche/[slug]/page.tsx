@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
-import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml } from "@/lib/wordpress";
+import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -11,6 +11,12 @@ type PageProps = {
 };
 
 type TocItem = { id: string; label: string };
+
+type SplitCityTips = {
+  strengths: WpCityTip[];
+  weaknesses: WpCityTip[];
+  generalTips: WpCityTip[];
+};
 
 const cityAuthor = {
   name: "Christian M. Haas",
@@ -59,6 +65,13 @@ function addHeadingIds(html: string, tocItems: TocItem[]) {
     if (!id || /\sid=/.test(attrs)) return match;
     return `<h2${attrs} id="${id}">${inner}</h2>`;
   });
+}
+
+function linesFromTextarea(value?: string | null) {
+  return (value || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
 }
 
 function cityRegistrationLink() {
@@ -116,6 +129,42 @@ function uniqueNonEmpty(values: Array<string | null | undefined>) {
   return Array.from(new Set(values.map((value) => (value || "").trim()).filter(Boolean)));
 }
 
+function splitCityTips(tips?: WpCityTip[] | null): SplitCityTips {
+  const strengths: WpCityTip[] = [];
+  const weaknesses: WpCityTip[] = [];
+  const generalTips: WpCityTip[] = [];
+
+  for (const tip of tips || []) {
+    const rawTitle = (tip?.title || "").trim();
+    const text = (tip?.text || "").trim();
+    if (!rawTitle && !text) continue;
+
+    const lowered = rawTitle.toLowerCase();
+    const cleanTitle = rawTitle.replace(/^(stärke|staerke|plus|vorteil|schwäche|schwaeche|minus|limit):\s*/i, "").trim();
+    const normalizedTip = { ...tip, title: cleanTitle || rawTitle, text };
+
+    if (/^(stärke|staerke|plus|vorteil):/i.test(lowered)) {
+      strengths.push(normalizedTip);
+    } else if (/^(schwäche|schwaeche|minus|limit):/i.test(lowered)) {
+      weaknesses.push(normalizedTip);
+    } else {
+      generalTips.push(normalizedTip);
+    }
+  }
+
+  return { strengths, weaknesses, generalTips };
+}
+
+function normalizeStatCards(cards?: WpCityStatCard[] | null) {
+  return (cards || []).filter((card) => (card?.label || card?.value || card?.description));
+}
+
+function normalizeScore(value?: string | number | null) {
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(String(value).replace(",", "."));
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
 export async function generateStaticParams() {
   const slugs: string[] = await getAllPublicCitySlugs();
   return slugs.map((citySlug) => ({ slug: citySlug }));
@@ -152,7 +201,7 @@ function TableOfContents({ items }: { items: TocItem[] }) {
       <p className="eyebrow">Auf dieser Seite</p>
       <strong>Deine Schnellnavigation</strong>
       <ol>
-        {items.map((item) => (
+        {items.map((item: TocItem) => (
           <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>
         ))}
       </ol>
@@ -174,16 +223,35 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const cityName = city.acf?.city_name || title;
   const lead = cityLead(city) || `Hier bekommst du einen ruhigen regionalen Einstieg in das Thema Dating ab 50 in ${cityName}.`;
   const publicSlugMap = buildPublicSlugMap(publicCitySlugs);
-  const relatedCities = allCities.filter((item) => item.slug !== city.slug).slice(0, 6);
+  const relatedCities = allCities.filter((item: typeof allCities[number]) => item.slug !== city.slug).slice(0, 6);
   const readingMinutes = estimateReadingTime(city.content);
   const tocItems = extractTocItems(city.content);
   const safeHtml = sanitizeContent(city.content, tocItems, cityName);
   const lastUpdated = city.modified ? formatGermanDate(city.modified) : null;
+  const reviewDate = city.acf?.content_reviewed_at ? formatGermanDate(city.acf.content_reviewed_at) : null;
+  const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
+  const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
+  const score = normalizeScore(city.acf?.flirt_factor_score);
+  const statCards = normalizeStatCards(city.acf?.local_stat_cards);
+  const splitTips = splitCityTips(city.acf?.local_tips);
+  const hasEnhancedSignals = Boolean(score || statCards.length || splitTips.strengths.length || splitTips.weaknesses.length || splitTips.generalTips.length);
+  const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
+  const primaryCtaLabel = city.acf?.primary_cta_label || "Kostenlos starten";
+  const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche";
+  const secondaryCtaLabel = city.acf?.secondary_cta_label || "Alle Städte";
+  const sidebarCtaHref = city.acf?.city_sidebar_cta_url || primaryCtaHref;
+  const sidebarCtaLabel = city.acf?.city_sidebar_cta_label || primaryCtaLabel;
+  const finalCtaEyebrow = city.acf?.city_cta_eyebrow || "Nächster Schritt";
+  const finalCtaTitle = city.acf?.city_cta_title || `Wenn du magst, kannst du jetzt direkt kostenlos starten und neue Kontakte in ${cityName} entdecken.`;
+  const finalCtaText = city.acf?.city_cta_text || "Oder du schaust dir weitere Städte und Magazin-Themen in Ruhe an.";
+  const finalCtaNote = city.acf?.city_cta_note || null;
   const citySignals = uniqueNonEmpty([
     city.acf?.city_hero_claim,
     city.acf?.city_dating_angle,
+    ...trustPoints,
     `Singles ab 50 in ${cityName}`,
-  ]).slice(0, 2);
+  ]).slice(0, 4);
+  const heroChipItems = heroChips.length ? heroChips : ["Singles ab 50", "Regionale Orientierung", "Kostenlos starten"];
   const quickFacts = [
     { label: "Fokus", value: `Partnersuche ab 50 in ${cityName}` },
     { label: "Lesezeit", value: `${readingMinutes} Min.` },
@@ -242,17 +310,15 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <span aria-hidden="true">/</span>
               <span>{cityName}</span>
             </nav>
-            <p className="eyebrow">Partnersuche ab 50 in {cityName}</p>
+            <p className="eyebrow">{city.acf?.hero_eyebrow || `Partnersuche ab 50 in ${cityName}`}</p>
             <h1>{title}</h1>
             <p className="lead">{lead}</p>
             <div className="trust-chip-row" aria-label="Stadtvorteile">
-              <span>Singles ab 50</span>
-              <span>Regionale Orientierung</span>
-              <span>Kostenlos starten</span>
+              {heroChipItems.map((chip) => <span key={chip}>{chip}</span>)}
             </div>
             <div className="hero-actions">
-              <a className="button-primary" href={cityRegistrationLink()}>Kostenlos starten</a>
-              <a className="button-secondary" href="/partnersuche">Alle Städte</a>
+              <a className="button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
+              <a className="button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
             </div>
           </div>
           <aside className="category-hero-sidecard city-hero-sidecard" aria-label="Schneller Überblick">
@@ -268,8 +334,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               />
             ) : null}
             <div className="city-sidecard-copy">
-              <p className="eyebrow">Schneller Überblick</p>
-              <strong>Was dich auf dieser Seite erwartet</strong>
+              <p className="eyebrow">{city.acf?.city_profile_card_eyebrow || "Schneller Überblick"}</p>
+              <strong>{city.acf?.city_profile_card_title || "Was dich auf dieser Seite erwartet"}</strong>
+              {city.acf?.city_profile_card_text ? <p>{city.acf.city_profile_card_text}</p> : null}
               <ul className="city-hero-sidecard-list">
                 {quickFacts.map((fact) => (
                   <li key={fact.label}>
@@ -284,9 +351,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
 
         <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
           <article className="overview-intent-card overview-intent-card-guide city-intro-card">
-            <span>Regionaler Einstieg</span>
-            <strong>Dating ab 50 in {cityName} verständlich einordnen</strong>
-            <p>Die Seite bündelt regionale Hinweise, typische Fragen und einen ruhigen Einstieg für Menschen, die in {cityName} neue Kontakte suchen.</p>
+            <span>{city.acf?.city_highlight_eyebrow || "Regionaler Einstieg"}</span>
+            <strong>{city.acf?.city_highlight_title || `Dating ab 50 in ${cityName} verständlich einordnen`}</strong>
+            <p>{city.acf?.city_highlight_text || `Die Seite bündelt regionale Hinweise, typische Fragen und einen ruhigen Einstieg für Menschen, die in ${cityName} neue Kontakte suchen.`}</p>
           </article>
           <article className="overview-intent-card overview-intent-card-trust city-intro-card">
             <span>Was du mitnimmst</span>
@@ -305,7 +372,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <div className="city-sidebar-stack">
               <TableOfContents items={tocItems} />
               <section className="city-sidebar-card" aria-label="Kurz zusammengefasst">
-                <p className="eyebrow">Kurz gesagt</p>
+                <p className="eyebrow">{city.acf?.city_trust_eyebrow || "Kurz gesagt"}</p>
                 <strong>Darum lohnt sich die Seite für {cityName}</strong>
                 <ul className="city-key-points">
                   {citySignals.map((point) => <li key={point}>{point}</li>)}
@@ -313,10 +380,10 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 </ul>
               </section>
               <section className="city-sidebar-card city-sidebar-cta" aria-label="Kostenlos starten">
-                <p className="eyebrow">Bereit für den nächsten Schritt?</p>
-                <strong>Starte kostenlos und schau dich in deiner Region um.</strong>
-                <p>Ohne Druck, aber mit einem klaren nächsten Schritt für neue Kontakte ab 50.</p>
-                <a className="button-primary" href={cityRegistrationLink()}>Kostenlos starten</a>
+                <p className="eyebrow">{city.acf?.city_sidebar_eyebrow || "Bereit für den nächsten Schritt?"}</p>
+                <strong>{city.acf?.city_sidebar_title || "Starte kostenlos und schau dich in deiner Region um."}</strong>
+                <p>{city.acf?.city_sidebar_text || "Ohne Druck, aber mit einem klaren nächsten Schritt für neue Kontakte ab 50."}</p>
+                <a className="button-primary" href={sidebarCtaHref}>{sidebarCtaLabel}</a>
               </section>
             </div>
           </aside>
@@ -335,6 +402,92 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 ))}
               </div>
             </section>
+
+            {hasEnhancedSignals ? (
+              <section className="city-score-section" aria-label={`Dating-Signale für ${cityName}`}>
+                <div className="section-heading compact-heading">
+                  <p className="eyebrow">Signal-Check</p>
+                  <h2>Wie stark {cityName} für neue Begegnungen aufgestellt ist</h2>
+                  <p>{city.acf?.flirt_factor_text || city.acf?.city_dating_angle || `Diese Signale helfen dir, ${cityName} als Dating-Stadt besser einzuordnen.`}</p>
+                </div>
+                <div className="city-score-grid">
+                  {score !== null ? (
+                    <article className="city-score-card city-score-card-primary">
+                      <span>Flirt-Faktor</span>
+                      <strong>{score.toLocaleString("de-DE", { minimumFractionDigits: score % 1 ? 1 : 0, maximumFractionDigits: 1 })}/100</strong>
+                      <p>{city.acf?.flirt_factor_text || `Ein redaktioneller Blick darauf, wie kontaktfreundlich ${cityName} für erste Dates wirkt.`}</p>
+                    </article>
+                  ) : null}
+                  {statCards.map((card, index) => (
+                    <article className="city-score-card" key={`${card.label || "card"}-${index}`}>
+                      <span>{card.label || "Signal"}</span>
+                      <strong>{card.value}</strong>
+                      {card.description ? <p>{card.description}</p> : null}
+                    </article>
+                  ))}
+                </div>
+                {reviewDate || city.acf?.content_review_note ? (
+                  <p className="city-data-note">{reviewDate ? `Datenstand geprüft am ${reviewDate}. ` : ""}{city.acf?.content_review_note || ""}</p>
+                ) : null}
+              </section>
+            ) : null}
+
+            {(splitTips.strengths.length || splitTips.weaknesses.length) ? (
+              <section className="city-signal-section" aria-label={`Stärken und Schwächen für ${cityName}`}>
+                <div className="section-heading compact-heading">
+                  <p className="eyebrow">Stärken & Schwächen</p>
+                  <h2>Was in {cityName} für Dates spricht – und was du im Blick behalten solltest</h2>
+                </div>
+                <div className="city-signal-grid">
+                  {splitTips.strengths.length ? (
+                    <article className="city-signal-card city-signal-card-positive">
+                      <span>Stärken</span>
+                      <strong>Das hilft dir in {cityName}</strong>
+                      <ul>
+                        {splitTips.strengths.map((tip, index) => (
+                          <li key={`strength-${index}`}>
+                            <strong>{tip.title}</strong>
+                            {tip.text ? <p>{tip.text}</p> : null}
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  ) : null}
+                  {splitTips.weaknesses.length ? (
+                    <article className="city-signal-card city-signal-card-neutral">
+                      <span>Worauf du achten solltest</span>
+                      <strong>Diese Punkte sind in {cityName} wichtig</strong>
+                      <ul>
+                        {splitTips.weaknesses.map((tip, index) => (
+                          <li key={`weakness-${index}`}>
+                            <strong>{tip.title}</strong>
+                            {tip.text ? <p>{tip.text}</p> : null}
+                          </li>
+                        ))}
+                      </ul>
+                    </article>
+                  ) : null}
+                </div>
+              </section>
+            ) : null}
+
+            {splitTips.generalTips.length ? (
+              <section className="city-tip-section" aria-label={`Dating-Ideen für ${cityName}`}>
+                <div className="section-heading compact-heading">
+                  <p className="eyebrow">{city.acf?.local_tips_eyebrow || "Dating-Ideen"}</p>
+                  <h2>{city.acf?.local_tips_title || `Konkrete Dating-Ideen für ${cityName}`}</h2>
+                  {city.acf?.local_tips_intro ? <p>{city.acf.local_tips_intro}</p> : null}
+                </div>
+                <div className="city-tip-grid">
+                  {splitTips.generalTips.map((tip, index) => (
+                    <article className="city-tip-card" key={`tip-${index}`}>
+                      {tip.title ? <strong>{tip.title}</strong> : null}
+                      {tip.text ? <p>{tip.text}</p> : null}
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <div className="article-content-card">
               <div className="article-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
@@ -372,7 +525,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <h2>Weitere regionale Einstiege</h2>
             </div>
             <div className="category-topic-grid">
-              {relatedCities.map((item) => {
+              {relatedCities.map((item: typeof relatedCities[number]) => {
                 const publicSlug = publicSlugMap.get(item.slug) || item.slug;
                 return (
                   <a className="category-topic-card" href={cityPath(publicSlug)} key={item.slug}>
@@ -388,12 +541,13 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
 
         <section className="overview-cta-strip category-final-cta" aria-label="Nächster Schritt">
           <div>
-            <p className="eyebrow">Nächster Schritt</p>
-            <h2>Wenn du magst, kannst du jetzt direkt kostenlos starten und neue Kontakte in {cityName} entdecken.</h2>
-            <p>Oder du schaust dir weitere Städte und Magazin-Themen in Ruhe an.</p>
+            <p className="eyebrow">{finalCtaEyebrow}</p>
+            <h2>{finalCtaTitle}</h2>
+            <p>{finalCtaText}</p>
+            {finalCtaNote ? <small className="city-cta-note">{finalCtaNote}</small> : null}
           </div>
           <div className="overview-cta-actions">
-            <a className="button-primary" href={cityRegistrationLink()}>Kostenlos starten</a>
+            <a className="button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
             <a className="button-secondary" href="/magazin">Zum Magazin</a>
           </div>
         </section>

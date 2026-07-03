@@ -44,6 +44,17 @@ export type WpPage = {
   content?: string | null;
 };
 
+export type WpCityStatCard = {
+  label?: string | null;
+  value?: string | number | null;
+  description?: string | null;
+};
+
+export type WpCityTip = {
+  title?: string | null;
+  text?: string | null;
+};
+
 export type WpCityAcf = {
   template_variant?: string | null;
   city_name?: string | null;
@@ -51,6 +62,31 @@ export type WpCityAcf = {
   city_country?: string | null;
   city_hero_claim?: string | null;
   city_dating_angle?: string | null;
+  city_highlight_eyebrow?: string | null;
+  city_highlight_title?: string | null;
+  city_highlight_text?: string | null;
+  city_profile_card_eyebrow?: string | null;
+  city_profile_card_title?: string | null;
+  city_profile_card_text?: string | null;
+  city_sidebar_eyebrow?: string | null;
+  city_sidebar_title?: string | null;
+  city_sidebar_text?: string | null;
+  city_sidebar_cta_label?: string | null;
+  city_sidebar_cta_url?: string | null;
+  city_cta_eyebrow?: string | null;
+  city_cta_title?: string | null;
+  city_cta_text?: string | null;
+  city_cta_note?: string | null;
+  city_trust_eyebrow?: string | null;
+  city_trust_points?: string | null;
+  city_hero_chips?: string | null;
+  flirt_factor_score?: string | number | null;
+  flirt_factor_text?: string | null;
+  local_stat_cards?: WpCityStatCard[] | null;
+  local_tips_eyebrow?: string | null;
+  local_tips_title?: string | null;
+  local_tips_intro?: string | null;
+  local_tips?: WpCityTip[] | null;
   hero_eyebrow?: string | null;
   hero_title?: string | null;
   hero_lead?: string | null;
@@ -58,6 +94,8 @@ export type WpCityAcf = {
   primary_cta_url?: string | null;
   secondary_cta_label?: string | null;
   secondary_cta_url?: string | null;
+  content_reviewed_at?: string | null;
+  content_review_note?: string | null;
 };
 
 export type WpCity = {
