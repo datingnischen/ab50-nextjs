@@ -32,12 +32,12 @@ export async function SiteHeader() {
         <BrandLogo />
 
         <div className="header-actions compact-header-actions" aria-label="Navigation und Aktionen">
-          <a className="header-register header-register-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos starten</a>
+          <a className="header-register header-register-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
 
           <details className="header-menu">
             <summary aria-label="Menü öffnen">
               <span className="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-              <span>Menü</span>
+              <span className="header-menu-label">Menü</span>
             </summary>
             <div className="header-menu-panel">
               <nav className="main-nav compact-menu-nav" aria-label="Magazin Navigation">

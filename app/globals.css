@@ -88,7 +88,7 @@ main { min-height: 60vh; }
   max-width: 1180px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   justify-content: space-between;
   gap: 14px;
   align-items: center;
@@ -97,6 +97,7 @@ main { min-height: 60vh; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   text-decoration: none;
   color: var(--brand-dark);
 }
@@ -120,6 +121,7 @@ main { min-height: 60vh; }
 .brand-text strong {
   font-size: 1.18rem;
   letter-spacing: -.03em;
+  white-space: nowrap;
 }
 .brand-text em {
   font-style: normal;
@@ -655,12 +657,43 @@ main { min-height: 60vh; }
 
 @media (max-width: 720px) {
   .container { width: min(100% - 24px, 1180px); }
-  .site-header-shell { padding-inline: 12px; }
-  .header-actions { gap: 8px; }
+  .site-header-shell {
+    padding: 8px 10px;
+  }
+  .site-header-bar {
+    gap: 8px;
+  }
+  .brand-lockup {
+    gap: 8px;
+  }
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    font-size: .82rem;
+  }
+  .brand-text strong {
+    font-size: 1rem;
+  }
+  .brand-text em {
+    display: none;
+  }
+  .header-actions {
+    gap: 6px;
+  }
   .header-register-primary {
-    min-height: 40px;
-    padding: 9px 14px;
-    font-size: .92rem;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: .84rem;
+    white-space: nowrap;
+  }
+  .header-menu summary {
+    min-height: 38px;
+    padding: 8px 10px;
+    gap: 0;
+  }
+  .header-menu-label {
+    display: none;
   }
   .footer-main,
   .footer-cta,
