@@ -32,12 +32,12 @@ function sanitizeTitle(value?: string | null) {
 
 function slugifyHeading(value: string) {
   return value
+    .replace(/&amp;/g, "und")
     .toLowerCase()
     .replace(/ä/g, "ae")
     .replace(/ö/g, "oe")
     .replace(/ü/g, "ue")
     .replace(/ß/g, "ss")
-    .replace(/&amp;/g, "und")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "") || "abschnitt";
 }
@@ -46,7 +46,7 @@ function extractTocItems(html?: string | null): TocItem[] {
   const source = html || "";
   const seen = new Map<string, number>();
   return Array.from(source.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi))
-    .map((match) => stripHtml(match[1]))
+    .map((match) => stripHtml(match[1]).replace(/&amp;/g, "&"))
     .filter(Boolean)
     .slice(0, 8)
     .map((label) => {
