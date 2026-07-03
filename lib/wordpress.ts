@@ -12,6 +12,7 @@ export type WpCategory = {
   id: number;
   name: string;
   slug: string;
+  description?: string | null;
   count?: number | null;
 };
 
@@ -111,6 +112,7 @@ function normalizeTerms(raw: any): WpCategory[] {
       id: term.id,
       name: decodeHtmlEntities(term.name),
       slug: term.slug,
+      description: stripHtml(term.description || "") || null,
       count: term.count ?? null,
     }));
 }
@@ -226,6 +228,7 @@ export const getCategories = cache(async (first = 24) => {
     id: category.id,
     name: decodeHtmlEntities(category.name),
     slug: category.slug,
+    description: stripHtml(category.description || "") || null,
     count: category.count ?? null,
   })) as WpCategory[];
 });
@@ -246,6 +249,7 @@ export const getPostsByCategory = cache(async (slug: string, first = 18) => {
     id: category.id,
     name: decodeHtmlEntities(category.name),
     slug: category.slug,
+    description: stripHtml(category.description || "") || null,
     count: category.count ?? null,
     posts: postData.map(normalizePost),
   };

@@ -138,7 +138,7 @@ export default async function MagazinOverviewPage() {
           <div className="category-filter-row" aria-label="Kategorien">
             {categories.map((category) => (
               <a href={categoryPath(category.slug)} key={category.slug}>
-                {category.name}<span>{category.count || 0}</span>
+                {category.name}
               </a>
             ))}
           </div>

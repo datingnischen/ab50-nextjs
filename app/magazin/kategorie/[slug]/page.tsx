@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const category = await getPostsByCategory(slug, 1);
   if (!category) return {};
   const title = `${category.name} – 50plus Magazin`;
-  const description = `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`;
+  const description = category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`;
 
   return {
     title,
@@ -48,7 +48,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <div className="section-heading wide-heading">
         <p className="eyebrow">Magazin-Kategorie</p>
         <h1>{category.name}</h1>
-        <p>{category.count || 0} Beiträge aus dem 50plus Magazin mit Fokus auf Orientierung, Ruhe und Alltagstauglichkeit.</p>
+        <p>{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
       </div>
 
       <div className="post-grid">
