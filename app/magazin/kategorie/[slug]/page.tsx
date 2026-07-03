@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl } from "@/lib/seo";
-import { categoryPath, getPostsByCategory, postPath, stripHtml } from "@/lib/wordpress";
+import { categoryPath, getCategories, getPostsByCategory, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -40,15 +40,87 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
-  const category = await getPostsByCategory(slug, 24);
+  const [category, allCategories] = await Promise.all([
+    getPostsByCategory(slug, 24),
+    getCategories(50),
+  ]);
   if (!category) notFound();
+
+  const relatedCategories = allCategories.filter((item) => item.slug !== category.slug).slice(0, 6);
+  const featuredPosts = category.posts.slice(0, 2);
 
   return (
     <section className="container section-block category-page">
+      <div className="category-hero-card">
+        <div className="category-hero-copy">
+          <nav className="article-breadcrumbs" aria-label="Breadcrumb">
+            <a href="/magazin">50plus Magazin</a>
+            <span aria-hidden="true">/</span>
+            <span>{category.name}</span>
+          </nav>
+          <p className="eyebrow">Magazin-Kategorie</p>
+          <h1>{category.name}</h1>
+          <p className="lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
+          <div className="trust-chip-row" aria-label="Kategorievorteile">
+            <span>Ruhige Orientierung</span>
+            <span>Redaktionell kuratiert</span>
+            <span>Für Singles ab 50</span>
+          </div>
+          <div className="hero-actions">
+            <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+            <a className="button-secondary" href="/magazin">Alle Themen ansehen</a>
+          </div>
+        </div>
+        <aside className="category-hero-sidecard" aria-label="Weiterlesen in dieser Rubrik">
+          <p className="eyebrow">Schneller Einstieg</p>
+          <strong>Worum es in dieser Rubrik geht</strong>
+          <p>Hier findest du sorgfältig ausgewählte Beiträge rund um {category.name.toLowerCase()}, damit du schneller zu den Inhalten kommst, die dir gerade wirklich weiterhelfen.</p>
+          <div className="index-mini-list">
+            {featuredPosts.map((post) => (
+              <a href={postPath(post.slug)} key={post.slug}>{stripHtml(post.title)}</a>
+            ))}
+          </div>
+        </aside>
+      </div>
+
+      <div className="category-editorial-note">
+        <div className="category-editorial-avatar">
+          <Image
+            src="https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png"
+            alt="Christian M. Haas"
+            width={72}
+            height={72}
+          />
+        </div>
+        <div>
+          <p className="eyebrow">Redaktion & Einordnung</p>
+          <strong>Inhalte mit Erfahrung, Klarheit und Dating-Bezug ab 50</strong>
+          <p>Diese Rubrik wird im 50plus Magazin redaktionell gepflegt und auf hilfreiche, alltagstaugliche Orientierung für Menschen mit Lebenserfahrung ausgerichtet.</p>
+          <a className="card-read-more" href="/magazin/christian-m-haas">Mehr zum Autorenprofil von Christian M. Haas</a>
+        </div>
+      </div>
+
+      {relatedCategories.length ? (
+        <div className="category-topic-strip" aria-label="Weitere Magazin-Themen">
+          <div className="section-heading compact-heading">
+            <p className="eyebrow">Weitere Themen</p>
+            <h2>Vielleicht auch interessant für dich</h2>
+          </div>
+          <div className="category-topic-grid">
+            {relatedCategories.map((item) => (
+              <a className="category-topic-card" href={categoryPath(item.slug)} key={item.slug}>
+                <span>{item.name}</span>
+                <strong>{item.description || `Mehr Orientierung und Beiträge aus dem 50plus Magazin zu ${item.name.toLowerCase()}.`}</strong>
+                <em className="card-read-more">Thema öffnen</em>
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className="section-heading wide-heading">
-        <p className="eyebrow">Magazin-Kategorie</p>
-        <h1>{category.name}</h1>
-        <p>{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
+        <p className="eyebrow">Beiträge in dieser Rubrik</p>
+        <h2>Alle Artikel zu {category.name}</h2>
       </div>
 
       <div className="post-grid">
@@ -75,6 +147,18 @@ export default async function CategoryPage({ params }: PageProps) {
           </a>
         ))}
       </div>
+
+      <section className="overview-cta-strip category-final-cta" aria-label="Weitere Schritte">
+        <div>
+          <p className="eyebrow">Mehr entdecken</p>
+          <h2>Such dir den nächsten Einstieg aus dem Magazin oder starte direkt auf ab50.de.</h2>
+          <p>Wenn du lieber direkt aktiv werden willst, kannst du kostenlos starten oder noch weitere Themen aus dem Magazin in Ruhe durchstöbern.</p>
+        </div>
+        <div className="overview-cta-actions">
+          <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+          <a className="button-secondary" href="/magazin">Zum Magazin</a>
+        </div>
+      </section>
     </section>
   );
 }
