@@ -14,6 +14,7 @@ export const siteConfig = {
   },
   links: {
     home: "https://ab50.de/",
+    homeCh: "https://ab50.ch/",
     registrationCommon: "https://ab50.de/?AID=magazin",
     magazine: "/magazin",
     imprint: "https://ab50.de/impressum.html",

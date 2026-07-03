@@ -141,6 +141,7 @@ export function SiteFooter() {
         </div>
         <div className="sub-footer-links">
           <a href={siteConfig.links.home} target="_blank" rel="noopener">ab50.de</a>
+          <a href={siteConfig.links.homeCh} target="_blank" rel="noopener">ab50.ch</a>
         </div>
       </div>
     </footer>

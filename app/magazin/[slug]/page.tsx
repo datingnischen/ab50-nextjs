@@ -12,6 +12,23 @@ type PageProps = {
 
 type TocItem = { id: string; label: string };
 
+type KnownAuthorProfile = {
+  imageSrc?: string;
+  imageAlt?: string;
+  role?: string;
+  fallbackDescription?: string;
+};
+
+const knownAuthorProfiles: Record<string, KnownAuthorProfile> = {
+  "christian-m-haas": {
+    imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
+    imageAlt: "Christian M. Haas",
+    role: "Autor & Dating-Experte bei ab50.de",
+    fallbackDescription:
+      "Christian M. Haas schreibt über Online-Dating ab 50, Profilwirkung, Kommunikation, Sicherheit und neue Nähe in späteren Lebensphasen – ruhig, verständlich und praxisnah.",
+  },
+};
+
 function slugifyHeading(value: string) {
   return value
     .toLowerCase()
@@ -82,6 +99,10 @@ function sanitizeContent(html?: string | null, tocItems: TocItem[] = []) {
 function estimateReadingTime(html?: string | null) {
   const words = stripHtml(html).split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 220));
+}
+
+function getAuthorProfile(authorSlug?: string | null) {
+  return authorSlug ? knownAuthorProfiles[authorSlug] || null : null;
 }
 
 function rotateRelated(posts: Awaited<ReturnType<typeof getLatestPosts>>, slug: string, count = 4) {
@@ -250,6 +271,13 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const safeHtml = sanitizeContent(post.content, tocItems);
   const authorName = post.author?.name || "ab50.de Redaktion";
   const authorSlug = post.author?.slug || "redaktion";
+  const authorProfile = getAuthorProfile(authorSlug);
+  const authorPage = authorSlug ? await getPageBySlug(authorSlug) : null;
+  const authorHref = authorPage?.slug ? pagePath(authorPage.slug) : null;
+  const authorRole = authorProfile?.role || "Autor bei ab50.de";
+  const authorDescription = post.author?.description
+    ? stripHtml(post.author.description)
+    : (authorProfile?.fallbackDescription || "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah.");
   const category = post.categories?.[0];
   const schema = {
     "@context": "https://schema.org",
@@ -261,6 +289,8 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     author: {
       "@type": "Person",
       name: authorName,
+      url: authorHref ? absoluteUrl(authorHref) : undefined,
+      image: authorProfile?.imageSrc,
     },
     articleSection: category?.name,
     image: post.featuredImage?.sourceUrl,
@@ -289,10 +319,21 @@ export default async function MagazinSlugPage({ params }: PageProps) {
           ) : null}
           <div className="article-byline">
             <div className="article-byline-author">
-              <span className="article-byline-avatar" aria-hidden="true">{authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"}</span>
+              <span className="article-byline-avatar" aria-hidden="true">
+                {authorProfile?.imageSrc ? (
+                  <Image
+                    src={authorProfile.imageSrc}
+                    alt={authorProfile.imageAlt || authorName}
+                    width={54}
+                    height={54}
+                  />
+                ) : (
+                  authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"
+                )}
+              </span>
               <span>
-                <strong>{authorName}</strong>
-                <em>50plus Magazin</em>
+                {authorHref ? <a className="article-author-link" href={authorHref}><strong>{authorName}</strong></a> : <strong>{authorName}</strong>}
+                <em>{authorRole}</em>
               </span>
             </div>
             <div className="article-byline-facts">
@@ -313,15 +354,28 @@ export default async function MagazinSlugPage({ params }: PageProps) {
               <div className="article-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
             </div>
             <section className="magazine-author-box" aria-label="Autor">
-              <div className="magazine-author-avatar" aria-hidden="true">{authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"}</div>
+              <div className="magazine-author-avatar" aria-hidden="true">
+                {authorProfile?.imageSrc ? (
+                  <Image
+                    src={authorProfile.imageSrc}
+                    alt={authorProfile.imageAlt || authorName}
+                    width={96}
+                    height={96}
+                  />
+                ) : (
+                  authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"
+                )}
+              </div>
               <div>
-                <p className="eyebrow">Autor</p>
+                <p className="eyebrow">Verfasst von</p>
                 <h2>{authorName}</h2>
-                <p>{post.author?.description ? stripHtml(post.author.description) : "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah."}</p>
+                <p className="magazine-author-role">{authorRole}</p>
+                <p>{authorDescription}</p>
                 <div className="magazine-author-meta">
                   {post.date ? <span>Veröffentlicht am {formatGermanDate(post.date)}</span> : null}
-                  <span>Slug: {authorSlug}</span>
+                  {authorHref ? <span>Autorenprofil verfügbar</span> : null}
                 </div>
+                {authorHref ? <a className="button-secondary magazine-author-link" href={authorHref}>Zum Autorenprofil</a> : null}
               </div>
             </section>
             <RelatedArticles posts={relatedPosts} />
