@@ -88,7 +88,7 @@ const footerColumns: FooterColumn[] = [
   {
     title: "Service",
     links: [
-      { label: "Regionale Partnersuche (Städte-Übersicht)", href: "/partnersuche/" },
+      { label: "Regionale Partnersuche", href: "/partnersuche/" },
       { label: "ab50.de Startseite", href: siteConfig.links.home, external: true },
       { label: "Impressum", href: siteConfig.links.imprint, external: true },
       { label: "Datenschutz", href: siteConfig.links.privacy, external: true },
