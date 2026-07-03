@@ -1,14 +1,14 @@
 :root {
-  --bg: #faf6f1;
+  --bg: #f5f7fb;
   --card: #ffffff;
-  --text: #2f2622;
-  --muted: #70635d;
-  --brand: #8d3b4f;
-  --brand-dark: #6f2d3d;
-  --brand-soft: #f4e8eb;
-  --accent: #b38b4d;
-  --line: #e8ddd5;
-  --surface: #fffdfb;
+  --text: #253144;
+  --muted: #5f6b7e;
+  --brand: #1A4C95;
+  --brand-dark: #143d77;
+  --brand-soft: #eaf1fb;
+  --accent: #88282A;
+  --line: #d8e2f0;
+  --surface: #fdfefe;
 }
 
 * { box-sizing: border-box; }
@@ -128,10 +128,10 @@ main { min-height: 60vh; }
 }
 .header-actions { display: flex; align-items: center; gap: 10px; }
 .header-register-primary {
-  background: #85613f;
-  box-shadow: 0 10px 28px rgba(133,97,63,.18);
+  background: var(--accent);
+  box-shadow: 0 10px 28px rgba(136,40,42,.18);
 }
-.header-register-primary:hover { background: #6f5034; }
+.header-register-primary:hover { background: #6f2022; }
 .header-menu { position: relative; }
 .header-menu summary {
   display: inline-flex;
@@ -368,8 +368,8 @@ main { min-height: 60vh; }
 }
 .overview-intent-card p { margin: 0; color: #5f524b; }
 .overview-intent-card-guide { background: linear-gradient(180deg, #fffdf8, #fff); }
-.overview-intent-card-trust { background: linear-gradient(180deg, #f9f2f4, #fff); }
-.overview-intent-card-featured { background: linear-gradient(180deg, #f7f4ef, #fff); }
+.overview-intent-card-trust { background: linear-gradient(180deg, #f8ebec, #fff); }
+.overview-intent-card-featured { background: linear-gradient(180deg, #edf3fc, #fff); }
 .magazine-page-card-topline {
   display: flex;
   justify-content: space-between;

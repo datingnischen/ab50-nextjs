@@ -7,10 +7,10 @@ export const siteConfig = {
     process.env.WORDPRESS_REST_ENDPOINT || "https://ab50.de/magazin/wp-json/wp/v2",
   magazinePath: "/magazin",
   colors: {
-    primary: "#8d3b4f",
-    primaryDark: "#6f2d3d",
-    secondary: "#8c7b72",
-    accent: "#b38b4d",
+    primary: "#1A4C95",
+    primaryDark: "#1A4C95",
+    secondary: "#88282A",
+    accent: "#88282A",
   },
   links: {
     home: "https://ab50.de/",
