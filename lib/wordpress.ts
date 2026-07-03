@@ -44,6 +44,33 @@ export type WpPage = {
   content?: string | null;
 };
 
+export type WpCityAcf = {
+  template_variant?: string | null;
+  city_name?: string | null;
+  city_region?: string | null;
+  city_country?: string | null;
+  city_hero_claim?: string | null;
+  city_dating_angle?: string | null;
+  hero_eyebrow?: string | null;
+  hero_title?: string | null;
+  hero_lead?: string | null;
+  primary_cta_label?: string | null;
+  primary_cta_url?: string | null;
+  secondary_cta_label?: string | null;
+  secondary_cta_url?: string | null;
+};
+
+export type WpCity = {
+  id: number;
+  title: string;
+  slug: string;
+  date?: string | null;
+  modified?: string | null;
+  content?: string | null;
+  featuredImage?: WpImage | null;
+  acf?: WpCityAcf | null;
+};
+
 type RestHeaders = Headers;
 type RestListResult<T> = { data: T[]; headers: RestHeaders };
 
@@ -91,6 +118,19 @@ export function pagePath(slug: string) {
 
 export function categoryPath(slug: string) {
   return `/magazin/kategorie/${slug}`;
+}
+
+export function cityPath(slug: string) {
+  return `/partnersuche/${slug}/`;
+}
+
+export function normalizeCitySlug(slug: string) {
+  return decodeURIComponent(slug)
+    .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss");
 }
 
 function normalizeImage(raw: any): WpImage | null {
@@ -151,6 +191,21 @@ function normalizePage(raw: any): WpPage {
     date: raw.date || null,
     modified: raw.modified || null,
     content: raw?.content?.rendered || null,
+  };
+}
+
+function normalizeCity(raw: any): WpCity {
+  const media = Array.isArray(raw?._embedded?.["wp:featuredmedia"]) ? raw._embedded["wp:featuredmedia"][0] : null;
+  const acf = raw?.acf && typeof raw.acf === "object" && !Array.isArray(raw.acf) ? raw.acf : null;
+  return {
+    id: raw.id,
+    title: decodeHtmlEntities(raw?.title?.rendered || raw?.title?.raw || ""),
+    slug: raw.slug,
+    date: raw.date || null,
+    modified: raw.modified || null,
+    content: raw?.content?.rendered || raw?.content?.raw || null,
+    featuredImage: normalizeImage(media),
+    acf,
   };
 }
 
@@ -253,4 +308,50 @@ export const getPostsByCategory = cache(async (slug: string, first = 18) => {
     count: category.count ?? null,
     posts: postData.map(normalizePost),
   };
+});
+
+export const getAllCities = cache(async () => {
+  const cities = await collectPaged<any>("/stadt", {
+    _embed: 1,
+    status: "publish",
+    orderby: "title",
+    order: "asc",
+  });
+  return cities.map(normalizeCity);
+});
+
+export const getCityByPublicSlug = cache(async (publicSlug: string) => {
+  const normalizedSlug = normalizeCitySlug(publicSlug);
+  const { data } = await wpRest<any>("/stadt", {
+    slug: normalizedSlug,
+    _embed: 1,
+    per_page: 1,
+    status: "publish",
+  });
+  return data[0] ? normalizeCity(data[0]) : null;
+});
+
+export const getAllPublicCitySlugs = cache(async () => {
+  const response = await fetch(`${siteConfig.links.home.replace(/\/$/, "")}/sitemap.php`, {
+    headers: { "User-Agent": "Amigo ab50 Next.js/Vercel Cities" },
+    next: { revalidate: 300 },
+  });
+  if (!response.ok) {
+    return [] as string[];
+  }
+  const xml = await response.text();
+  return Array.from(xml.matchAll(/<loc>(.*?)<\/loc>/g))
+    .map((match) => match[1])
+    .filter((url) => {
+      try {
+        const parsed = new URL(url);
+        return parsed.pathname.startsWith("/partnersuche/") && parsed.pathname !== "/partnersuche/";
+      } catch {
+        return false;
+      }
+    })
+    .map((url) => {
+      const parsed = new URL(url);
+      return decodeURIComponent(parsed.pathname.replace(/^\/partnersuche\//, "").replace(/\/$/, ""));
+    });
 });
