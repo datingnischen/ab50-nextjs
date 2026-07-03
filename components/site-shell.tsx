@@ -114,9 +114,9 @@ export function SiteFooter() {
           <BrandLogo footer />
           <p>Ratgeber, Orientierung und Dating-Themen für Menschen, die bewusst, gelassen und mit Erfahrung neue Kontakte aufbauen möchten.</p>
           <ul className="footer-trust-list" aria-label="Vertrauensmerkmale">
-            <li>Ruhigere Ansprache für die Generation 50+</li>
-            <li>Lesefreundliche Darstellung auf Desktop und mobil</li>
-            <li>Magazin-Inhalte direkt aus WordPress übernommen</li>
+            <li>Gut lesbar auf Handy und Desktop</li>
+            <li>Praxisnahe Tipps speziell für 50+</li>
+            <li>Fokus auf Sicherheit, Vertrauen und echte Begegnungen</li>
           </ul>
         </div>
 
