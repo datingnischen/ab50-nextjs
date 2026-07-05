@@ -27,6 +27,7 @@ function frameDocument({ city, platformId, location, gender, profileClickUrl, fa
     country: location.country,
     zip: location.zip || "",
     count: 6,
+    ageMin: 48,
     affiliate: "location",
     profileClickUrl,
     fallbackSearchUrl,
@@ -92,6 +93,7 @@ function frameDocument({ city, platformId, location, gender, profileClickUrl, fa
     gender: options.gender,
     country: options.country,
     zip: options.zip,
+    age_min: options.ageMin,
     affiliate: options.affiliate,
     use_thumbnails: 0,
     blurred: 0
