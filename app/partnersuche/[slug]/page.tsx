@@ -253,6 +253,143 @@ function SourceBox({
   );
 }
 
+function FlirtFactorVisualCard({ cityName, score, text }: { cityName: string; score: number | null; text?: string | null }) {
+  if (score === null && !text) return null;
+  const safeScore = score === null ? null : Math.max(0, Math.min(100, score));
+  return (
+    <div className="flirt-factor-card" aria-label={`Flirt-Faktor ${cityName}`}>
+      <div>
+        <span className="flirt-factor-kicker">Stadtprofil</span>
+        <strong>{safeScore !== null ? `${safeScore.toLocaleString("de-DE", { minimumFractionDigits: safeScore % 1 ? 1 : 0, maximumFractionDigits: 1 })}/100` : `Dating ab 50 in ${cityName}`}</strong>
+        <p>{text || `Ein ruhiger Überblick darüber, wie gut ${cityName} für neue Kontakte, passende Orte und einen entspannten Start geeignet ist.`}</p>
+      </div>
+      {safeScore !== null ? (
+        <div className="flirt-meter" aria-hidden="true">
+          <span style={{ width: `${safeScore}%` }} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function CityHeroVisual({
+  cityName,
+  title,
+  image,
+  profileEyebrow,
+  profileTitle,
+  profileText,
+  score,
+  scoreText,
+}: {
+  cityName: string;
+  title: string;
+  image?: { sourceUrl?: string | null; altText?: string | null; width?: number | null; height?: number | null } | null;
+  profileEyebrow?: string | null;
+  profileTitle?: string | null;
+  profileText?: string | null;
+  score: number | null;
+  scoreText?: string | null;
+}) {
+  return (
+    <div className="city-visual-wrap">
+      <div className="city-phone-card">
+        <div className="city-phone-topbar">
+          <span />
+          <strong>ab50.de</strong>
+          <em>{cityName}</em>
+        </div>
+        {image?.sourceUrl ? (
+          <Image
+            priority
+            sizes="(max-width: 980px) 100vw, 420px"
+            src={image.sourceUrl}
+            alt={image.altText || title}
+            width={image.width || 1200}
+            height={image.height || 800}
+            className="city-phone-image"
+          />
+        ) : (
+          <div className="city-phone-placeholder" />
+        )}
+        <div className="city-profile-card">
+          <span>{profileEyebrow || "Dein Einstieg"}</span>
+          <strong>{profileTitle || `Neue Kontakte in ${cityName}`}</strong>
+          <p>{profileText || `Regionale Orientierung, konkrete Dating-Ideen und ein ruhiger Einstieg für Singles ab 50.`}</p>
+        </div>
+      </div>
+      <FlirtFactorVisualCard cityName={cityName} score={score} text={scoreText} />
+    </div>
+  );
+}
+
+function CityStatsModule({
+  cityName,
+  statCards,
+  quickFacts,
+}: {
+  cityName: string;
+  statCards: WpCityStatCard[];
+  quickFacts: Array<{ label: string; value: string }>;
+}) {
+  const cards = statCards.length
+    ? statCards.slice(0, 3).map((card) => ({
+        label: card.label || "Signal",
+        value: card.value || cityName,
+        description: card.description || `Hilft dir, ${cityName} schneller für deine Partnersuche ab 50 einzuordnen.`,
+      }))
+    : quickFacts.map((fact) => ({
+        label: fact.label,
+        value: fact.value,
+        description: `Ein schneller Überblick für ${cityName}.`,
+      }));
+
+  return (
+    <section className="city-stats-grid" aria-label={`Stadtfakten für ${cityName}`}>
+      {cards.map((card, index) => (
+        <article className="city-stat-card" key={`${card.label}-${index}`}>
+          <span>{card.label}</span>
+          <strong>{card.value}</strong>
+          <p>{card.description}</p>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function CityCtaBox({
+  eyebrow,
+  title,
+  text,
+  note,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+}: {
+  eyebrow: string;
+  title: string;
+  text: string;
+  note?: string | null;
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref: string;
+  secondaryLabel: string;
+}) {
+  return (
+    <section className="city-cta-box city-cta-box-compact" aria-label="Nächster Schritt">
+      <p className="eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <div className="city-cta-actions">
+        <a className="button-primary" href={primaryHref}>{primaryLabel}</a>
+        <a className="button-secondary" href={secondaryHref}>{secondaryLabel}</a>
+      </div>
+      {note ? <small>{note}</small> : null}
+    </section>
+  );
+}
+
 export default async function PartnersucheCityPage({ params }: PageProps) {
   const { slug } = await params;
   const [city, allCities, publicCitySlugs] = await Promise.all([
@@ -349,8 +486,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
-      <article className="container article-page city-page">
-        <div className="category-hero-card city-overview-hero city-detail-hero">
+      <article className="container article-page city-page city-page-premium">
+        <div className="category-hero-card city-overview-hero city-detail-hero city-premium-hero">
           <div className="category-hero-copy">
             <nav className="article-breadcrumbs" aria-label="Breadcrumb">
               <a href="/partnersuche">Partnersuche</a>
@@ -368,31 +505,17 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <a className="button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
             </div>
           </div>
-          <aside className="category-hero-sidecard city-hero-sidecard" aria-label="Schneller Überblick">
-            {city.featuredImage?.sourceUrl ? (
-              <Image
-                src={city.featuredImage.sourceUrl}
-                alt={city.featuredImage.altText || title}
-                width={city.featuredImage.width || 1200}
-                height={city.featuredImage.height || 700}
-                className="article-hero-image city-side-image"
-                sizes="(max-width: 980px) 100vw, 380px"
-                priority
-              />
-            ) : null}
-            <div className="city-sidecard-copy">
-              <p className="eyebrow">{city.acf?.city_profile_card_eyebrow || "Schneller Überblick"}</p>
-              <strong>{city.acf?.city_profile_card_title || "Was dich auf dieser Seite erwartet"}</strong>
-              {city.acf?.city_profile_card_text ? <p>{city.acf.city_profile_card_text}</p> : null}
-              <ul className="city-hero-sidecard-list">
-                {quickFacts.map((fact) => (
-                  <li key={fact.label}>
-                    <span>{fact.label}</span>
-                    <strong>{fact.value}</strong>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label="Schneller Überblick">
+            <CityHeroVisual
+              cityName={cityName}
+              title={title}
+              image={city.featuredImage}
+              profileEyebrow={city.acf?.city_profile_card_eyebrow}
+              profileTitle={city.acf?.city_profile_card_title}
+              profileText={city.acf?.city_profile_card_text}
+              score={score}
+              scoreText={city.acf?.flirt_factor_text || city.acf?.city_dating_angle}
+            />
           </aside>
         </div>
 
@@ -414,11 +537,25 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </article>
         </section>
 
+        <div className="city-top-modules">
+          <CityStatsModule cityName={cityName} statCards={statCards} quickFacts={quickFacts} />
+          <CityCtaBox
+            eyebrow={city.acf?.city_sidebar_eyebrow || finalCtaEyebrow}
+            title={city.acf?.city_sidebar_title || city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`}
+            text={city.acf?.city_sidebar_text || city.acf?.city_cta_text || `Wenn du nach dem Lesen direkt weitermachen willst, kannst du dich ohne Umwege in deiner Region umschauen.`}
+            note={city.acf?.city_cta_note || finalCtaNote}
+            primaryHref={primaryCtaHref}
+            primaryLabel={primaryCtaLabel}
+            secondaryHref={secondaryCtaHref}
+            secondaryLabel={secondaryCtaLabel}
+          />
+        </div>
+
         <section className="article-body-grid city-body-grid">
           <aside className="article-side-column city-side-column">
             <div className="city-sidebar-stack">
               <TableOfContents items={tocItems} />
-              <section className="city-sidebar-card" aria-label="Kurz zusammengefasst">
+              <section className="city-sidebar-card city-sidebar-soft" aria-label="Kurz zusammengefasst">
                 <p className="eyebrow">{city.acf?.city_trust_eyebrow || "Kurz gesagt"}</p>
                 <strong>Darum lohnt sich die Seite für {cityName}</strong>
                 <ul className="city-key-points">
