@@ -1,0 +1,126 @@
+import type { Metadata } from "next";
+import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { siteConfig } from "@/data/site";
+import { ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
+
+export const metadata: Metadata = {
+  title: "Über ab50.de",
+  description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+  alternates: { canonical: ABOUT_ROOT_PATH },
+  openGraph: {
+    title: "Über ab50.de",
+    description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+    url: absoluteUrl(ABOUT_ROOT_PATH),
+    type: "website",
+    locale: "de_DE",
+  },
+};
+
+const aboutCards = [
+  {
+    eyebrow: "Social Media",
+    title: "Tipps, Community und Updates direkt öffnen",
+    text: "Auf Social Media begleitet dich ab50.de mit Facebook, Community-Austausch und YouTube-Inhalten rund um Dating, Kontakte und Partnersuche ab 50.",
+    href: ABOUT_SOCIAL_PATH,
+    label: "Zur Social-Media-Seite",
+  },
+  {
+    eyebrow: "Bewertungen & Erfahrungen",
+    title: "Vertrauen entsteht durch echte Einblicke",
+    text: "Wenn du wissen möchtest, wie andere ab50.de erleben, findest du dort Hinweise zu Nutzerfeedback, Trustpilot und externen Vergleichsseiten.",
+    href: ABOUT_REVIEWS_PATH,
+    label: "Zu Bewertungen & Erfahrungen",
+  },
+  {
+    eyebrow: "50plus Magazin",
+    title: "Mehr Orientierung für Dating mit Lebenserfahrung",
+    text: "Neben der Partnersuche findest du im Magazin alltagsnahe Inhalte zu Profil, Kommunikation, Vertrauen und Neuanfang ab 50.",
+    href: "/magazin",
+    label: "Zum Magazin",
+  },
+];
+
+export default function UeberUnsPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Über ab50.de",
+    headline: "Über ab50.de",
+    description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+    url: absoluteUrl(ABOUT_ROOT_PATH),
+    inLanguage: "de-DE",
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteConfig.name,
+      url: absoluteUrl("/"),
+    },
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+      <article className="standard-page standard-page-about">
+        <header className="standard-hero ab50-standard-hero">
+          <div className="container standard-hero-grid">
+            <div>
+              <p className="eyebrow">Hinter den Kulissen</p>
+              <h1>Über ab50.de</h1>
+              <p className="lead">ab50.de begleitet Singles mit Lebenserfahrung auf dem Weg zu neuen Kontakten, guten Gesprächen und einem ruhigen, verständlichen Einstieg in die Partnersuche.</p>
+              <div className="trust-chip-row" aria-label="Einblicke rund um ab50.de">
+                <span>Social Media & Community</span>
+                <span>Bewertungen & Erfahrungen</span>
+                <span>Magazin & Orientierung</span>
+                <span>Für Singles ab 50</span>
+              </div>
+              <div className="hero-actions">
+                <a className="button-primary" href={ABOUT_SOCIAL_PATH}>Social Media entdecken</a>
+                <a className="button-secondary" href={ABOUT_REVIEWS_PATH}>Bewertungen ansehen</a>
+              </div>
+            </div>
+            <aside className="standard-hero-card ab50-standard-hero-card" aria-label="Überblick zu ab50.de">
+              <strong>{siteConfig.name}</strong>
+              <span>ruhiger Einstieg in die Partnersuche</span>
+              <span>mehr Vertrauen durch transparente Einblicke</span>
+              <span>Magazine, Community und Plattform sinnvoll verbunden</span>
+            </aside>
+          </div>
+        </header>
+
+        <section className="container section-block">
+          <div className="section-heading">
+            <p className="eyebrow">Schnell weiter</p>
+            <h2>Die wichtigsten Hintergrundseiten auf einen Blick</h2>
+            <p>Statt alles auf einer Seite zu bündeln, führt dich dieser Überblick direkt zu den Bereichen, die für Vertrauen, Einordnung und zusätzliche Einblicke besonders wichtig sind.</p>
+          </div>
+          <div className="card-grid standard-card-grid">
+            {aboutCards.map((card) => (
+              <a className="card standard-card" href={card.href} key={card.href}>
+                <span className="standard-card-kicker">{card.eyebrow}</span>
+                <strong>{card.title}</strong>
+                <span>{card.text}</span>
+                <em>{card.label}</em>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="container section-block two-column standard-split-section">
+          <div className="stats-panel standard-info-panel">
+            <p className="eyebrow">Warum diese Seite wichtig ist</p>
+            <h2>Mehr Vertrauen vor dem ersten Klick</h2>
+            <p>Wer eine Plattform ausprobiert, möchte nicht nur Funktionen sehen, sondern auch verstehen, wie sie öffentlich auftritt, wo zusätzliche Einblicke zu finden sind und wie andere Nutzer sie bewerten.</p>
+          </div>
+          <div className="city-cta-box city-cta-box-compact">
+            <p className="eyebrow">Direkter Einstieg</p>
+            <h2>Wenn du nicht nur lesen, sondern direkt loslegen möchtest</h2>
+            <p>Du kannst jederzeit kostenlos starten, Profile ansehen und selbst entscheiden, ob ab50.de zu deinem Tempo und deiner Art der Partnersuche passt.</p>
+            <div className="city-cta-actions">
+              <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
+              <a className="button-secondary" href="/partnersuche">Stadtseiten ansehen</a>
+            </div>
+          </div>
+        </section>
+      </article>
+    </>
+  );
+}

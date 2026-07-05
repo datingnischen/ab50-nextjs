@@ -1619,3 +1619,120 @@ main { min-height: 60vh; }
     margin-top: 14px;
   }
 }
+
+/* Standard reusable trust/about pages */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.standard-page {
+  background:
+    radial-gradient(circle at top left, rgba(26,76,149,.08), transparent 34rem),
+    linear-gradient(180deg, var(--bg), #fff);
+}
+.standard-hero {
+  padding: 48px 0 34px;
+  border-bottom: 1px solid var(--line);
+}
+.ab50-standard-hero {
+  background: linear-gradient(135deg, #f7fbff, #fff);
+}
+.standard-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, .38fr);
+  gap: 28px;
+  align-items: center;
+}
+.standard-hero h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
+.standard-hero-card {
+  display: grid;
+  gap: 12px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 18px 54px rgba(26,76,149,.08);
+}
+.ab50-standard-hero-card strong {
+  font-size: 1.55rem;
+  color: var(--brand-dark);
+}
+.ab50-standard-hero-card span {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 820;
+}
+.standard-card-grid .standard-card {
+  display: grid;
+  gap: 12px;
+  min-height: 190px;
+  padding: 22px;
+  text-decoration: none;
+}
+.standard-card-grid .standard-card strong {
+  font-size: 1.15rem;
+  line-height: 1.28;
+  color: var(--brand-dark);
+}
+.standard-card-grid .standard-card > span {
+  color: var(--muted);
+}
+.standard-card-grid .standard-card em,
+.standard-card-kicker {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 850;
+}
+.standard-split-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+.standard-info-panel {
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 16px 44px rgba(61,43,39,.06);
+}
+.standard-info-panel h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
+  line-height: 1.14;
+}
+.standard-info-panel p {
+  margin: 0;
+  color: var(--muted);
+}
+.standard-final-cta {
+  padding-top: 0;
+}
+
+@media (max-width: 980px) {
+  .card-grid,
+  .standard-hero-grid,
+  .standard-split-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .standard-hero,
+  .standard-card-grid .standard-card,
+  .standard-hero-card,
+  .standard-info-panel {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
