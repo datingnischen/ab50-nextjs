@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/data/site";
 import { getAllPageSlugs, getAllPostSlugs, getAllPublicCitySlugs, getCategories, categoryPath, cityPath, pagePath, postPath } from "@/lib/wordpress";
-import { ABOUT_REVIEWS_PATH, ABOUT_ROOT_PATH, ABOUT_SOCIAL_PATH } from "@/lib/about-pages";
+import { ABOUT_HISTORY_PATH, ABOUT_REVIEWS_PATH, ABOUT_ROOT_PATH, ABOUT_SOCIAL_PATH } from "@/lib/about-pages";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [postSlugs, pageSlugs, categories, citySlugs] = await Promise.all([
@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteConfig.baseUrl}/magazin`, lastModified: now },
     { url: `${siteConfig.baseUrl}/partnersuche`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_ROOT_PATH}`, lastModified: now },
+    { url: `${siteConfig.baseUrl}${ABOUT_HISTORY_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_SOCIAL_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_REVIEWS_PATH}`, lastModified: now },
     ...postSlugs.map((slug) => ({ url: `${siteConfig.baseUrl}${postPath(slug)}`, lastModified: now })),

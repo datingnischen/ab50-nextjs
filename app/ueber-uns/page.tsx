@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
-import { ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
+import { ABOUT_HISTORY_PATH, ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
 
 export const metadata: Metadata = {
   title: "Über ab50.de",
@@ -17,6 +17,13 @@ export const metadata: Metadata = {
 };
 
 const aboutCards = [
+  {
+    eyebrow: "Unsere Geschichte",
+    title: "Die Entwicklung von ab50.de über die Jahre sehen",
+    text: "Auf der Geschichtsseite zeigen ausgewählte Wayback-Snapshots, wie sich der Auftritt von ab50.de von frühen Web-Spuren bis zur heutigen Plattform verändert hat.",
+    href: ABOUT_HISTORY_PATH,
+    label: "Zur Geschichte",
+  },
   {
     eyebrow: "Social Media",
     title: "Tipps, Community und Updates direkt öffnen",
@@ -67,14 +74,14 @@ export default function UeberUnsPage() {
               <h1>Über ab50.de</h1>
               <p className="lead">ab50.de begleitet Singles mit Lebenserfahrung auf dem Weg zu neuen Kontakten, guten Gesprächen und einem ruhigen, verständlichen Einstieg in die Partnersuche.</p>
               <div className="trust-chip-row" aria-label="Einblicke rund um ab50.de">
+                <span>Unsere Geschichte</span>
                 <span>Social Media & Community</span>
                 <span>Bewertungen & Erfahrungen</span>
                 <span>Magazin & Orientierung</span>
-                <span>Für Singles ab 50</span>
               </div>
               <div className="hero-actions">
-                <a className="button-primary" href={ABOUT_SOCIAL_PATH}>Social Media entdecken</a>
-                <a className="button-secondary" href={ABOUT_REVIEWS_PATH}>Bewertungen ansehen</a>
+                <a className="button-primary" href={ABOUT_HISTORY_PATH}>Unsere Geschichte ansehen</a>
+                <a className="button-secondary" href={ABOUT_SOCIAL_PATH}>Social Media entdecken</a>
               </div>
             </div>
             <aside className="standard-hero-card ab50-standard-hero-card" aria-label="Überblick zu ab50.de">
