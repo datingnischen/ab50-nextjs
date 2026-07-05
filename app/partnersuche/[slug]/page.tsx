@@ -23,12 +23,9 @@ type ParsedPlace = {
   typeLabel: string;
   category?: string | null;
   address?: string | null;
-  phone?: string | null;
-  website?: string | null;
   mapsUrl?: string | null;
   openingHours?: string | null;
   tip?: string | null;
-  dataSource?: string | null;
 };
 
 const placeTypeLabels: Record<string, string> = {
@@ -194,12 +191,9 @@ function normalizePlaces(places?: WpLocalPlace[] | null): ParsedPlace[] {
         typeLabel: placeTypeLabel(place.place_type),
         category: place.place_category || null,
         address: address || null,
-        phone: place.place_phone || null,
-        website: place.place_website || null,
         mapsUrl: place.place_maps_url || null,
         openingHours: place.place_opening_hours || null,
         tip: place.place_tip_text || null,
-        dataSource: place.place_data_source || null,
       } as ParsedPlace;
     })
     .filter((place): place is ParsedPlace => Boolean(place));
@@ -231,24 +225,18 @@ function PlaceCardsSection({
         {places.map((place, index) => {
           const mapsUrl = place.mapsUrl || (place.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}` : null);
           return (
-            <article className="place-card" key={`${place.name}-${index}`}>
+            <article className="place-card place-card-slim" key={`${place.name}-${index}`}>
               <div className="place-card-topline">
                 <span className="place-type-badge">📍 {place.typeLabel}</span>
                 {place.category ? <span className="place-category-badge">{place.category}</span> : null}
               </div>
               <h3>{place.name}</h3>
               {place.tip ? <p className="place-card-text">{place.tip}</p> : null}
-              <dl className="place-meta-list">
+              <dl className="place-meta-list place-meta-list-slim">
                 {place.address ? (
                   <div>
                     <dt>Adresse</dt>
                     <dd>{place.address}</dd>
-                  </div>
-                ) : null}
-                {place.phone ? (
-                  <div>
-                    <dt>Telefon</dt>
-                    <dd><a href={`tel:${place.phone.replace(/\s+/g, "")}`}>{place.phone}</a></dd>
                   </div>
                 ) : null}
                 {place.openingHours ? (
@@ -257,17 +245,12 @@ function PlaceCardsSection({
                     <dd>{place.openingHours}</dd>
                   </div>
                 ) : null}
-                {place.dataSource ? (
-                  <div>
-                    <dt>Datenbasis</dt>
-                    <dd>{place.dataSource}</dd>
-                  </div>
-                ) : null}
               </dl>
-              <div className="place-actions">
-                {place.website ? <a href={place.website} rel="nofollow noopener noreferrer" target="_blank">Website</a> : null}
-                {mapsUrl ? <a href={mapsUrl} rel="nofollow noopener noreferrer" target="_blank">Karte öffnen</a> : null}
-              </div>
+              {mapsUrl ? (
+                <div className="place-actions place-actions-slim">
+                  <a href={mapsUrl} rel="nofollow noopener noreferrer" target="_blank">Karte öffnen</a>
+                </div>
+              ) : null}
             </article>
           );
         })}

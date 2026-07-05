@@ -773,6 +773,9 @@ main { min-height: 60vh; }
   border-radius: 24px;
   background: linear-gradient(180deg, #fff, #f8fbff);
 }
+.place-card-slim {
+  padding: 18px;
+}
 .place-card-topline {
   display: flex;
   flex-wrap: wrap;
@@ -802,13 +805,17 @@ main { min-height: 60vh; }
   line-height: 1.25;
 }
 .place-card-text {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   color: var(--city-muted);
+  line-height: 1.55;
 }
 .place-meta-list {
   display: grid;
   gap: 12px;
   margin: 0;
+}
+.place-meta-list-slim {
+  gap: 10px;
 }
 .place-meta-list div {
   display: grid;
@@ -830,6 +837,9 @@ main { min-height: 60vh; }
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
+}
+.place-actions-slim {
+  margin-top: 14px;
 }
 .place-actions a {
   display: inline-flex;
