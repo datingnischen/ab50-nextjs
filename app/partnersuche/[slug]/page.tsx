@@ -288,6 +288,17 @@ function scoreSummary(cityName: string, score: number, text?: string | null) {
   return `${cityName} erreicht ${formatScoreValue(score)} Punkte und zeigt damit eine gute Grundlage für neue Kontakte, passende Treffpunkte und einen entspannten Einstieg in die Partnersuche ab 50.`;
 }
 
+function cityHeroEyebrow(value: string | null | undefined, cityName: string) {
+  const fallback = `Partnersuche ab 50 in ${cityName}`;
+  if (!value) return fallback;
+
+  const normalized = value.trim();
+  if (!normalized) return fallback;
+  if (/elflirt/i.test(normalized)) return fallback;
+
+  return normalized;
+}
+
 function normalizeSources(sources?: WpSourceItem[] | null) {
   return (sources || []).filter((source) => source?.title || source?.url || source?.publisher || source?.note);
 }
@@ -642,7 +653,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <span aria-hidden="true">/</span>
               <span>{cityName}</span>
             </nav>
-            <p className="eyebrow">{city.acf?.hero_eyebrow || `Partnersuche ab 50 in ${cityName}`}</p>
+            <p className="eyebrow">{cityHeroEyebrow(city.acf?.hero_eyebrow, cityName)}</p>
             <h1>{title}</h1>
             <p className="lead">{lead}</p>
             <div className="trust-chip-row" aria-label="Stadtvorteile">
