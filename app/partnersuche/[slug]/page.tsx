@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpLocalPlace, type WpSourceItem } from "@/lib/wordpress";
+import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
+import { getIconyWidgetLocation } from "@/data/city-widget-locations";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -549,6 +551,12 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const sources = normalizeSources(city.acf?.sources);
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
+  const iconyLocation = getIconyWidgetLocation(cityName);
+  const singlesWidgetEyebrow = city.acf?.city_singles_widget_eyebrow || null;
+  const singlesWidgetTitle = city.acf?.city_singles_widget_title || null;
+  const singlesWidgetText = city.acf?.city_singles_widget_text || null;
+  const singlesWidgetCtaLabel = city.acf?.city_singles_widget_cta_label || null;
+  const singlesWidgetNote = city.acf?.city_singles_widget_note || null;
   const score = normalizeScore(city.acf?.flirt_factor_score);
   const statCards = normalizeStatCards(city.acf?.local_stat_cards);
   const splitTips = splitCityTips(city.acf?.local_tips);
@@ -658,6 +666,19 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             />
           </aside>
         </div>
+
+        <IconyIframeSinglesWidget
+          city={cityName}
+          platformId={siteConfig.icony.projectKey}
+          location={iconyLocation}
+          searchUrl={siteConfig.links.searchLocation}
+          profileClickUrl={siteConfig.links.registrationLocation}
+          eyebrow={singlesWidgetEyebrow || undefined}
+          title={singlesWidgetTitle || undefined}
+          text={singlesWidgetText || undefined}
+          ctaLabel={singlesWidgetCtaLabel || undefined}
+          note={singlesWidgetNote || undefined}
+        />
 
         <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
           <article className="overview-intent-card overview-intent-card-guide city-intro-card">

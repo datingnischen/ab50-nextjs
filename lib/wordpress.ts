@@ -89,6 +89,11 @@ export type WpCityAcf = {
   city_profile_card_eyebrow?: string | null;
   city_profile_card_title?: string | null;
   city_profile_card_text?: string | null;
+  city_singles_widget_eyebrow?: string | null;
+  city_singles_widget_title?: string | null;
+  city_singles_widget_text?: string | null;
+  city_singles_widget_cta_label?: string | null;
+  city_singles_widget_note?: string | null;
   city_sidebar_eyebrow?: string | null;
   city_sidebar_title?: string | null;
   city_sidebar_text?: string | null;

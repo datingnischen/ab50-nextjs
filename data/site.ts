@@ -17,9 +17,13 @@ export const siteConfig = {
     homeCh: "https://ab50.ch/",
     registrationCommon: "https://ab50.de/?AID=magazin",
     registrationLocation: "https://ab50.de/?AID=location",
+    searchLocation: "https://ab50.de/suche/?AID=location",
     magazine: "/magazin",
     imprint: "https://ab50.de/impressum.html",
     privacy: "https://ab50.de/datenschutz.html",
     terms: "https://ab50.de/agb.html",
+  },
+  icony: {
+    projectKey: "ab50de",
   },
 };

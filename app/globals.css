@@ -751,6 +751,85 @@ main { min-height: 60vh; }
 .city-data-note {
   margin: 0;
 }
+
+/* ICONY iframe singles widget */
+.icony-iframe-section {
+  margin: 10px auto 28px;
+  padding: 24px;
+  border: 1px solid var(--city-line, var(--line));
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(245,248,253,.96));
+  box-shadow: 0 18px 54px rgba(26,76,149,.06);
+}
+.icony-iframe-copy h2 {
+  margin: 0 0 10px;
+  line-height: 1.14;
+}
+.icony-iframe-copy p:last-child {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+.icony-iframe-tabs {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+}
+.icony-iframe-tabs input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.icony-iframe-tabs label {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 800;
+  cursor: pointer;
+  border: 1px solid rgba(26,76,149,.16);
+}
+.icony-iframe-tabs input:checked + label {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(26,76,149,.18);
+}
+.icony-iframe-panel {
+  display: none;
+  grid-column: 1 / -1;
+  padding: 12px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f5f8fd, #fff);
+  border: 1px solid var(--city-line, var(--line));
+  overflow: hidden;
+}
+.icony-iframe-panel iframe {
+  display: block;
+  width: 100%;
+  min-height: 470px;
+  border: 0;
+  background: transparent;
+}
+.icony-iframe-tabs input:first-of-type:checked ~ .icony-iframe-panel-women,
+.icony-iframe-tabs input:nth-of-type(2):checked ~ .icony-iframe-panel-men {
+  display: block;
+}
+.icony-iframe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+.icony-iframe-actions span {
+  color: var(--muted);
+  font-size: .88rem;
+}
 .city-places-section {
   padding: 24px;
   border: 1px solid var(--city-line);
@@ -1433,6 +1512,16 @@ main { min-height: 60vh; }
   .city-signal-grid,
   .place-card-grid {
     grid-template-columns: 1fr;
+  }
+  .icony-iframe-tabs {
+    grid-template-columns: 1fr;
+  }
+  .icony-iframe-tabs label,
+  .icony-iframe-actions .button-primary {
+    width: 100%;
+  }
+  .icony-iframe-panel iframe {
+    min-height: 430px;
   }
   .city-premium-hero .category-hero-copy h1 {
     max-width: none;
