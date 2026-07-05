@@ -55,6 +55,19 @@ export type WpCityTip = {
   text?: string | null;
 };
 
+export type WpLocalPlace = {
+  place_type?: string | null;
+  place_name?: string | null;
+  place_category?: string | null;
+  place_address?: string | null;
+  place_phone?: string | null;
+  place_website?: string | null;
+  place_maps_url?: string | null;
+  place_opening_hours?: string | null;
+  place_tip_text?: string | null;
+  place_data_source?: string | null;
+};
+
 export type WpSourceItem = {
   title?: string | null;
   url?: string | null;
@@ -95,6 +108,10 @@ export type WpCityAcf = {
   local_tips_title?: string | null;
   local_tips_intro?: string | null;
   local_tips?: WpCityTip[] | null;
+  local_places_eyebrow?: string | null;
+  local_places_title?: string | null;
+  local_places_intro?: string | null;
+  local_places?: WpLocalPlace[] | null;
   sources_intro?: string | null;
   sources_display_mode?: string | null;
   sources?: WpSourceItem[] | null;

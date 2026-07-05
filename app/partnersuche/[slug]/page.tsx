@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
-import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpSourceItem } from "@/lib/wordpress";
+import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpLocalPlace, type WpSourceItem } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -16,6 +16,29 @@ type SplitCityTips = {
   strengths: WpCityTip[];
   weaknesses: WpCityTip[];
   generalTips: WpCityTip[];
+};
+
+type ParsedPlace = {
+  name: string;
+  typeLabel: string;
+  category?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  mapsUrl?: string | null;
+  openingHours?: string | null;
+  tip?: string | null;
+  dataSource?: string | null;
+};
+
+const placeTypeLabels: Record<string, string> = {
+  restaurant: "Restaurant",
+  cafe: "Café",
+  bar: "Bar",
+  park: "Park",
+  library: "Bibliothek",
+  university: "Universität",
+  other: "Ort",
 };
 
 const cityAuthor = {
@@ -153,6 +176,104 @@ function splitCityTips(tips?: WpCityTip[] | null): SplitCityTips {
   }
 
   return { strengths, weaknesses, generalTips };
+}
+
+function placeTypeLabel(type?: string | null) {
+  const key = (type || "other").toLowerCase();
+  return placeTypeLabels[key] || type || "Ort";
+}
+
+function normalizePlaces(places?: WpLocalPlace[] | null): ParsedPlace[] {
+  return (places || [])
+    .map((place) => {
+      const name = (place.place_name || "").trim();
+      const address = (place.place_address || "").trim();
+      if (!name && !address) return null;
+      return {
+        name: name || "Lokaler Ort",
+        typeLabel: placeTypeLabel(place.place_type),
+        category: place.place_category || null,
+        address: address || null,
+        phone: place.place_phone || null,
+        website: place.place_website || null,
+        mapsUrl: place.place_maps_url || null,
+        openingHours: place.place_opening_hours || null,
+        tip: place.place_tip_text || null,
+        dataSource: place.place_data_source || null,
+      } as ParsedPlace;
+    })
+    .filter((place): place is ParsedPlace => Boolean(place));
+}
+
+function PlaceCardsSection({
+  cityName,
+  eyebrow,
+  title,
+  intro,
+  places,
+}: {
+  cityName: string;
+  eyebrow?: string | null;
+  title?: string | null;
+  intro?: string | null;
+  places: ParsedPlace[];
+}) {
+  if (!places.length) return null;
+
+  return (
+    <section className="city-places-section" aria-label={`Date-Orte in ${cityName}`}>
+      <div className="section-heading compact-heading place-section-heading">
+        <p className="eyebrow">{eyebrow || `Date-Ideen in ${cityName}`}</p>
+        <h2>{title || `${places.length} konkrete Orte für Dates in ${cityName}`}</h2>
+        <p>{intro || `Hier findest du konkrete Treffpunkte, die sich für ein erstes Kennenlernen oder einen entspannten nächsten Schritt in ${cityName} eignen.`}</p>
+      </div>
+      <div className="place-card-grid">
+        {places.map((place, index) => {
+          const mapsUrl = place.mapsUrl || (place.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}` : null);
+          return (
+            <article className="place-card" key={`${place.name}-${index}`}>
+              <div className="place-card-topline">
+                <span className="place-type-badge">📍 {place.typeLabel}</span>
+                {place.category ? <span className="place-category-badge">{place.category}</span> : null}
+              </div>
+              <h3>{place.name}</h3>
+              {place.tip ? <p className="place-card-text">{place.tip}</p> : null}
+              <dl className="place-meta-list">
+                {place.address ? (
+                  <div>
+                    <dt>Adresse</dt>
+                    <dd>{place.address}</dd>
+                  </div>
+                ) : null}
+                {place.phone ? (
+                  <div>
+                    <dt>Telefon</dt>
+                    <dd><a href={`tel:${place.phone.replace(/\s+/g, "")}`}>{place.phone}</a></dd>
+                  </div>
+                ) : null}
+                {place.openingHours ? (
+                  <div>
+                    <dt>Öffnungszeiten</dt>
+                    <dd>{place.openingHours}</dd>
+                  </div>
+                ) : null}
+                {place.dataSource ? (
+                  <div>
+                    <dt>Datenbasis</dt>
+                    <dd>{place.dataSource}</dd>
+                  </div>
+                ) : null}
+              </dl>
+              <div className="place-actions">
+                {place.website ? <a href={place.website} rel="nofollow noopener noreferrer" target="_blank">Website</a> : null}
+                {mapsUrl ? <a href={mapsUrl} rel="nofollow noopener noreferrer" target="_blank">Karte öffnen</a> : null}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 function normalizeStatCards(cards?: WpCityStatCard[] | null) {
@@ -418,7 +539,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const score = normalizeScore(city.acf?.flirt_factor_score);
   const statCards = normalizeStatCards(city.acf?.local_stat_cards);
   const splitTips = splitCityTips(city.acf?.local_tips);
-  const hasEnhancedSignals = Boolean(score || statCards.length || splitTips.strengths.length || splitTips.weaknesses.length || splitTips.generalTips.length);
+  const places = normalizePlaces(city.acf?.local_places);
+  const hasEnhancedSignals = Boolean(score || statCards.length || splitTips.strengths.length || splitTips.weaknesses.length || splitTips.generalTips.length || places.length);
   const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
   const primaryCtaLabel = city.acf?.primary_cta_label || "Kostenlos starten";
   const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche";
@@ -654,6 +776,14 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 </div>
               </section>
             ) : null}
+
+            <PlaceCardsSection
+              cityName={cityName}
+              eyebrow={city.acf?.local_places_eyebrow}
+              title={city.acf?.local_places_title}
+              intro={city.acf?.local_places_intro}
+              places={places}
+            />
 
             {splitTips.generalTips.length ? (
               <section className="city-tip-section" aria-label={`Dating-Ideen für ${cityName}`}>

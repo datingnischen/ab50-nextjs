@@ -751,6 +751,102 @@ main { min-height: 60vh; }
 .city-data-note {
   margin: 0;
 }
+.city-places-section {
+  padding: 24px;
+  border: 1px solid var(--city-line);
+  border-radius: 28px;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 18px 54px rgba(26,76,149,.06);
+}
+.place-section-heading p:last-child {
+  max-width: 60ch;
+}
+.place-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.place-card {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--city-line);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff, #f8fbff);
+}
+.place-card-topline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.place-type-badge,
+.place-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 800;
+}
+.place-type-badge {
+  background: rgba(26,76,149,.10);
+  color: var(--brand-dark);
+}
+.place-category-badge {
+  background: rgba(136,40,42,.08);
+  color: var(--accent);
+}
+.place-card h3 {
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+.place-card-text {
+  margin: 0 0 14px;
+  color: var(--city-muted);
+}
+.place-meta-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.place-meta-list div {
+  display: grid;
+  gap: 4px;
+}
+.place-meta-list dt {
+  font-size: .8rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.place-meta-list dd {
+  margin: 0;
+  color: var(--text);
+}
+.place-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.place-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--city-line);
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+.place-actions a:hover {
+  background: var(--brand-soft);
+}
 .city-signal-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1324,7 +1420,8 @@ main { min-height: 60vh; }
   .city-meta-grid,
   .city-score-grid,
   .city-tip-grid,
-  .city-signal-grid {
+  .city-signal-grid,
+  .place-card-grid {
     grid-template-columns: 1fr;
   }
   .city-premium-hero .category-hero-copy h1 {
