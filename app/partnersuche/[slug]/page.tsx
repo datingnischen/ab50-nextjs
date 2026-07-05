@@ -286,6 +286,23 @@ function normalizeScore(value?: string | number | null) {
   return Number.isFinite(numeric) ? numeric : null;
 }
 
+function formatScoreValue(score: number) {
+  return score.toLocaleString("de-DE", { minimumFractionDigits: score % 1 ? 1 : 0, maximumFractionDigits: 1 });
+}
+
+function scoreHeadline(score: number) {
+  if (score >= 90) return "Ausgezeichnete Basis für neue Kontakte";
+  if (score >= 80) return "Sehr gute Basis für Kontakte";
+  if (score >= 70) return "Gute Basis für neue Kontakte";
+  if (score >= 60) return "Solider Einstieg für neue Kontakte";
+  return "Ruhiger Einstieg mit Chancen";
+}
+
+function scoreSummary(cityName: string, score: number, text?: string | null) {
+  if (text) return `${cityName} erreicht ${formatScoreValue(score)} Punkte. ${text}`;
+  return `${cityName} erreicht ${formatScoreValue(score)} Punkte und zeigt damit eine gute Grundlage für neue Kontakte, passende Treffpunkte und einen entspannten Einstieg in die Partnersuche ab 50.`;
+}
+
 function normalizeSources(sources?: WpSourceItem[] | null) {
   return (sources || []).filter((source) => source?.title || source?.url || source?.publisher || source?.note);
 }
@@ -381,7 +398,7 @@ function FlirtFactorVisualCard({ cityName, score, text }: { cityName: string; sc
     <div className="flirt-factor-card" aria-label={`Flirt-Faktor ${cityName}`}>
       <div>
         <span className="flirt-factor-kicker">Stadtprofil</span>
-        <strong>{safeScore !== null ? `${safeScore.toLocaleString("de-DE", { minimumFractionDigits: safeScore % 1 ? 1 : 0, maximumFractionDigits: 1 })}/100` : `Dating ab 50 in ${cityName}`}</strong>
+        <strong>{safeScore !== null ? `${formatScoreValue(safeScore)}/100` : `Dating ab 50 in ${cityName}`}</strong>
         <p>{text || `Ein ruhiger Überblick darüber, wie gut ${cityName} für neue Kontakte, passende Orte und einen entspannten Start geeignet ist.`}</p>
       </div>
       {safeScore !== null ? (
@@ -448,22 +465,35 @@ function CityStatsModule({
   cityName,
   statCards,
   quickFacts,
+  score,
+  scoreText,
 }: {
   cityName: string;
   statCards: WpCityStatCard[];
   quickFacts: Array<{ label: string; value: string }>;
+  score: number | null;
+  scoreText?: string | null;
 }) {
-  const cards = statCards.length
-    ? statCards.slice(0, 3).map((card) => ({
-        label: card.label || "Signal",
-        value: card.value || cityName,
-        description: card.description || `Hilft dir, ${cityName} schneller für deine Partnersuche ab 50 einzuordnen.`,
-      }))
-    : quickFacts.map((fact) => ({
-        label: fact.label,
-        value: fact.value,
-        description: `Ein schneller Überblick für ${cityName}.`,
-      }));
+  const cards = [
+    ...(score !== null
+      ? [{
+          label: "Flirt-Faktor",
+          value: `${formatScoreValue(score)}/100`,
+          description: scoreText || `Der redaktionelle Flirt-Score für ${cityName}.`,
+        }]
+      : []),
+    ...(statCards.length
+      ? statCards.slice(0, score !== null ? 2 : 3).map((card) => ({
+          label: card.label || "Signal",
+          value: card.value || cityName,
+          description: card.description || `Hilft dir, ${cityName} schneller für deine Partnersuche ab 50 einzuordnen.`,
+        }))
+      : quickFacts.slice(0, score !== null ? 2 : 3).map((fact) => ({
+          label: fact.label,
+          value: fact.value,
+          description: `Ein schneller Überblick für ${cityName}.`,
+        }))),
+  ];
 
   return (
     <section className="city-stats-grid" aria-label={`Stadtfakten für ${cityName}`}>
@@ -557,7 +587,12 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
     ...trustPoints,
     `Singles ab 50 in ${cityName}`,
   ]).slice(0, 4);
-  const heroChipItems = heroChips.length ? heroChips : ["Singles ab 50", "Regionale Orientierung", "Kostenlos starten"];
+  const scoreChip = score !== null ? `${formatScoreValue(score)} Flirt-Faktor` : null;
+  const heroChipItems = uniqueNonEmpty([
+    scoreChip,
+    ...heroChips.filter((chip) => !/flirt-faktor/i.test(chip)),
+    ...(heroChips.length ? [] : ["Singles ab 50", "Regionale Orientierung", "Kostenlos starten"]),
+  ]).slice(0, 5);
   const quickFacts = [
     { label: "Fokus", value: `Partnersuche ab 50 in ${cityName}` },
     { label: "Lesezeit", value: `${readingMinutes} Min.` },
@@ -643,9 +678,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
 
         <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
           <article className="overview-intent-card overview-intent-card-guide city-intro-card">
-            <span>{city.acf?.city_highlight_eyebrow || "Regionaler Einstieg"}</span>
-            <strong>{city.acf?.city_highlight_title || `Dating ab 50 in ${cityName} verständlich einordnen`}</strong>
-            <p>{city.acf?.city_highlight_text || `Die Seite bündelt regionale Hinweise, typische Fragen und einen ruhigen Einstieg für Menschen, die in ${cityName} neue Kontakte suchen.`}</p>
+            <span>{score !== null ? `Flirt-Faktor ${cityName}` : (city.acf?.city_highlight_eyebrow || "Regionaler Einstieg")}</span>
+            <strong>{score !== null ? scoreHeadline(score) : (city.acf?.city_highlight_title || `Dating ab 50 in ${cityName} verständlich einordnen`)}</strong>
+            <p>{score !== null ? scoreSummary(cityName, score, city.acf?.flirt_factor_text) : (city.acf?.city_highlight_text || `Die Seite bündelt regionale Hinweise, typische Fragen und einen ruhigen Einstieg für Menschen, die in ${cityName} neue Kontakte suchen.`)}</p>
           </article>
           <article className="overview-intent-card overview-intent-card-trust city-intro-card">
             <span>Was du mitnimmst</span>
@@ -660,7 +695,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         </section>
 
         <div className="city-top-modules">
-          <CityStatsModule cityName={cityName} statCards={statCards} quickFacts={quickFacts} />
+          <CityStatsModule cityName={cityName} statCards={statCards} quickFacts={quickFacts} score={score} scoreText={city.acf?.flirt_factor_text} />
           <CityCtaBox
             eyebrow={city.acf?.city_sidebar_eyebrow || finalCtaEyebrow}
             title={city.acf?.city_sidebar_title || city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`}
@@ -720,7 +755,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                   {score !== null ? (
                     <article className="city-score-card city-score-card-primary">
                       <span>Flirt-Faktor</span>
-                      <strong>{score.toLocaleString("de-DE", { minimumFractionDigits: score % 1 ? 1 : 0, maximumFractionDigits: 1 })}/100</strong>
+                      <strong>{formatScoreValue(score)}/100</strong>
                       <p>{city.acf?.flirt_factor_text || `Ein redaktioneller Blick darauf, wie kontaktfreundlich ${cityName} für erste Dates wirkt.`}</p>
                     </article>
                   ) : null}
