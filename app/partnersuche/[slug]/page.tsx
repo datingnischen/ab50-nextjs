@@ -479,7 +479,7 @@ function CityStatsModule({
         }]
       : []),
     ...(statCards.length
-      ? statCards.slice(0, score !== null ? 2 : 3).map((card) => ({
+      ? statCards.map((card) => ({
           label: card.label || "Signal",
           value: card.value || cityName,
           description: card.description || `Hilft dir, ${cityName} schneller für deine Partnersuche ab 50 einzuordnen.`,
@@ -570,9 +570,11 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const singlesWidgetNote = city.acf?.city_singles_widget_note || null;
   const score = normalizeScore(city.acf?.flirt_factor_score);
   const statCards = normalizeStatCards(city.acf?.local_stat_cards);
+  const topStatCardLimit = score !== null ? 2 : 3;
+  const topStatCards = statCards.slice(0, topStatCardLimit);
+  const remainingStatCards = statCards.slice(topStatCardLimit);
   const splitTips = splitCityTips(city.acf?.local_tips);
   const places = normalizePlaces(city.acf?.local_places);
-  const hasEnhancedSignals = Boolean(score || statCards.length || splitTips.strengths.length || splitTips.weaknesses.length || splitTips.generalTips.length || places.length);
   const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
   const primaryCtaLabel = city.acf?.primary_cta_label || "Kostenlos starten";
   const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche";
@@ -710,7 +712,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         </section>
 
         <div className="city-top-modules">
-          <CityStatsModule cityName={cityName} statCards={statCards} quickFacts={quickFacts} score={score} scoreText={city.acf?.flirt_factor_text} />
+          <CityStatsModule cityName={cityName} statCards={topStatCards} quickFacts={quickFacts} score={score} scoreText={city.acf?.flirt_factor_text} />
           <CityCtaBox
             eyebrow={city.acf?.city_sidebar_eyebrow || finalCtaEyebrow}
             title={city.acf?.city_sidebar_title || city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`}
@@ -759,22 +761,15 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               </div>
             </section>
 
-            {hasEnhancedSignals ? (
+            {remainingStatCards.length ? (
               <section className="city-score-section" aria-label={`Dating-Signale für ${cityName}`}>
                 <div className="section-heading compact-heading">
                   <p className="eyebrow">Signal-Check</p>
-                  <h2>Wie stark {cityName} für neue Begegnungen aufgestellt ist</h2>
-                  <p>{city.acf?.flirt_factor_text || city.acf?.city_dating_angle || `Diese Signale helfen dir, ${cityName} als Dating-Stadt besser einzuordnen.`}</p>
+                  <h2>Weitere Kennzahlen für {cityName}</h2>
+                  <p>Diese zusätzlichen Signale ergänzen den schnellen Überblick oben und helfen dir, {cityName} noch genauer einzuordnen.</p>
                 </div>
                 <div className="city-score-grid">
-                  {score !== null ? (
-                    <article className="city-score-card city-score-card-primary">
-                      <span>Flirt-Faktor</span>
-                      <strong>{formatScoreValue(score)}/100</strong>
-                      <p>{city.acf?.flirt_factor_text || `Ein redaktioneller Blick darauf, wie kontaktfreundlich ${cityName} für erste Dates wirkt.`}</p>
-                    </article>
-                  ) : null}
-                  {statCards.map((card, index) => (
+                  {remainingStatCards.map((card, index) => (
                     <article className="city-score-card" key={`${card.label || "card"}-${index}`}>
                       <span>{card.label || "Signal"}</span>
                       <strong>{card.value}</strong>
