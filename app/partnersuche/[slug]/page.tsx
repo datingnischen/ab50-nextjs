@@ -585,11 +585,11 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const finalCtaTitle = city.acf?.city_cta_title || `Wenn du magst, kannst du jetzt direkt kostenlos starten und neue Kontakte in ${cityName} entdecken.`;
   const finalCtaText = city.acf?.city_cta_text || "Oder du schaust dir weitere Städte und Magazin-Themen in Ruhe an.";
   const finalCtaNote = city.acf?.city_cta_note || null;
+  const takeawaySummary = city.acf?.city_dating_angle || city.acf?.city_highlight_text || `Hier findest du den kompakten Überblick für Dating ab 50 in ${cityName} – mit regionalen Signalen, passenden Treffpunkten und einem ruhigen nächsten Schritt.`;
   const citySignals = uniqueNonEmpty([
     city.acf?.city_hero_claim,
-    city.acf?.city_dating_angle,
     ...trustPoints,
-    `Singles ab 50 in ${cityName}`,
+    ...(city.acf?.city_hero_claim || trustPoints.length ? [] : [city.acf?.city_dating_angle]),
   ]).slice(0, 4);
   const scoreChip = score !== null ? `${formatScoreValue(score)} Flirt-Faktor` : null;
   const heroChipItems = uniqueNonEmpty([
@@ -750,7 +750,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <section className="article-takeaway-box city-takeaway-box" aria-label="Stadtprofil">
               <p className="eyebrow">Stadtprofil</p>
               <h2>Das Wichtigste für Dating ab 50 in {cityName}</h2>
-              <p>{lead}</p>
+              <p>{takeawaySummary}</p>
               <div className="city-meta-grid">
                 {quickFacts.map((fact) => (
                   <div className="city-meta-card" key={fact.label}>
