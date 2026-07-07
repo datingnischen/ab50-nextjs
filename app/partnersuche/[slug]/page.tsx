@@ -680,6 +680,18 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </aside>
         </div>
 
+        {/* Conversion Banner */}
+        <section className="city-banner-conversion" aria-label="Call-to-Action Banner">
+          <Image
+            src="/ab50-banner-conversion-langformat.png"
+            alt="Neue Menschen ab 50 in deiner Nähe kennenlernen"
+            width={1200}
+            height={800}
+            className="city-banner-image"
+            priority={false}
+          />
+        </section>
+
         <IconyIframeSinglesWidget
           city={cityName}
           platformId={siteConfig.icony.projectKey}

@@ -1876,3 +1876,35 @@ main { min-height: 60vh; }
     padding-right: 20px;
   }
 }
+
+/* ab50 Conversion Banner */
+.city-banner-conversion {
+  width: 100%;
+  max-width: 1200px;
+  margin: 4rem auto 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(26, 76, 149, 0.1);
+}
+
+.city-banner-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.city-banner-conversion:hover .city-banner-image {
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .city-banner-conversion {
+    margin: 2rem auto 1.5rem;
+    border-radius: 8px;
+  }
+}
