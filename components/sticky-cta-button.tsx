@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 export function StickyCTAButton() {
   const pathname = usePathname();
   
-  // Extract city from pathname (e.g., /partnersuche/berlin -> berlin)
-  const cityMatch = pathname.match(/\/partnersuche\/([^\/]+)/);
-  const city = cityMatch ? cityMatch[1] : null;
+  // Extract city from pathname (only clean Next.js routes, not .php)
+  const partnersucheMatch = pathname.match(/\/partnersuche\/([^\/\.]+?)(?:\.php)?$/);
+  const city = partnersucheMatch && !pathname.includes('.php') ? partnersucheMatch[1] : null;
   
   // Build CTA based on page type
   let ctaText = 'Kostenlos registrieren';
@@ -15,7 +15,7 @@ export function StickyCTAButton() {
   let ariaLabel = 'Kostenlos registrieren';
   
   if (city) {
-    // City page: use location aid
+    // City page: use location aid (only for clean routes)
     const cityName = decodeURIComponent(city)
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
