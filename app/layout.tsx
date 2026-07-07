@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
+import { StickyCTAButton } from "@/components/sticky-cta-button";
 import { siteConfig } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
+        <StickyCTAButton />
       </body>
     </html>
   );
