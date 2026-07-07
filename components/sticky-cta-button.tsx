@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { siteConfig } from '@/data/site';
 
 export function StickyCTAButton() {
   const pathname = usePathname();
@@ -12,7 +11,7 @@ export function StickyCTAButton() {
   
   // Build CTA based on page type
   let ctaText = 'Kostenlos registrieren';
-  let ctaUrl = `${siteConfig.links.registrationCommon}?aid=magazin`;
+  let ctaUrl = 'https://ab50.de/?aid=magazin';
   let ariaLabel = 'Kostenlos registrieren';
   
   if (city) {
@@ -23,11 +22,11 @@ export function StickyCTAButton() {
       .join(' ');
     
     ctaText = `Singles in ${cityName} finden`;
-    ctaUrl = `${siteConfig.links.registrationCommon}?aid=location`;
+    ctaUrl = 'https://ab50.de/?aid=location';
     ariaLabel = `Singles in ${cityName} finden`;
   } else if (pathname.includes('/magazin/')) {
     // Magazine page: use magazin aid
-    ctaUrl = `${siteConfig.links.registrationCommon}?aid=magazin`;
+    ctaUrl = 'https://ab50.de/?aid=magazin';
     ariaLabel = 'Kostenlos registrieren';
   }
   
