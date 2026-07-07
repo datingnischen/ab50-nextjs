@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getCategories } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import type { WpCategory } from "@/lib/wordpress";
@@ -5,8 +6,14 @@ import type { WpCategory } from "@/lib/wordpress";
 function BrandLogo({ footer = false }: { footer?: boolean }) {
   return (
     <a className={`brand-lockup${footer ? " footer-brand-lockup" : ""}`} href="/magazin" aria-label="ab50.de Magazin Startseite">
-      <span className="brand-mark" aria-hidden="true">50+</span>
-      <span className="brand-text"><strong>ab50.de</strong> <em>Magazin</em></span>
+      <Image
+        src="/ab50-logo.png"
+        alt="ab50.de Logo"
+        width={180}
+        height={60}
+        className="brand-logo-image"
+        priority
+      />
     </a>
   );
 }
