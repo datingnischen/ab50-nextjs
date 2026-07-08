@@ -759,20 +759,6 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </aside>
 
           <div className="article-main-column">
-            <section className="article-takeaway-box city-takeaway-box" aria-label="Stadtprofil">
-              <p className="eyebrow">Stadtprofil</p>
-              <h2>Das Wichtigste für Dating ab 50 in {cityName}</h2>
-              <p>{takeawaySummary}</p>
-              <div className="city-meta-grid">
-                {quickFacts.map((fact) => (
-                  <div className="city-meta-card" key={fact.label}>
-                    <span>{fact.label}</span>
-                    <strong>{fact.value}</strong>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             {remainingStatCards.length ? (
               <section className="city-score-section" aria-label={`Dating-Signale für ${cityName}`}>
                 <div className="section-heading compact-heading">
@@ -794,6 +780,20 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 ) : null}
               </section>
             ) : null}
+
+            <section className="article-takeaway-box city-takeaway-box" aria-label="Stadtprofil">
+              <p className="eyebrow">Stadtprofil</p>
+              <h2>Das Wichtigste für Dating ab 50 in {cityName}</h2>
+              <p>{takeawaySummary}</p>
+              <div className="city-meta-grid">
+                {quickFacts.map((fact) => (
+                  <div className="city-meta-card" key={fact.label}>
+                    <span>{fact.label}</span>
+                    <strong>{fact.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {(splitTips.strengths.length || splitTips.weaknesses.length) ? (
               <section className="city-signal-section" aria-label={`Stärken und Schwächen für ${cityName}`}>
