@@ -20,7 +20,7 @@ export function StickyCTAButton() {
         const partnersucheMatch = pathname.match(/\/partnersuche\/([^\/]+)/);
         if (partnersucheMatch) {
           postType = 'stadt';
-          slug = `singles-${partnersucheMatch[1]}`;
+          slug = partnersucheMatch[1];
           aid = 'location';
         }
         // Check if magazine page
