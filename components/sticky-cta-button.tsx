@@ -3,10 +3,14 @@
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+function aidFromPathname(pathname: string) {
+  return pathname.includes('/partnersuche/') ? 'location' : 'magazin';
+}
+
 export function StickyCTAButton() {
   const pathname = usePathname();
   const [ctaText, setCtaText] = useState('Kostenlos registrieren');
-  const [ctaUrl, setCtaUrl] = useState('https://ab50.de/?aid=magazin');
+  const [ctaUrl, setCtaUrl] = useState(`https://ab50.de/?aid=${aidFromPathname(pathname)}`);
 
   useEffect(() => {
     const fetchCTAText = async () => {
@@ -63,8 +67,8 @@ export function StickyCTAButton() {
         setCtaUrl(`https://ab50.de/?aid=${aid}`);
       } catch (error) {
         console.error('Error fetching CTA text:', error);
-        // Fallback to defaults
-        setCtaUrl(`https://ab50.de/?aid=magazin`);
+        // Fallback to route-aware default
+        setCtaUrl(`https://ab50.de/?aid=${aidFromPathname(pathname)}`);
       }
     };
 
