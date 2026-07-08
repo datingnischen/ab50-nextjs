@@ -1951,7 +1951,7 @@ main { min-height: 60vh; }
 /* Sticky CTA Button */
 @media (min-width: 981px) {
   .sticky-cta-button {
-    display: none;
+    display: none !important;
   }
 }
 .sticky-cta-button {
