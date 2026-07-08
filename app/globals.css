@@ -1178,8 +1178,11 @@ main { min-height: 60vh; }
   display: grid;
   justify-items: center;
   padding: 8px 0 34px;
+  isolation: isolate;
 }
 .city-phone-card {
+  position: relative;
+  z-index: 1;
   width: min(100%, 390px);
   border: 1px solid rgba(255,255,255,.82);
   border-radius: 34px;
@@ -1253,6 +1256,7 @@ main { min-height: 60vh; }
   position: absolute;
   left: 0;
   bottom: 0;
+  z-index: 3;
   width: min(265px, 76%);
   border: 1px solid rgba(136,40,42,.14);
   border-radius: 24px;
