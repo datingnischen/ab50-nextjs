@@ -41,7 +41,7 @@ export function StickyCTAButton() {
 
         // Fetch post from WordPress REST API
         const wpUrl = `https://ab50.de/magazin/wp-json/wp/v2/${postType}?slug=${encodeURIComponent(slug)}&_fields=id,acf`;
-        const response = await fetch(wpUrl, { cache: 'revalidate' });
+        const response = await fetch(wpUrl, { cache: 'no-store' });
 
         if (!response.ok) {
           setCtaUrl(`https://ab50.de/?aid=${aid}`);
