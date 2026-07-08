@@ -393,7 +393,7 @@ function FlirtFactorVisualCard({ cityName, score, text }: { cityName: string; sc
   return (
     <div className="flirt-factor-card" aria-label={`Flirt-Faktor ${cityName}`}>
       <div>
-        <span className="flirt-factor-kicker">Stadtprofil</span>
+        <span className="flirt-factor-kicker">Flirt-Faktor</span>
         <strong>{safeScore !== null ? `${formatScoreValue(safeScore)}/100` : `Dating ab 50 in ${cityName}`}</strong>
         <p>{text || `Ein ruhiger Überblick darüber, wie gut ${cityName} für neue Kontakte, passende Orte und einen entspannten Start geeignet ist.`}</p>
       </div>

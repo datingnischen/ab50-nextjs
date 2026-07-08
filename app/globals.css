@@ -1177,7 +1177,7 @@ main { min-height: 60vh; }
   position: relative;
   display: grid;
   justify-items: center;
-  padding: 8px 0 34px;
+  padding: 8px 0 72px 26px;
   isolation: isolate;
 }
 .city-phone-card {
@@ -1254,15 +1254,15 @@ main { min-height: 60vh; }
 }
 .flirt-factor-card {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: -10px;
+  bottom: -18px;
   z-index: 3;
-  width: min(265px, 76%);
-  border: 1px solid rgba(136,40,42,.14);
+  width: min(252px, 72%);
+  border: 1px solid rgba(136,40,42,.16);
   border-radius: 24px;
   padding: 16px;
   background: linear-gradient(145deg, #ffffff, #fdf3f4);
-  box-shadow: 0 18px 60px rgba(52,29,35,.14);
+  box-shadow: 0 26px 80px rgba(52,29,35,.20);
 }
 .flirt-factor-card strong {
   display: block;
