@@ -1785,6 +1785,11 @@ main { min-height: 60vh; }
 .social-card {
   position: relative;
   overflow: hidden;
+  display: grid;
+  gap: 12px;
+  min-height: 218px;
+  padding: 24px;
+  text-decoration: none;
   border: 1px solid rgba(26,76,149,.14);
   border-radius: 28px;
   background:
@@ -1826,9 +1831,15 @@ main { min-height: 60vh; }
   height: 26px;
 }
 .social-icon-facebook {
+  border-radius: 999px;
   background: linear-gradient(135deg, #1877f2, #0f5fc4);
 }
+.social-icon-facebook svg {
+  width: 22px;
+  height: 22px;
+}
 .social-icon-youtube {
+  border-radius: 16px;
   background: linear-gradient(135deg, #ff3131, #d90000);
 }
 .social-card-meta {
@@ -1853,6 +1864,47 @@ main { min-height: 60vh; }
   font-size: .88rem;
   font-weight: 820;
   border: 1px solid rgba(26,76,149,.12);
+}
+.social-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: auto;
+}
+.social-card-footer em {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+.social-card-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(26,76,149,.14);
+  background: rgba(26,76,149,.08);
+  color: var(--brand-dark);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+.social-card-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+.social-card-facebook .social-card-arrow {
+  border-color: rgba(24,119,242,.18);
+  background: rgba(24,119,242,.10);
+  color: #1877f2;
+}
+.social-card-youtube .social-card-arrow {
+  border-color: rgba(255,0,0,.16);
+  background: rgba(255,0,0,.08);
+  color: #d90000;
+}
+.social-card:hover .social-card-arrow {
+  transform: translateX(2px);
 }
 .standard-split-section {
   display: grid;

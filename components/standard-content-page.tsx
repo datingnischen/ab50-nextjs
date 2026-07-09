@@ -22,9 +22,18 @@ function SocialIcon({ platform }: { platform: "facebook" | "youtube" }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
       <path
-        d="M13.6 21v-7.6h2.6l.4-3h-3V8.5c0-.88.24-1.48 1.5-1.48H16.7V4.4c-.28-.03-1.25-.12-2.37-.12-2.34 0-3.95 1.43-3.95 4.07v2.28H7.8v3h2.58V21h3.22Z"
+        d="M15.12 5.32h-2.08c-2.3 0-3.79 1.52-3.79 3.87v2.13H6.8v2.96h2.45V21h3.01v-6.72h2.42l.36-2.96h-2.78V9.51c0-.86.23-1.45 1.44-1.45h1.53V5.39c-.26-.04-1.16-.07-2.13-.07Z"
         fill="currentColor"
       />
+    </svg>
+  );
+}
+
+function SocialArrowIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M7 17 17 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 7h9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -100,7 +109,7 @@ function SocialSection({ page }: { page: StandardPage }) {
       <div className="section-heading">
         <p className="eyebrow">Kanäle & Community</p>
         <h2>Social-Media-Übersicht</h2>
-        <p>Hier findest du die wichtigsten Einstiege, wenn du ab50.de auch außerhalb der Plattform begleiten möchtest.</p>
+        <p>Hier findest du die wichtigsten Facebook- und YouTube-Einstiege, wenn du ab50.de auch außerhalb der Plattform begleiten möchtest.</p>
       </div>
       <div className="card-grid standard-card-grid social-card-grid">
         {page.socialLinks.map((link) => (
@@ -116,7 +125,12 @@ function SocialSection({ page }: { page: StandardPage }) {
             </div>
             <strong>{link.label}</strong>
             <span>{link.text}</span>
-            <em>{getSocialActionLabel(link)}</em>
+            <div className="social-card-footer">
+              <em>{getSocialActionLabel(link)}</em>
+              <span className="social-card-arrow" aria-hidden="true">
+                <SocialArrowIcon />
+              </span>
+            </div>
           </a>
         ))}
       </div>
