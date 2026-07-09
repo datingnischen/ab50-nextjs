@@ -6,6 +6,35 @@ function externalAttrs(external?: boolean) {
   return external ? { target: "_blank", rel: "noopener noreferrer" } : undefined;
 }
 
+function SocialIcon({ platform }: { platform: "facebook" | "youtube" }) {
+  if (platform === "youtube") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M21.3 7.2a2.95 2.95 0 0 0-2.08-2.09C17.36 4.6 12 4.6 12 4.6s-5.36 0-7.22.51A2.95 2.95 0 0 0 2.7 7.2 31 31 0 0 0 2.2 12c0 1.62.16 3.22.5 4.8a2.95 2.95 0 0 0 2.08 2.09c1.86.51 7.22.51 7.22.51s5.36 0 7.22-.51a2.95 2.95 0 0 0 2.08-2.09c.34-1.58.5-3.18.5-4.8 0-1.62-.16-3.22-.5-4.8Z"
+          fill="currentColor"
+        />
+        <path d="m10.2 15.3 5.2-3.3-5.2-3.3v6.6Z" fill="#fff" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M13.6 21v-7.6h2.6l.4-3h-3V8.5c0-.88.24-1.48 1.5-1.48H16.7V4.4c-.28-.03-1.25-.12-2.37-.12-2.34 0-3.95 1.43-3.95 4.07v2.28H7.8v3h2.58V21h3.22Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function getSocialActionLabel(link: NonNullable<StandardPage["socialLinks"]>[number]) {
+  if (link.ctaLabel) return link.ctaLabel;
+  if (link.platform === "youtube") return "Videos ansehen";
+  return link.kind.toLowerCase().includes("gruppe") ? "Gruppe öffnen" : "Seite ansehen";
+}
+
 function StandardHero({ page }: { page: StandardPage }) {
   return (
     <header className="standard-hero ab50-standard-hero">
@@ -73,12 +102,21 @@ function SocialSection({ page }: { page: StandardPage }) {
         <h2>Social-Media-Übersicht</h2>
         <p>Hier findest du die wichtigsten Einstiege, wenn du ab50.de auch außerhalb der Plattform begleiten möchtest.</p>
       </div>
-      <div className="card-grid standard-card-grid">
+      <div className="card-grid standard-card-grid social-card-grid">
         {page.socialLinks.map((link) => (
-          <a className="card standard-card" href={link.href} key={link.href} {...externalAttrs(link.external)}>
+          <a className={`card standard-card social-card social-card-${link.platform}`} href={link.href} key={link.href} {...externalAttrs(link.external)}>
+            <div className="social-card-top">
+              <span className={`social-icon social-icon-${link.platform}`}>
+                <SocialIcon platform={link.platform} />
+              </span>
+              <div className="social-card-meta">
+                <small>{link.platform === "facebook" ? "Facebook" : "YouTube"}</small>
+                <span>{link.kind}</span>
+              </div>
+            </div>
             <strong>{link.label}</strong>
             <span>{link.text}</span>
-            <em>Kanal öffnen</em>
+            <em>{getSocialActionLabel(link)}</em>
           </a>
         ))}
       </div>

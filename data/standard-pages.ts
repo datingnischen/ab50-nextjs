@@ -18,6 +18,9 @@ type Card = {
 
 type SocialLink = Link & {
   text: string;
+  platform: "facebook" | "youtube";
+  kind: string;
+  ctaLabel?: string;
 };
 
 export type StandardPage = {
@@ -106,18 +109,27 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         label: "Facebook-Seite",
         href: "https://www.facebook.com/ab50de/",
         text: "Neuigkeiten, Tipps und interessante Beiträge rund um Partnersuche ab 50.",
+        platform: "facebook",
+        kind: "Offizielle Seite",
+        ctaLabel: "Seite ansehen",
         external: true,
       },
       {
         label: "Facebook-Gruppe",
         href: "https://www.facebook.com/groups/414302856141869/",
         text: "Tausche dich mit anderen Singles über 50 aus und knüpfe neue Kontakte in entspannter Atmosphäre.",
+        platform: "facebook",
+        kind: "Community-Gruppe",
+        ctaLabel: "Gruppe öffnen",
         external: true,
       },
       {
         label: "YouTube",
         href: "https://www.youtube.com/@ab50de",
         text: "Videos, Erfahrungsberichte und Tipps rund um Partnerschaft, Begegnungen und Dating für Singles ab 50.",
+        platform: "youtube",
+        kind: "Video-Kanal",
+        ctaLabel: "Kanal ansehen",
         external: true,
       },
     ],
