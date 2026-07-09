@@ -75,6 +75,14 @@ type FooterColumn = {
 
 const footerColumns: FooterColumn[] = [
   {
+    title: "Über uns",
+    links: [
+      { label: "Geschichte", href: "/ueber-uns/geschichte" },
+      { label: "Social Media", href: "/ueber-uns/social-media" },
+      { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen" },
+    ],
+  },
+  {
     title: "Magazin",
     links: [
       { label: "50plus Magazin", href: "/magazin" },
