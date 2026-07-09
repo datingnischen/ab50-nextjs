@@ -15,36 +15,36 @@ export function StickyCTAButton() {
   useEffect(() => {
     const fetchCTAText = async () => {
       try {
-        // Determine post type and slug
-        let postType = '';
+        // Determine endpoint and slug
+        let endpoint = '';
         let slug = '';
         let aid = 'magazin';
 
         // Check if city/partnersuche page
         const partnersucheMatch = pathname.match(/\/partnersuche\/([^\/]+)/);
         if (partnersucheMatch) {
-          postType = 'stadt';
+          endpoint = 'stadt';
           slug = partnersucheMatch[1];
           aid = 'location';
         }
-        // Check if magazine page
+        // Check if magazine article
         else if (pathname.includes('/magazin/')) {
           const magazinMatch = pathname.match(/\/magazin\/([^\/]+)/);
           if (magazinMatch) {
-            postType = 'post';
+            endpoint = 'posts';
             slug = magazinMatch[1];
             aid = 'magazin';
           }
         }
 
-        if (!postType || !slug) {
+        if (!endpoint || !slug) {
           // Use defaults
           setCtaUrl(`https://ab50.de/?aid=${aid}`);
           return;
         }
 
-        // Fetch post from WordPress REST API
-        const wpUrl = `https://ab50.de/magazin/wp-json/wp/v2/${postType}?slug=${encodeURIComponent(slug)}&_fields=id,acf`;
+        // Fetch CTA source record from WordPress REST API
+        const wpUrl = `https://ab50.de/magazin/wp-json/wp/v2/${endpoint}?slug=${encodeURIComponent(slug)}&_fields=id,acf`;
         const response = await fetch(wpUrl, { cache: 'no-store' });
 
         if (!response.ok) {
