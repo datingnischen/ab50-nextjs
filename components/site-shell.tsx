@@ -77,6 +77,7 @@ const footerColumns: FooterColumn[] = [
   {
     title: "Über uns",
     links: [
+      { label: "Über ab50.de", href: "/ueber-uns" },
       { label: "Geschichte", href: "/ueber-uns/geschichte" },
       { label: "Social Media", href: "/ueber-uns/social-media" },
       { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen" },
@@ -104,8 +105,6 @@ const footerColumns: FooterColumn[] = [
     title: "Service",
     links: [
       { label: "Regionale Partnersuche", href: "/partnersuche/" },
-      { label: "Über ab50.de", href: "/ueber-uns" },
-      { label: "ab50.de Startseite", href: siteConfig.links.home, external: true },
       { label: "Impressum", href: siteConfig.links.imprint, external: true },
       { label: "Datenschutz", href: siteConfig.links.privacy, external: true },
       { label: "AGB", href: siteConfig.links.terms, external: true },
