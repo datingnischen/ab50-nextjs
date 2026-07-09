@@ -1736,6 +1736,19 @@ main { min-height: 60vh; }
   line-height: 1.08;
   letter-spacing: -.04em;
 }
+.standard-hero-figure {
+  margin: 22px 0 0;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(26,76,149,.12);
+  box-shadow: 0 18px 42px rgba(26,76,149,.08);
+  background: #fff;
+}
+.standard-hero-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .standard-hero-card {
   display: grid;
   gap: 12px;
@@ -1765,6 +1778,14 @@ main { min-height: 60vh; }
   padding: 22px;
   text-decoration: none;
 }
+.standard-card-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  border: 1px solid rgba(26,76,149,.10);
+  background: #fff;
+}
 .standard-card-grid .standard-card strong {
   font-size: 1.15rem;
   line-height: 1.28;
@@ -1778,6 +1799,67 @@ main { min-height: 60vh; }
   color: var(--accent);
   font-style: normal;
   font-weight: 850;
+}
+.standard-detail-stack {
+  display: grid;
+  gap: 22px;
+}
+.standard-detail-card {
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 18px 54px rgba(26,76,149,.07);
+}
+.standard-detail-grid {
+  display: grid;
+  gap: 22px;
+}
+.standard-detail-grid.has-media {
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+  align-items: center;
+}
+.standard-detail-copy h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  line-height: 1.15;
+}
+.standard-detail-copy p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+.standard-detail-copy p:last-child {
+  margin-bottom: 0;
+}
+.standard-detail-note {
+  font-size: 1.35rem;
+  line-height: 1;
+  letter-spacing: .08em;
+  color: var(--brand-dark);
+}
+.standard-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 6px;
+}
+.standard-detail-media {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(26,76,149,.12);
+  background: linear-gradient(180deg, #fff, #f8fbff);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+}
+.standard-detail-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.standard-detail-media figcaption {
+  padding: 14px 16px 16px;
+  color: var(--muted);
+  font-size: .94rem;
 }
 .social-card-grid {
   align-items: stretch;
@@ -1993,7 +2075,8 @@ main { min-height: 60vh; }
   .card-grid,
   .standard-hero-grid,
   .standard-split-section,
-  .history-story-card {
+  .history-story-card,
+  .standard-detail-grid.has-media {
     grid-template-columns: 1fr;
   }
 }
@@ -2002,7 +2085,8 @@ main { min-height: 60vh; }
   .standard-hero,
   .standard-card-grid .standard-card,
   .standard-hero-card,
-  .standard-info-panel {
+  .standard-info-panel,
+  .standard-detail-card {
     padding-left: 20px;
     padding-right: 20px;
   }

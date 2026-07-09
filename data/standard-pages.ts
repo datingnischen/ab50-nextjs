@@ -14,6 +14,25 @@ type Card = {
   text: string;
   href?: string;
   label?: string;
+  kicker?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+};
+
+type MediaAsset = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+type DetailSection = {
+  eyebrow?: string;
+  title: string;
+  paragraphs: string[];
+  image?: MediaAsset;
+  imagePosition?: "left" | "right";
+  link?: Link;
+  note?: string;
 };
 
 type SocialLink = Link & {
@@ -31,6 +50,8 @@ export type StandardPage = {
   title: string;
   description: string;
   lead: string;
+  heroImageSrc?: string;
+  heroImageAlt?: string;
   primaryCtaLabel: string;
   primaryCtaHref: string;
   secondaryCtaLabel?: string;
@@ -39,6 +60,7 @@ export type StandardPage = {
   highlights: string[];
   cards?: Card[];
   socialLinks?: SocialLink[];
+  detailSections?: DetailSection[];
   seo: {
     title: string;
     description: string;
@@ -54,34 +76,102 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     navLabel: "Bewertungen & Erfahrungen",
     eyebrow: "Erfahrungen & Vertrauen",
     title: "Bewertungen und Erfahrungen zu ab50.de",
-    description: "Einordnung von Nutzerfeedback, Vergleichsportalen und Erfahrungen mit ab50.de.",
+    description: "Authentische Nutzermeinungen, Trustpilot-Bewertungen und Empfehlungen von Vergleichsportalen zu ab50.de.",
     lead:
-      "Wer eine Singlebörse ab 50 ausprobiert, möchte wissen, wie andere sie erleben. Hier findest du einen kompakten Überblick über externe Bewertungen, Vergleichsseiten und wichtige Hinweise, damit du dir ein realistisches Bild machen kannst.",
-    primaryCtaLabel: "ab50.de kostenlos ausprobieren",
+      "Wer eine Singlebörse ab 50 ausprobiert, möchte wissen, wie andere sie erleben. Hier findest du die wichtigsten Nutzerstimmen, externe Bewertungen und Vergleichsseiten auf einen Blick — nah an den Originalinhalten der bestehenden ab50.de-Seite.",
+    heroImageSrc:
+      "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
+    heroImageAlt: "Frau mit Daumen hoch als Motiv für Bewertungen und Erfahrungen",
+    primaryCtaLabel: "Zur kostenlosen Registrierung",
     primaryCtaHref: registrationHref,
     secondaryCtaLabel: "Zur Social-Media-Seite",
     secondaryCtaHref: ABOUT_SOCIAL_PATH,
     template: "trust",
-    highlights: ["echte Nutzerstimmen", "externe Bewertungsseiten", "Vergleichsportale", "transparent einordnen"],
+    highlights: ["echte Nutzermeinungen", "Trustpilot", "Vergleichsportale", "transparent einordnen"],
     cards: [
       {
-        title: "Warum Nutzerfeedback wichtig ist",
+        title: "Warum uns echte Nutzermeinungen wichtig sind",
         text:
-          "Bei ab50.de stehen die Erfahrungen der Mitglieder im Mittelpunkt. Positive Rückmeldungen zeigen, was bereits gut funktioniert, und kritische Hinweise helfen dabei, die Plattform weiter zu verbessern.",
+          "Bei ab50.de stehen unsere Mitglieder im Mittelpunkt – ihr Feedback hilft uns, die Plattform kontinuierlich zu verbessern und optimal an die Bedürfnisse der Silver-Ager-Community anzupassen. Positive Erfahrungen bestärken uns in unserer Arbeit, während konstruktive Kritik zeigt, wo wir noch besser werden können. Ehrlichkeit und Transparenz sind uns wichtig – deshalb geben wir hier einen authentischen Überblick.",
       },
       {
-        title: "Bewertungen auf Trustpilot",
+        title: "Hervorragende Bewertungen auf Trustpilot",
         text:
-          "Viele Mitglieder bewerten ab50.de auf Trustpilot sehr positiv. Besonders häufig genannt werden die einfache Bedienung, der klare Fokus auf Singles ab 50 und die ruhige Ausrichtung der Plattform.",
+          "Viele unserer Mitglieder bewerten ab50.de auf Trustpilot mit Bestnoten. Besonders geschätzt werden die einfache Bedienbarkeit und die hohe Erfolgsquote. Mit einer Durchschnittsbewertung von 4,6 von 5 Sternen zeigt sich die Zufriedenheit unserer Community.",
         href: "https://www.trustpilot.com/review/ab50.de",
         label: "Trustpilot öffnen",
+        kicker: "⭐⭐⭐⭐⭐",
       },
       {
-        title: "Empfehlungen auf Vergleichsseiten",
+        title: "Empfehlungen auf renommierten Vergleichsseiten",
         text:
-          "ab50.de wird regelmäßig auf Vergleichsportalen wie Singleboersen-Überblick.de eingeordnet. Dort findest du zusätzliche Perspektiven auf Zielgruppe, Funktionen und Gesamteindruck.",
+          "ab50.de wird regelmäßig von Vergleichsportalen wie Singleboersen-Überblick.de, DatingJunge und Singlebörsen-Vergleich empfohlen. Diese Plattformen heben besonders die benutzerfreundliche Gestaltung und den gezielten Fokus auf Singles über 50 hervor.",
         href: "https://singleboersen-ueberblick.de/partnersuche/ab50/",
         label: "Vergleich ansehen",
+        imageSrc:
+          "https://static-cms.icony-hosting.de/cms/0AAC065690E55C2E5C07C90516AFDAF309FBFA84E8003071E7240115A5B9F98D/empfohlen-siegel-45sterne-330x60.jpg",
+        imageAlt: "Empfohlen-Siegel mit 4,5 Sternen",
+      },
+    ],
+    detailSections: [
+      {
+        eyebrow: "Originalinhalte übernommen",
+        title: "Warum uns echte Nutzermeinungen wichtig sind",
+        paragraphs: [
+          "Bei ab50.de stehen die Mitglieder im Mittelpunkt – ihr Feedback hilft dabei, die Plattform kontinuierlich weiterzuentwickeln und noch besser auf die Bedürfnisse von Singles ab 50 auszurichten.",
+          "Positive Erfahrungen zeigen, was bereits gut funktioniert. Kritische Hinweise sind genauso wertvoll, weil sie konkrete Ansatzpunkte liefern, um Abläufe, Bedienbarkeit und Vertrauen weiter zu stärken.",
+          "Transparenz gehört dazu: Wer sich für eine Partnersuche ab 50 entscheidet, soll sich auf nachvollziehbare Einordnungen und einen ehrlichen ersten Eindruck verlassen können.",
+        ],
+        image: {
+          src: "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
+          alt: "Frau zeigt mit erhobenem Daumen in die Kamera",
+          caption: "Das zentrale Bild der ursprünglichen Bewertungsseite wurde in die neue Vercel-Seite übernommen.",
+        },
+      },
+      {
+        eyebrow: "Externe Stimmen",
+        title: "Hervorragende Bewertungen auf Trustpilot",
+        paragraphs: [
+          "Viele Mitglieder heben auf Trustpilot besonders die einfache Bedienbarkeit, die ruhige Ausrichtung und den klaren Fokus auf Singles ab 50 hervor.",
+          "Gerade für Menschen mit Lebenserfahrung ist wichtig, dass eine Plattform verständlich bleibt und nicht hektisch wirkt. Genau diese Punkte tauchen in den Rückmeldungen immer wieder auf.",
+        ],
+        note: "⭐⭐⭐⭐⭐",
+        link: {
+          label: "Trustpilot öffnen",
+          href: "https://www.trustpilot.com/review/ab50.de",
+          external: true,
+        },
+      },
+      {
+        eyebrow: "Weitere Einordnungen",
+        title: "Empfehlungen auf Vergleichsseiten",
+        paragraphs: [
+          "Neben direkten Nutzerbewertungen wird ab50.de auch auf Vergleichsportalen wie Singleboersen-Überblick.de eingeordnet. Dort bekommst du eine zusätzliche Perspektive auf Zielgruppe, Gesamteindruck und Positionierung.",
+          "Auf der ursprünglichen Seite wurden außerdem weitere Portale wie DatingJunge und Singlebörsen-Vergleich als ergänzende Orientierung genannt. Diese Einordnungen wurden in die neue Seite textlich übernommen.",
+        ],
+        image: {
+          src: "https://static-cms.icony-hosting.de/cms/0AAC065690E55C2E5C07C90516AFDAF309FBFA84E8003071E7240115A5B9F98D/empfohlen-siegel-45sterne-330x60.jpg",
+          alt: "Empfohlen-Siegel mit Sternebewertung",
+          caption: "Empfehlungs-Siegel aus der bisherigen Bewertungsseite.",
+        },
+        imagePosition: "left",
+        link: {
+          label: "Vergleich ansehen",
+          href: "https://singleboersen-ueberblick.de/partnersuche/ab50/",
+          external: true,
+        },
+      },
+      {
+        eyebrow: "Selbst testen",
+        title: "Teste ab50.de selbst",
+        paragraphs: [
+          "Am Ende zählt immer dein eigener Eindruck. Schau dir Funktionen, Tonalität und potenzielle Kontakte in Ruhe an und entscheide selbst, ob ab50.de zu deiner Art von Partnersuche passt.",
+          "So wurde auch die bisherige Seite abgeschlossen: mit einer klaren Einladung, die Plattform unverbindlich selbst kennenzulernen.",
+        ],
+        link: {
+          label: "Zur kostenlosen Registrierung",
+          href: registrationHref,
+        },
       },
     ],
     seo: {

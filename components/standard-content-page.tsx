@@ -52,6 +52,11 @@ function StandardHero({ page }: { page: StandardPage }) {
           <p className="eyebrow">{page.eyebrow}</p>
           <h1>{page.title}</h1>
           <p className="lead">{page.lead}</p>
+          {page.heroImageSrc ? (
+            <figure className="standard-hero-figure">
+              <img src={page.heroImageSrc} alt={page.heroImageAlt ?? page.title} loading="lazy" />
+            </figure>
+          ) : null}
           <div className="trust-chip-row" aria-label="Vorteile">
             {page.highlights.map((item) => <span key={item}>{item}</span>)}
           </div>
@@ -85,8 +90,10 @@ function CardsSection({ page }: { page: StandardPage }) {
         {page.cards.map((card) => {
           const content = (
             <>
+              {card.imageSrc ? <img className="standard-card-image" src={card.imageSrc} alt={card.imageAlt ?? card.title} loading="lazy" /> : null}
               <strong>{card.title}</strong>
               <span>{card.text}</span>
+              {card.kicker ? <span className="standard-card-kicker">{card.kicker}</span> : null}
               {card.label ? <em>{card.label}</em> : null}
             </>
           );
@@ -98,6 +105,50 @@ function CardsSection({ page }: { page: StandardPage }) {
           );
         })}
       </div>
+    </section>
+  );
+}
+
+function DetailSections({ page }: { page: StandardPage }) {
+  if (!page.detailSections?.length) return null;
+
+  return (
+    <section className="container section-block standard-detail-stack">
+      {page.detailSections.map((section) => {
+        const imageFirst = section.image && section.imagePosition === "left";
+        const copy = (
+          <div className="standard-detail-copy">
+            {section.eyebrow ? <p className="eyebrow">{section.eyebrow}</p> : null}
+            <h2>{section.title}</h2>
+            {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            {section.note ? <p className="standard-detail-note">{section.note}</p> : null}
+            {section.link ? (
+              <div className="standard-detail-actions">
+                <a className="button-secondary" href={section.link.href} {...externalAttrs(section.link.external)}>
+                  {section.link.label}
+                </a>
+              </div>
+            ) : null}
+          </div>
+        );
+
+        const media = section.image ? (
+          <figure className="standard-detail-media">
+            <img src={section.image.src} alt={section.image.alt} loading="lazy" />
+            {section.image.caption ? <figcaption>{section.image.caption}</figcaption> : null}
+          </figure>
+        ) : null;
+
+        return (
+          <article className="standard-detail-card" key={section.title}>
+            <div className={`standard-detail-grid${section.image ? " has-media" : ""}`}>
+              {imageFirst ? media : null}
+              {copy}
+              {!imageFirst ? media : null}
+            </div>
+          </article>
+        );
+      })}
     </section>
   );
 }
@@ -184,6 +235,7 @@ export function StandardContentPage({ page }: { page: StandardPage }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <StandardHero page={page} />
       {page.cards?.length ? <CardsSection page={page} /> : null}
+      {page.detailSections?.length ? <DetailSections page={page} /> : null}
       <TemplateSpecificSection page={page} />
       <section className="container section-block standard-final-cta">
         <div className="city-cta-box">
