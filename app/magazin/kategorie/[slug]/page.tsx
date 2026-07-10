@@ -110,7 +110,7 @@ export default async function CategoryPage({ params }: PageProps) {
             {relatedCategories.map((item) => (
               <a className="category-topic-card" href={categoryPath(item.slug)} key={item.slug}>
                 <span>{item.name}</span>
-                <strong>{item.description || `Mehr Orientierung und Beiträge aus dem 50plus Magazin zu ${item.name.toLowerCase()}.`}</strong>
+                <strong>{item.description || `Praktische Tipps und echte Antworten zum Thema ${item.name.toLowerCase()}.`}</strong>
                 <em className="card-read-more">Thema öffnen</em>
               </a>
             ))}
