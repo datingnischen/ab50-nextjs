@@ -117,9 +117,9 @@ export function SiteFooter() {
     <footer className="site-footer-shell">
       <section className="footer-cta" aria-label="Registrierung">
         <div>
-          <p className="eyebrow">Für Singles mit Lebenserfahrung</p>
-          <h2>Finde Kontakte, Gespräche und Nähe — ohne Zeitverschwendung.</h2>
-          <p>Singles ab 50, die wirklich zu dir passen: Profil anlegen, echte Matches finden, verbinden.</p>
+          <p className="eyebrow">Dating ab 50 — entspannt und sicher</p>
+          <h2>Treffe passende Singles und starte neue Beziehungen.</h2>
+          <p>Profil anlegen kostenlos, seriöse Matches, hundertfach erfolgreiche Paare ab 50. Nicht ewig suchen, sondern verbinden.</p>
         </div>
         <a className="footer-cta-button" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
       </section>
@@ -127,11 +127,11 @@ export function SiteFooter() {
       <div className="footer-main">
         <div className="footer-brand-panel">
           <BrandLogo footer />
-          <p>Das 50plus Magazin: praktische Tipps zu Dating, Sicherheit, Kommunikation und Beziehung nach 50.</p>
+          <p>Das 50plus Magazin: echte Tipps zu Dating ab 50, Sicherheit, Kommunikation und wie du neue Beziehungen aufbaust.</p>
           <ul className="footer-trust-list" aria-label="Vertrauensmerkmale">
-            <li>Kostenlos Profile anlegen und Kontakte durchstöbern</li>
-            <li>Verifizierte Singles und sichere Nachrichtenbox</li>
-            <li>Erfolgsgeschichten von über 50-Jährigen</li>
+            <li>Profil kostenlos — kein Abo nötig zum Stöbern</li>
+            <li>Alle Profile verifiziert, sichere Nachrichtenbox</li>
+            <li>Echte Erfolgsgeschichten von über 50-Jährigen</li>
           </ul>
         </div>
 
