@@ -714,9 +714,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <p>{score !== null ? scoreSummary(cityName, score, city.acf?.flirt_factor_text) : (city.acf?.city_highlight_text || `Welche Orte sich in ${cityName} für erste Treffen eignen, worauf du achten kannst und wie du entspannt ins Kennenlernen startest.`)}</p>
           </article>
           <article className="overview-intent-card overview-intent-card-trust city-intro-card">
-            <span>Was du mitnimmst</span>
-            <strong>{tocItems.length ? `${tocItems.length} klare Themenblöcke statt Textwüste` : `Worauf Singles in ${cityName} besonders achten sollten`}</strong>
-            <p>Du siehst schneller, welche Orte, Tipps und nächsten Schritte für deine Situation in ${cityName} wirklich hilfreich sind.</p>
+            <span>Darum lohnt sich die Seite</span>
+            <strong>{tocItems.length ? `Wo du in ${cityName} leichter ins Gespräch kommst` : `Worauf es in ${cityName} beim Kennenlernen ankommt`}</strong>
+            <p>{`Du bekommst Date-Ideen, passende Treffpunkte und konkrete Tipps, damit du in ${cityName} entspannter neue Menschen kennenlernst.`}</p>
           </article>
           <article className="overview-intent-card overview-intent-card-featured city-intro-card">
             <span>Nächster Schritt</span>
