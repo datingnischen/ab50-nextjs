@@ -33,15 +33,15 @@ const aboutCards = [
   },
   {
     eyebrow: "Bewertungen & Erfahrungen",
-    title: "Vertrauen entsteht durch echte Einblicke",
-    text: "Wenn du wissen möchtest, wie andere ab50.de erleben, findest du dort Hinweise zu Nutzerfeedback, Trustpilot und externen Vergleichsseiten.",
+    title: "So bewerten echte Singles ab50.de",
+    text: "Nutzerfeedback, Trustpilot-Bewertungen und Erfahrungsberichte von Menschen wie dir — damit du weißt, was andere denken.",
     href: ABOUT_REVIEWS_PATH,
     label: "Zu Bewertungen & Erfahrungen",
   },
   {
     eyebrow: "50plus Magazin",
-    title: "Mehr Orientierung für Dating mit Lebenserfahrung",
-    text: "Neben der Partnersuche findest du im Magazin alltagsnahe Inhalte zu Profil, Kommunikation, Vertrauen und Neuanfang ab 50.",
+    title: "Echte Tipps zu Dating, Sicherheit und Kontakten",
+    text: "Neben der Partnersuche: Wie du ein gutes Profil schreibst, echte Menschen erkennst, sicher bleibst und neue Nähe aufbaust.",
     href: "/magazin",
     label: "Zum Magazin",
   },
@@ -49,21 +49,21 @@ const aboutCards = [
 
 const aboutIntroCards = [
   {
-    eyebrow: "Einordnung",
-    title: "Worum es auf diesen Seiten geht",
-    text: "Hier findest du die Bereiche, die Vertrauen, Hintergrund und Orientierung rund um ab50.de am schnellsten greifbar machen.",
+    eyebrow: "Wer steckt dahinter?",
+    title: "Hinter den Kulissen: ab50.de & dein Vertrauen",
+    text: "Unsere Geschichte, wie andere uns bewerten, und wo du die Community findest — damit du weißt, wer du bist.",
     variant: "guide",
   },
   {
-    eyebrow: "Vertrauen",
-    title: "Warum Bewertungen und Transparenz so wichtig sind",
-    text: "Gerade bei Partnersuche ab 50 zählt ein ruhiger, glaubwürdiger Eindruck. Deshalb führen wir Bewertungen, Geschichte und Community nicht versteckt, sondern sichtbar zusammen.",
+    eyebrow: "Authentische Bewertungen",
+    title: "Was echte Singles über ab50.de denken",
+    text: "Kein Hype, nur echte Erfahrungen von Menschen wie dir. Trustpilot, Community-Feedback und externe Vergleiche in voller Transparenz.",
     variant: "trust",
   },
   {
-    eyebrow: "Nächster Schritt",
-    title: "Danach kannst du direkt weiterklicken",
-    text: "Ob Geschichte, Social Media, Bewertungen oder Magazin: Von hier aus kommst du ohne Umwege an die wichtigsten Hintergrundseiten von ab50.de.",
+    eyebrow: "Direkt weitermachen",
+    title: "Von hier aus zum nächsten Schritt",
+    text: "Geschichte lesen, Social Media checken, Bewertungen ansehen oder direkt kostenlos starten — alles auf dieser Seite verlinkt.",
     variant: "featured",
   },
 ] as const;
@@ -101,22 +101,22 @@ export default function UeberUnsPage() {
               <p className="eyebrow">Hinter den Kulissen</p>
               <h1>Über ab50.de</h1>
               <p className="lead">ab50.de begleitet Singles mit Lebenserfahrung auf dem Weg zu neuen Kontakten, guten Gesprächen und einem ruhigen, verständlichen Einstieg in die Partnersuche.</p>
-              <div className="trust-chip-row" aria-label="Einblicke rund um ab50.de">
+              <div className="trust-chip-row" aria-label="Wichtige Infos zu ab50.de">
                 <span>Unsere Geschichte</span>
                 <span>Social Media & Community</span>
                 <span>Bewertungen & Erfahrungen</span>
-                <span>Magazin & Orientierung</span>
+                <span>Dating Tipps & Sicherheit</span>
               </div>
               <div className="hero-actions">
                 <a className="button-primary" href={ABOUT_HISTORY_PATH}>Unsere Geschichte ansehen</a>
                 <a className="button-secondary" href={ABOUT_SOCIAL_PATH}>Social Media entdecken</a>
               </div>
             </div>
-            <aside className="standard-hero-card ab50-standard-hero-card" aria-label="Überblick zu ab50.de">
+            <aside className="standard-hero-card ab50-standard-hero-card" aria-label="Was ab50.de ausmacht">
               <strong>{siteConfig.name}</strong>
-              <span>ruhiger Einstieg in die Partnersuche</span>
-              <span>mehr Vertrauen durch transparente Einblicke</span>
-              <span>Magazine, Community und Plattform sinnvoll verbunden</span>
+              <span>für Singles ab 50, die echte Nähe suchen</span>
+              <span>Authentische Profile & Sicherheit an erster Stelle</span>
+              <span>Community, Tipps und echte Erfolgsstorys</span>
             </aside>
           </div>
         </header>
@@ -134,10 +134,10 @@ export default function UeberUnsPage() {
         <section className="container article-body-grid about-page-grid">
           <aside className="article-side-column about-page-sidebar">
             <div className="city-sidebar-stack">
-              <section className="city-sidebar-card magazine-about-sidebar" aria-label="Schnell weiter">
-                <p className="eyebrow">Schnell weiter</p>
-                <strong>Die wichtigsten Einblicke direkt öffnen</strong>
-                <p>Hier findest du die Seiten, auf denen wir Hintergründe, Erfahrung und Einblicke ausführlicher zeigen.</p>
+              <section className="city-sidebar-card magazine-about-sidebar" aria-label="Schnelllinks">
+                <p className="eyebrow">Schnell zum Punkt</p>
+                <strong>Was willst du über ab50.de wissen?</strong>
+                <p>Hier sind die wichtigsten Links: Wie wir entstanden sind, was echte Singles sagen, wo du uns online findest.</p>
                 <ul className="city-key-points about-quick-links">
                   {aboutQuickLinks.map((link) => (
                     <li key={link.href}><a href={link.href}>{link.label}</a></li>
@@ -154,9 +154,9 @@ export default function UeberUnsPage() {
           <div className="article-main-column">
             <section className="section-block about-main-intro-card">
               <div className="section-heading">
-                <p className="eyebrow">Hintergründe & Vertrauen</p>
-                <h2>Die wichtigsten Hintergrundseiten auf einen Blick</h2>
-                <p>Statt alles auf einer Seite zu bündeln, führt dich dieser Überblick direkt zu den Bereichen, die für Vertrauen, Einordnung und zusätzliche Einblicke besonders wichtig sind.</p>
+                <p className="eyebrow">Vier wichtige Seiten</p>
+                <h2>Was willst du über ab50.de erfahren?</h2>
+                <p>Unsere Geschichte, echte Bewertungen, wo du uns online findest und wie du sicher startest — alles direkt verlinkt.</p>
               </div>
               <div className="card-grid standard-card-grid">
                 {aboutCards.map((card) => (
@@ -173,8 +173,8 @@ export default function UeberUnsPage() {
             <section className="two-column standard-split-section about-bottom-split">
               <div className="stats-panel standard-info-panel">
                 <p className="eyebrow">Warum diese Seite wichtig ist</p>
-                <h2>Mehr Vertrauen vor dem ersten Klick</h2>
-                <p>Wer eine Plattform ausprobiert, möchte nicht nur Funktionen sehen, sondern auch verstehen, wie sie öffentlich auftritt, wo zusätzliche Einblicke zu finden sind und wie andere Nutzer sie bewerten.</p>
+                <h2>Diese Informationen helfen dir, Vertrauen zu fassen</h2>
+                <p>Du willst die Plattform verstehen, sehen wie andere Singles sie bewerten und wissen, ob sie zu dir passt — das ist völlig normal. Hier findest du alle Antworten.</p>
               </div>
               <div className="city-cta-box city-cta-box-compact">
                 <p className="eyebrow">Direkter Einstieg</p>
