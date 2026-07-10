@@ -61,9 +61,9 @@ export default async function CategoryPage({ params }: PageProps) {
           <p className="eyebrow">Magazin-Kategorie</p>
           <h1>{category.name}</h1>
           <p className="lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
-          <div className="trust-chip-row" aria-label="Kategorievorteile">
-            <span>Ruhige Orientierung</span>
-            <span>Redaktionell kuratiert</span>
+          <div className="trust-chip-row" aria-label="Was du hier findest">
+            <span>Echte Tipps zum Thema</span>
+            <span>Von Dating-Experten</span>
             <span>Für Singles ab 50</span>
           </div>
           <div className="hero-actions">
@@ -71,10 +71,10 @@ export default async function CategoryPage({ params }: PageProps) {
             <a className="button-secondary" href="/magazin">Alle Themen ansehen</a>
           </div>
         </div>
-        <aside className="category-hero-sidecard" aria-label="Weiterlesen in dieser Rubrik">
-          <p className="eyebrow">Schneller Einstieg</p>
-          <strong>Worum es in dieser Rubrik geht</strong>
-          <p>Hier findest du sorgfältig ausgewählte Beiträge rund um {category.name.toLowerCase()}, damit du schneller zu den Inhalten kommst, die dir gerade wirklich weiterhelfen.</p>
+        <aside className="category-hero-sidecard" aria-label="Beliebte Artikel in dieser Rubrik">
+          <p className="eyebrow">Top Artikel</p>
+          <strong>Meistgelesen in {category.name.toLowerCase()}</strong>
+          <p>Diese Beiträge helfen dir am schnellsten weiter: Praktische Tipps, echte Lösungen und das Wichtigste zu diesem Thema — ohne Umschweife.</p>
           <div className="index-mini-list">
             {featuredPosts.map((post) => (
               <a href={postPath(post.slug)} key={post.slug}>{stripHtml(post.title)}</a>
@@ -93,9 +93,9 @@ export default async function CategoryPage({ params }: PageProps) {
           />
         </div>
         <div>
-          <p className="eyebrow">Redaktion & Einordnung</p>
-          <strong>Inhalte mit Erfahrung, Klarheit und Dating-Bezug ab 50</strong>
-          <p>Diese Rubrik wird im 50plus Magazin redaktionell gepflegt und auf hilfreiche, alltagstaugliche Orientierung für Menschen mit Lebenserfahrung ausgerichtet.</p>
+          <p className="eyebrow">Von Christian M. Haas</p>
+          <strong>Warum diese Tipps wirklich helfen</strong>
+          <p>Die Artikel in dieser Rubrik sind aus echten Fragen und Erfahrungen entstanden — damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
           <a className="card-read-more" href="/magazin/christian-m-haas">Mehr zum Autorenprofil von Christian M. Haas</a>
         </div>
       </div>
