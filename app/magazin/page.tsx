@@ -132,7 +132,7 @@ export default async function MagazinOverviewPage() {
           <div className="index-section-heading">
             <p className="eyebrow">Neu im Magazin</p>
             <h2>Aktuelle Beiträge zu Dating, Profil und Sicherheit</h2>
-            <p>Finde Antworten auf deine Dating-Fragen.</p>
+            <p>Finde praktische Antworten auf deine Dating-Fragen.</p>
           </div>
 
           <div className="category-filter-row" aria-label="Kategorien">
@@ -171,14 +171,14 @@ export default async function MagazinOverviewPage() {
 
         <section className="container overview-highlight-section magazine-overview-highlights">
           <div className="index-section-heading">
-            <p className="eyebrow">Direkter Einstieg</p>
+            <p className="eyebrow">Häufig gefragt</p>
             <h2>Häufige Fragen zum Dating ab 50</h2>
-            <p>Diese Inhalte helfen dir schnell weiter.</p>
+            <p>Diese Antworten helfen dir direkt weiter.</p>
           </div>
           <div className="overview-intent-grid">
             {featuredPosts.map((post, index) => (
               <a className="overview-intent-card overview-intent-card-featured" href={postPath(post.slug)} key={post.slug}>
-                <span>Aktueller Tipp {index + 1}</span>
+                <span>Praktischer Tipp {index + 1}</span>
                 <strong>{stripHtml(post.title)}</strong>
                 <p>{stripHtml(post.excerpt).slice(0, 140)}…</p>
               </a>
@@ -198,9 +198,9 @@ export default async function MagazinOverviewPage() {
 
         <section className="container index-list-section magazine-cms-pages-section" id="topics">
           <div className="index-section-heading">
-            <p className="eyebrow">Weitere Guides</p>
-            <h2>Ratgeber und Spezialseiten</h2>
-            <p>Vertiefte Infos zu Dating, Profil, Sicherheit und mehr.</p>
+            <p className="eyebrow">Ausführlich erklärt</p>
+            <h2>Spezialseiten und Guides</h2>
+            <p>Tiefe Guides zu Profil, Sicherheit, Gesprächstipps und mehr.</p>
           </div>
           <div className="section-index-grid magazine-page-grid">
             {visiblePages.map((page) => {
@@ -228,7 +228,7 @@ export default async function MagazinOverviewPage() {
           <div>
             <p className="eyebrow">Nächster Schritt</p>
             <h2>Wenn du nicht nur lesen, sondern neue Kontakte aufbauen möchtest</h2>
-            <p>Starte kostenlos auf ab50.de und entdecke Menschen, die ebenfalls offen für Nähe, gute Gespräche und einen neuen Abschnitt sind.</p>
+            <p>Starte kostenlos auf ab50.de und triff echte Menschen, die ebenfalls bereit sind für echte Verbindungen.</p>
           </div>
           <div className="overview-cta-actions">
             <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
