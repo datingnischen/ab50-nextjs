@@ -276,16 +276,16 @@ function formatScoreValue(score: number) {
 }
 
 function scoreHeadline(score: number) {
-  if (score >= 90) return "Ausgezeichnete Basis für neue Kontakte";
-  if (score >= 80) return "Sehr gute Basis für Kontakte";
-  if (score >= 70) return "Gute Basis für neue Kontakte";
-  if (score >= 60) return "Solider Einstieg für neue Kontakte";
-  return "Ruhiger Einstieg mit Chancen";
+  if (score >= 90) return "Sehr aktiv: viele echte Singles zum Kennenlernen";
+  if (score >= 80) return "Aktiv und lebendig: gute Chancen auf neue Kontakte";
+  if (score >= 70) return "Gute Dating-Chancen: Singles mit deinen Interessen";
+  if (score >= 60) return "Solide: reguläre Dating-Aktivität erwartet";
+  return "Kleinere Szene: braucht etwas Geduld, aber echte Chancen";
 }
 
 function scoreSummary(cityName: string, score: number, text?: string | null) {
-  if (text) return `${cityName} erreicht ${formatScoreValue(score)} Punkte. ${text}`;
-  return `${cityName} erreicht ${formatScoreValue(score)} Punkte und zeigt damit eine gute Grundlage für neue Kontakte, passende Treffpunkte und einen entspannten Einstieg in die Partnersuche ab 50.`;
+  if (text) return `${cityName}: ${formatScoreValue(score)} Punkte. ${text}`;
+  return `${cityName} hat viele aktive Singles ab 50, gute Date-Orte und eine niedrige Hemmschwelle für den Einstieg. Eine echte Chance, neue Menschen kennenzulernen.`;
 }
 
 function cityHeroEyebrow(value: string | null | undefined, cityName: string) {
@@ -314,7 +314,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!city) return {};
   const cityName = city.acf?.city_name || sanitizeTitle(city.title);
   const title = city.acf?.hero_title || sanitizeTitle(city.title);
-  const description = cityLead(city) || `Singles in ${cityName} kennenlernen: passende Treffpunkte, erste Date-Ideen und ein kostenloser Einstieg für neue Kontakte ab 50.`;
+  const description = cityLead(city) || `Partnersuche ab 50 in ${cityName}: echte Singles, erste Date-Ideen, Treffpunkte. Kostenlos Profile ansehen und Nachrichten schreiben.`;
 
   return {
     title,
