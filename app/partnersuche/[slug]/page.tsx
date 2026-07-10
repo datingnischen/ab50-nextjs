@@ -885,16 +885,16 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 />
               </div>
               <div>
-                <p className="eyebrow">Eingeordnet von</p>
+                <p className="eyebrow">Für dich zusammengestellt</p>
                 <h2>{cityAuthor.name}</h2>
-                <p className="magazine-author-role">{cityAuthor.role}</p>
-                <p>Diese Stadtseite wird für Menschen aufbereitet, die Dating ab 50 regional, respektvoll und ohne hektisches Gefühl angehen möchten. Deshalb findest du hier keine technische Spielerei, sondern einen klaren lokalen Einstieg.</p>
+                <p className="magazine-author-role">Schreibt über Dating ab 50, erste Treffen und neue Kontakte.</p>
+                <p>Hier findest du Ideen für erste Dates in {cityName}, typische Fragen rund ums Kennenlernen und einen einfachen Einstieg, wenn du neue Menschen ab 50 treffen möchtest.</p>
                 <div className="magazine-author-meta">
-                  <span>Regionale Partnersuche</span>
-                  <span>Dating ab 50</span>
-                  {lastUpdated ? <span>Zuletzt aktualisiert am {lastUpdated}</span> : null}
+                  <span>Treffpunkte in {cityName}</span>
+                  <span>Erste Dates ab 50</span>
+                  {lastUpdated ? <span>Aktualisiert am {lastUpdated}</span> : null}
                 </div>
-                <a className="button-secondary magazine-author-link" href={cityAuthor.href}>Zum Autorenprofil</a>
+                <a className="button-secondary magazine-author-link" href={cityAuthor.href}>Mehr von Christian lesen</a>
               </div>
             </section>
           </div>
