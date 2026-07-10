@@ -32,7 +32,7 @@ function getPagePresentation(title: string, slug?: string | null): PagePresentat
     return {
       label: "Über den Autor",
       icon: "✓",
-      description: "Mehr über den Hintergrund und die Erfahrung dahinter.",
+      description: "Christian über seine Erfahrung und Perspektive.",
       className: "magazine-page-card-expert",
     };
   }
@@ -40,7 +40,7 @@ function getPagePresentation(title: string, slug?: string | null): PagePresentat
     return {
       label: "Übersicht",
       icon: "◎",
-      description: "Ein Überblick über alle Magazin-Inhalte und Kategorien.",
+      description: "Alle Magazin-Inhalte und Kategorien auf einen Blick.",
       className: "magazine-page-card-guide",
     };
   }
@@ -48,14 +48,14 @@ function getPagePresentation(title: string, slug?: string | null): PagePresentat
     return {
       label: "Spiel & Pause",
       icon: "✦",
-      description: "Kleine Pausen zwischen dem Lesen – mit Knobelspaß.",
+      description: "Knobelspaß zwischen dem Lesen.",
       className: "magazine-page-card-lifestyle",
     };
   }
   return {
     label: "Ratgeber",
     icon: "→",
-    description: "Ein hilfreicher Guide aus unserem Magazin.",
+    description: "Praktischer Guide zum Thema.",
     className: "magazine-page-card-guide",
   };
 }
@@ -106,7 +106,7 @@ export default async function MagazinOverviewPage() {
               <div className="trust-chip-row index-chip-row" aria-label="Magazin-Vorteile">
                 <span>{posts.length} Beiträge</span>
                 <span>{visiblePages.length} Ratgeberseiten</span>
-                <span>Tipps von Experten</span>
+                <span>Von Profil bis Sicherheit</span>
                 <span>Für Singles 50+</span>
               </div>
               <div className="hero-actions index-actions">
@@ -132,7 +132,7 @@ export default async function MagazinOverviewPage() {
           <div className="index-section-heading">
             <p className="eyebrow">Neu im Magazin</p>
             <h2>Aktuelle Beiträge zu Dating, Profil und Sicherheit</h2>
-            <p>Wähle den Beitrag, der zu deiner aktuellen Frage passt.</p>
+            <p>Finde Antworten auf deine Dating-Fragen.</p>
           </div>
 
           <div className="category-filter-row" aria-label="Kategorien">
@@ -178,7 +178,7 @@ export default async function MagazinOverviewPage() {
           <div className="overview-intent-grid">
             {featuredPosts.map((post, index) => (
               <a className="overview-intent-card overview-intent-card-featured" href={postPath(post.slug)} key={post.slug}>
-                <span>Aktueller Impuls {index + 1}</span>
+                <span>Aktueller Tipp {index + 1}</span>
                 <strong>{stripHtml(post.title)}</strong>
                 <p>{stripHtml(post.excerpt).slice(0, 140)}…</p>
               </a>
@@ -200,7 +200,7 @@ export default async function MagazinOverviewPage() {
           <div className="index-section-heading">
             <p className="eyebrow">Weitere Guides</p>
             <h2>Ratgeber und Spezialseiten</h2>
-            <p>Diese Guides geben dir Überblick und vertiefte Infos zu wichtigen Dating-Themen.</p>
+            <p>Vertiefte Infos zu Dating, Profil, Sicherheit und mehr.</p>
           </div>
           <div className="section-index-grid magazine-page-grid">
             {visiblePages.map((page) => {
