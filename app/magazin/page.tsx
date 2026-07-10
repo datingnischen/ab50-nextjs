@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/magazin" },
   openGraph: {
     title: "50plus Magazin – alle Beiträge im Überblick",
-    description: "Ratgeber, Orientierung und Dating-Themen für Singles ab 50.",
+    description: "Tipps zu Dating, Profil, Sicherheit und Partnersuche für Singles ab 50.",
     url: absoluteUrl("/magazin"),
     type: "website",
     locale: "de_DE",
@@ -101,7 +101,7 @@ export default async function MagazinOverviewPage() {
               <p className="eyebrow">ab50.de · 50plus Magazin</p>
               <h1>Dating ab 50: Sicherheit, Klarheit und echte Verbindungen.</h1>
               <p className="lead">
-                Das 50plus Magazin hilft dir mit Tipps zu Profilen, ersten Gesprächen, Sicherheit und neuen Kontakten – praktisch, erprobt und ohne Umschweife.
+                Tipps zu Profil, ersten Gesprächen, Sicherheit und neuen Kontakten — für Singles ab 50, die es direkt angehen wollen.
               </p>
               <div className="trust-chip-row index-chip-row" aria-label="Magazin-Vorteile">
                 <span>{posts.length} Beiträge</span>
