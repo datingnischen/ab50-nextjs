@@ -70,8 +70,8 @@ function StandardHero({ page }: { page: StandardPage }) {
         <aside className="standard-hero-card ab50-standard-hero-card" aria-label={`${siteConfig.name} Hinweis`}>
           <strong>{siteConfig.name}</strong>
           <span>für Singles mit Lebenserfahrung</span>
-          <span>ruhig & verständlich</span>
-          <span>mit echten Einblicken</span>
+          <span>für Menschen, die es ernst meinen</span>
+          <span>mit echten Bewertungen</span>
         </aside>
       </div>
     </header>
@@ -83,8 +83,8 @@ function CardsSection({ page }: { page: StandardPage }) {
   return (
     <section className="container section-block">
       <div className="section-heading">
-        <p className="eyebrow">Gut zu wissen</p>
-        <h2>Was diese Seite abdeckt</h2>
+        <p className="eyebrow">Das solltest du wissen</p>
+        <h2>Echte Erfahrungen & externe Bewertungen</h2>
       </div>
       <div className="card-grid standard-card-grid">
         {page.cards.map((card) => {
@@ -194,13 +194,13 @@ function TemplateSpecificSection({ page }: { page: StandardPage }) {
     return (
       <section className="container section-block two-column standard-split-section">
         <div className="stats-panel standard-info-panel">
-          <p className="eyebrow">Transparenz</p>
-          <h2>Bewertungen regelmäßig direkt an der Quelle prüfen</h2>
-          <p>Externe Bewertungen können sich verändern. Deshalb bündeln wir die wichtigsten Einstiege, statt veraltete Momentaufnahmen dauerhaft festzuschreiben.</p>
+          <p className="eyebrow">Bewertungen prüfen</p>
+          <h2>Schau selbst auf Trustpilot & Co.</h2>
+          <p>Wir verlinken die aktuelle Quelle statt alte Momentaufnahmen zu zeigen – du siehst immer die neuesten Bewertungen.</p>
         </div>
         <div className="city-cta-box city-cta-box-compact">
-          <p className="eyebrow">Selbst testen</p>
-          <h2>Am Ende zählt dein eigener Eindruck</h2>
+          <p className="eyebrow">Probieren geht über Studieren</p>
+          <h2>Teste ab50.de kostenlos</h2>
           <p>Starte kostenlos, schau dir Profile und Funktionen in Ruhe an und entscheide selbst, ob ab50.de zu deiner Art von Partnersuche passt.</p>
           <div className="city-cta-actions">
             <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>

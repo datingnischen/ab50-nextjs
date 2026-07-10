@@ -87,7 +87,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     secondaryCtaLabel: "Zur Social-Media-Seite",
     secondaryCtaHref: ABOUT_SOCIAL_PATH,
     template: "trust",
-    highlights: ["echte Nutzermeinungen", "Trustpilot", "Vergleichsportale", "transparent einordnen"],
+    highlights: ["echte Nutzermeinungen", "Trustpilot", "Vergleichsportale", "sichere Wahl"],
     cards: [
       {
         title: "Warum uns echte Nutzermeinungen wichtig sind",
@@ -115,7 +115,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     ],
     detailSections: [
       {
-        eyebrow: "Originalinhalte übernommen",
+        eyebrow: "Bewertungen & Vertrauen",
         title: "Warum uns echte Nutzermeinungen wichtig sind",
         paragraphs: [
           "Bei ab50.de stehen die Mitglieder im Mittelpunkt – ihr Feedback hilft dabei, die Plattform kontinuierlich weiterzuentwickeln und noch besser auf die Bedürfnisse von Singles ab 50 auszurichten.",
@@ -143,7 +143,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         },
       },
       {
-        eyebrow: "Weitere Einordnungen",
+        eyebrow: "Externe Perspektiven",
         title: "Empfehlungen auf Vergleichsseiten",
         paragraphs: [
           "Neben direkten Nutzerbewertungen wird ab50.de auch auf Vergleichsportalen wie Singleboersen-Überblick.de eingeordnet. Dort bekommst du eine zusätzliche Perspektive auf Zielgruppe, Gesamteindruck und Positionierung.",
@@ -162,7 +162,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         },
       },
       {
-        eyebrow: "Selbst testen",
+        eyebrow: "Dein eigener Test",
         title: "Teste ab50.de selbst",
         paragraphs: [
           "Am Ende zählt immer dein eigener Eindruck. Schau dir Funktionen, Tonalität und potenzielle Kontakte in Ruhe an und entscheide selbst, ob ab50.de zu deiner Art von Partnersuche passt.",
