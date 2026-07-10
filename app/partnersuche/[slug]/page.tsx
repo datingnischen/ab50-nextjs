@@ -885,9 +885,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 />
               </div>
               <div>
-                <p className="eyebrow">Für dich zusammengestellt</p>
+                <p className="eyebrow">Von unserem Experten</p>
                 <h2>{cityAuthor.name}</h2>
-                <p className="magazine-author-role">Schreibt über Dating ab 50, erste Treffen und neue Kontakte.</p>
+                <p className="magazine-author-role">Autor & Dating-Experte bei ab50.de</p>
                 <p>Hier findest du Ideen für erste Dates in {cityName}, typische Fragen rund ums Kennenlernen und einen einfachen Einstieg, wenn du neue Menschen ab 50 treffen möchtest.</p>
                 <div className="magazine-author-meta">
                   <span>Treffpunkte in {cityName}</span>
