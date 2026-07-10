@@ -119,7 +119,7 @@ export function SiteFooter() {
         <div>
           <p className="eyebrow">Für Singles mit Lebenserfahrung</p>
           <h2>Entdecke Kontakte, Gespräche und Nähe mit Ruhe statt Dating-Hektik.</h2>
-          <p>Das 50plus Magazin begleitet dich mit Orientierung, Vertrauen und praxisnahen Impulsen rund um Dating ab 50.</p>
+          <p>Finde Singles ab 50, die wirklich zu dir passen — sicher, entspannt und ohne Zeitverschwendung.</p>
         </div>
         <a className="footer-cta-button" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
       </section>
@@ -127,11 +127,11 @@ export function SiteFooter() {
       <div className="footer-main">
         <div className="footer-brand-panel">
           <BrandLogo footer />
-          <p>Ratgeber, Orientierung und Dating-Themen für Menschen, die bewusst, gelassen und mit Erfahrung neue Kontakte aufbauen möchten.</p>
+          <p>Echte Tipps für echte Singles ab 50: Wie du die richtigen findest, sicher bleibst und echte Nähe aufbaust.</p>
           <ul className="footer-trust-list" aria-label="Vertrauensmerkmale">
-            <li>Gut lesbar auf Handy und Desktop</li>
-            <li>Praxisnahe Tipps speziell für 50+</li>
-            <li>Fokus auf Sicherheit, Vertrauen und echte Begegnungen</li>
+            <li>Für Menschen, die keine Zeit für Spielchen haben</li>
+            <li>Transparente Sicherheit & echte Profile</li>
+            <li>Erfolgsgeschichten von echten Singles ab 50</li>
           </ul>
         </div>
 
