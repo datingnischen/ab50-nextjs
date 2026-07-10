@@ -116,16 +116,15 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     detailSections: [
       {
         eyebrow: "Bewertungen & Vertrauen",
-        title: "Warum uns echte Nutzermeinungen wichtig sind",
+        title: "Warum echte Nutzermeinungen wichtig sind",
         paragraphs: [
           "Bei ab50.de stehen die Mitglieder im Mittelpunkt – ihr Feedback hilft dabei, die Plattform kontinuierlich weiterzuentwickeln und noch besser auf die Bedürfnisse von Singles ab 50 auszurichten.",
           "Positive Erfahrungen zeigen, was bereits gut funktioniert. Kritische Hinweise sind genauso wertvoll, weil sie konkrete Ansatzpunkte liefern, um Abläufe, Bedienbarkeit und Vertrauen weiter zu stärken.",
-          "Transparenz gehört dazu: Wer sich für eine Partnersuche ab 50 entscheidet, soll sich auf nachvollziehbare Einordnungen und einen ehrlichen ersten Eindruck verlassen können.",
+          "Du möchtest von echten Nutzern hören, ob die Plattform zu dir passt – genau darum findest du hier aussagekräftige Bewertungen und unabhängige Einordnungen.",
         ],
         image: {
           src: "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
           alt: "Frau zeigt mit erhobenem Daumen in die Kamera",
-          caption: "Das zentrale Bild der ursprünglichen Bewertungsseite wurde in die neue Vercel-Seite übernommen.",
         },
       },
       {
@@ -144,15 +143,14 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
       },
       {
         eyebrow: "Externe Perspektiven",
-        title: "Empfehlungen auf Vergleichsseiten",
+        title: "Was Vergleichsseiten über ab50.de sagen",
         paragraphs: [
-          "Neben direkten Nutzerbewertungen wird ab50.de auch auf Vergleichsportalen wie Singleboersen-Überblick.de eingeordnet. Dort bekommst du eine zusätzliche Perspektive auf Zielgruppe, Gesamteindruck und Positionierung.",
-          "Auf der ursprünglichen Seite wurden außerdem weitere Portale wie DatingJunge und Singlebörsen-Vergleich als ergänzende Orientierung genannt. Diese Einordnungen wurden in die neue Seite textlich übernommen.",
+          "Neben direkten Nutzerbewertungen wird ab50.de auch auf Vergleichsportalen wie Singleboersen-Überblick.de bewertet. Dort siehst du, wie die Plattform im Vergleich mit anderen Singlebörsen für deine Altersgruppe eingeordnet wird.",
+          "Solche Bewertungen helfen dir, einen breiteren Eindruck zu bekommen – von der Benutzerfreundlichkeit über die Erfolgsquoten bis hin zum Preis-Leistungs-Verhältnis.",
         ],
         image: {
           src: "https://static-cms.icony-hosting.de/cms/0AAC065690E55C2E5C07C90516AFDAF309FBFA84E8003071E7240115A5B9F98D/empfohlen-siegel-45sterne-330x60.jpg",
           alt: "Empfohlen-Siegel mit Sternebewertung",
-          caption: "Empfehlungs-Siegel aus der bisherigen Bewertungsseite.",
         },
         imagePosition: "left",
         link: {

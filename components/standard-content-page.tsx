@@ -196,7 +196,7 @@ function TemplateSpecificSection({ page }: { page: StandardPage }) {
         <div className="stats-panel standard-info-panel">
           <p className="eyebrow">Bewertungen prüfen</p>
           <h2>Schau selbst auf Trustpilot & Co.</h2>
-          <p>Wir verlinken die aktuelle Quelle statt alte Momentaufnahmen zu zeigen – du siehst immer die neuesten Bewertungen.</p>
+          <p>Schau dir die aktuelle Bewertungen an – du siehst immer das echte Feedback von echten Nutzern, nicht alte Momentaufnahmen.</p>
         </div>
         <div className="city-cta-box city-cta-box-compact">
           <p className="eyebrow">Probieren geht über Studieren</p>
