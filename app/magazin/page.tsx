@@ -30,32 +30,32 @@ function getPagePresentation(title: string, slug?: string | null): PagePresentat
   const haystack = `${title} ${slug || ""}`.toLowerCase();
   if (haystack.includes("christian") || haystack.includes("autor")) {
     return {
-      label: "Autor & Einordnung",
+      label: "Über den Autor",
       icon: "✓",
-      description: "Mehr Hintergrund zur redaktionellen Stimme und fachlichen Einordnung.",
+      description: "Mehr über den Hintergrund und die Erfahrung dahinter.",
       className: "magazine-page-card-expert",
     };
   }
   if (haystack.includes("inhaltsverzeichnis")) {
     return {
-      label: "Schnell finden",
+      label: "Übersicht",
       icon: "◎",
-      description: "Ein strukturierter Einstieg in weitere Magazin-Themen und Inhalte.",
+      description: "Ein Überblick über alle Magazin-Inhalte und Kategorien.",
       className: "magazine-page-card-guide",
     };
   }
   if (haystack.includes("sudoku") || haystack.includes("kreuzwort")) {
     return {
-      label: "Aktiv & entspannt",
+      label: "Spiel & Pause",
       icon: "✦",
-      description: "Leichte Angebote für Menschen, die zwischendurch Ruhe, Spaß und Aktivierung suchen.",
+      description: "Kleine Pausen zwischen dem Lesen – mit Knobelspaß.",
       className: "magazine-page-card-lifestyle",
     };
   }
   return {
-    label: "Ratgeberseite",
+    label: "Ratgeber",
     icon: "→",
-    description: "Ein weiterführender Einstieg aus dem 50plus Magazin.",
+    description: "Ein hilfreicher Guide aus unserem Magazin.",
     className: "magazine-page-card-guide",
   };
 }
@@ -99,14 +99,14 @@ export default async function MagazinOverviewPage() {
           <div className="container index-hero-grid">
             <div>
               <p className="eyebrow">ab50.de · 50plus Magazin</p>
-              <h1>Dating, Nähe und Neuanfang ab 50 – verständlich, ruhig und alltagsnah erklärt.</h1>
+              <h1>Dating ab 50: Sicherheit, Klarheit und echte Verbindungen.</h1>
               <p className="lead">
-                Das 50plus Magazin bündelt Themen rund um Online-Dating ab 50, Beziehung, Vertrauen, Profil, Kommunikation und neue Lebensphasen – ohne grelle Hektik, sondern mit Klarheit und Erfahrung.
+                Das 50plus Magazin hilft dir mit Tipps zu Profilen, ersten Gesprächen, Sicherheit und neuen Kontakten – praktisch, erprobt und ohne Umschweife.
               </p>
               <div className="trust-chip-row index-chip-row" aria-label="Magazin-Vorteile">
                 <span>{posts.length} Beiträge</span>
-                <span>{visiblePages.length} Sonderseiten</span>
-                <span>Lesefreundlich aufgebaut</span>
+                <span>{visiblePages.length} Ratgeberseiten</span>
+                <span>Tipps von Experten</span>
                 <span>Für Singles 50+</span>
               </div>
               <div className="hero-actions index-actions">
@@ -116,9 +116,9 @@ export default async function MagazinOverviewPage() {
               </div>
             </div>
             <aside className="index-feature-card magazine-feature-card" aria-label="Magazin-Fokus">
-              <span>Schwerpunkte</span>
-              <strong>Dating mit Ruhe</strong>
-              <p>Orientierung für Menschen, die lieber bewusst statt hektisch Kontakte aufbauen möchten.</p>
+              <span>Gut zu wissen</span>
+              <strong>Sicherheit beim Online-Dating</strong>
+              <p>Wie du sichere Entscheidungen triffst und Fake-Profile erkennst – ohne Umstände.</p>
               <div className="index-mini-list">
                 {categories.slice(0, 6).map((category) => (
                   <a href={categoryPath(category.slug)} key={category.slug}>{category.name}</a>
@@ -131,8 +131,8 @@ export default async function MagazinOverviewPage() {
         <section className="container index-list-section magazine-latest-section" id="articles">
           <div className="index-section-heading">
             <p className="eyebrow">Neu im Magazin</p>
-            <h2>Neueste Beiträge aus dem 50plus Magazin</h2>
-            <p>Wähle den Beitrag, der gerade zu deiner Situation, deinem Tempo und deinem Dating-Thema passt.</p>
+            <h2>Aktuelle Beiträge zu Dating, Profil und Sicherheit</h2>
+            <p>Wähle den Beitrag, der zu deiner aktuellen Frage passt.</p>
           </div>
 
           <div className="category-filter-row" aria-label="Kategorien">
@@ -171,9 +171,9 @@ export default async function MagazinOverviewPage() {
 
         <section className="container overview-highlight-section magazine-overview-highlights">
           <div className="index-section-heading">
-            <p className="eyebrow">Schnelleinstieg</p>
-            <h2>Beliebte Einstiege für Dating ab 50</h2>
-            <p>Wenn du direkt Orientierung suchst, helfen diese Einstiege besonders schnell weiter.</p>
+            <p className="eyebrow">Direkter Einstieg</p>
+            <h2>Häufige Fragen zum Dating ab 50</h2>
+            <p>Diese Inhalte helfen dir schnell weiter.</p>
           </div>
           <div className="overview-intent-grid">
             {featuredPosts.map((post, index) => (
@@ -184,23 +184,23 @@ export default async function MagazinOverviewPage() {
               </a>
             ))}
             <a className="overview-intent-card overview-intent-card-guide" href="/magazin/kategorie/online-dating-ab-50">
-              <span>Online-Dating</span>
-              <strong>Mehr Sicherheit und Klarheit beim Einstieg</strong>
-              <p>Tipps für Profile, Gespräche, Erwartungen und erste Kontakte in einer neuen Lebensphase.</p>
+              <span>Profil & Kontakte</span>
+              <strong>Mit besserer Strategie zu echten Matches</strong>
+              <p>Tipps für dein Profil, erste Gespräche, Erwartungen setzen und sichere erste Kontakte.</p>
             </a>
             <a className="overview-intent-card overview-intent-card-trust" href="/magazin/kategorie/sicherheit-vertrauen">
-              <span>Vertrauen</span>
-              <strong>Warnsignale, Schutz und gutes Bauchgefühl</strong>
-              <p>Ruhige Einordnung zu Fake-Profilen, Grenzen, Sicherheit und einem guten Umgang mit Unsicherheit.</p>
+              <span>Sicherheit</span>
+              <strong>Fake-Profile erkennen und gut schützen</strong>
+              <p>Warnsignale, rote Flaggen und wie du vertrauensvoll unterwegs bist.</p>
             </a>
           </div>
         </section>
 
         <section className="container index-list-section magazine-cms-pages-section" id="topics">
           <div className="index-section-heading">
-            <p className="eyebrow">Sonderseiten & Orientierung</p>
-            <h2>Weitere Magazinseiten und hilfreiche Sonderformate</h2>
-            <p>Auch diese bestehenden Magazinseiten bleiben sichtbar und werden sauber in die neue Magazin-Struktur übernommen.</p>
+            <p className="eyebrow">Weitere Guides</p>
+            <h2>Ratgeber und Spezialseiten</h2>
+            <p>Diese Guides geben dir Überblick und vertiefte Infos zu wichtigen Dating-Themen.</p>
           </div>
           <div className="section-index-grid magazine-page-grid">
             {visiblePages.map((page) => {
