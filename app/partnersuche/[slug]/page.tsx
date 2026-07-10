@@ -314,7 +314,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!city) return {};
   const cityName = city.acf?.city_name || sanitizeTitle(city.title);
   const title = city.acf?.hero_title || sanitizeTitle(city.title);
-  const description = cityLead(city) || `Singles in ${cityName} kennenlernen: regionale Dating-Tipps, lokale Orientierung und ein kostenloser Einstieg für neue Kontakte ab 50.`;
+  const description = cityLead(city) || `Singles in ${cityName} kennenlernen: passende Treffpunkte, erste Date-Ideen und ein kostenloser Einstieg für neue Kontakte ab 50.`;
 
   return {
     title,
@@ -477,7 +477,7 @@ function CityStatsModule({
       ? [{
           label: "Flirt-Faktor",
           value: `${formatScoreValue(score)}/100`,
-          description: scoreText || `Der redaktionelle Flirt-Score für ${cityName}.`,
+          description: scoreText || `Zeigt auf einen Blick, wie leicht du in ${cityName} neue Leute kennenlernen kannst.`,
         }]
       : []),
     ...(statCards.length
@@ -489,7 +489,7 @@ function CityStatsModule({
       : quickFacts.slice(0, score !== null ? 2 : 3).map((fact) => ({
           label: fact.label,
           value: fact.value,
-          description: `Ein schneller Überblick für ${cityName}.`,
+          description: `Hilft dir einzuschätzen, wie gut ${cityName} für neue Kontakte und erste Dates passt.`,
         }))),
   ];
 
@@ -551,7 +551,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
 
   const title = city.acf?.hero_title || sanitizeTitle(city.title);
   const cityName = city.acf?.city_name || title;
-  const lead = cityLead(city) || `Hier bekommst du einen ruhigen regionalen Einstieg in das Thema Dating ab 50 in ${cityName}.`;
+  const lead = cityLead(city) || `Hier erfährst du, wo Singles ab 50 in ${cityName} leichter ins Gespräch kommen, welche Orte sich für erste Dates eignen und wie du kostenlos starten kannst.`;
   const publicSlugMap = buildPublicSlugMap(publicCitySlugs);
   const relatedCities = allCities.filter((item: typeof allCities[number]) => item.slug !== city.slug).slice(0, 6);
   const readingMinutes = estimateReadingTime(city.content);
@@ -587,7 +587,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const finalCtaTitle = city.acf?.city_cta_title || `Wenn du magst, kannst du jetzt direkt kostenlos starten und neue Kontakte in ${cityName} entdecken.`;
   const finalCtaText = city.acf?.city_cta_text || "Oder du schaust dir weitere Städte und Magazin-Themen in Ruhe an.";
   const finalCtaNote = city.acf?.city_cta_note || null;
-  const takeawaySummary = city.acf?.city_dating_angle || city.acf?.city_highlight_text || `Hier findest du den kompakten Überblick für Dating ab 50 in ${cityName} – mit regionalen Signalen, passenden Treffpunkten und einem ruhigen nächsten Schritt.`;
+  const takeawaySummary = city.acf?.city_dating_angle || city.acf?.city_highlight_text || `Hier siehst du schnell, wo du in ${cityName} leichter neue Kontakte knüpfst, welche Treffpunkte passen und wie dein nächster Schritt aussehen kann.`;
   const citySignals = uniqueNonEmpty([
     city.acf?.city_hero_claim,
     ...trustPoints,
@@ -597,12 +597,12 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const heroChipItems = uniqueNonEmpty([
     scoreChip,
     ...heroChips.filter((chip) => !/flirt-faktor/i.test(chip)),
-    ...(heroChips.length ? [] : ["Singles ab 50", "Regionale Orientierung", "Kostenlos starten"]),
+    ...(heroChips.length ? [] : ["Singles ab 50", `Treffpunkte in ${cityName}`, "Kostenlos starten"]),
   ]).slice(0, 5);
   const quickFacts = [
     { label: "Fokus", value: `Partnersuche ab 50 in ${cityName}` },
     { label: "Lesezeit", value: `${readingMinutes} Min.` },
-    { label: "Aktualisiert", value: lastUpdated || "laufend gepflegt" },
+    { label: "Aktualisiert", value: lastUpdated || "regelmäßig aktualisiert" },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -668,7 +668,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <a className="button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
             </div>
           </div>
-          <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label="Schneller Überblick">
+          <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${cityName} auf einen Blick`}>
             <CityHeroVisual
               cityName={cityName}
               title={title}
@@ -709,14 +709,14 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
 
         <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
           <article className="overview-intent-card overview-intent-card-guide city-intro-card">
-            <span>{score !== null ? `Flirt-Faktor ${cityName}` : (city.acf?.city_highlight_eyebrow || "Regionaler Einstieg")}</span>
-            <strong>{score !== null ? scoreHeadline(score) : (city.acf?.city_highlight_title || `Dating ab 50 in ${cityName} verständlich einordnen`)}</strong>
-            <p>{score !== null ? scoreSummary(cityName, score, city.acf?.flirt_factor_text) : (city.acf?.city_highlight_text || `Die Seite bündelt regionale Hinweise, typische Fragen und einen ruhigen Einstieg für Menschen, die in ${cityName} neue Kontakte suchen.`)}</p>
+            <span>{score !== null ? `Flirt-Faktor ${cityName}` : (city.acf?.city_highlight_eyebrow || "Dating in deiner Stadt")}</span>
+            <strong>{score !== null ? scoreHeadline(score) : (city.acf?.city_highlight_title || `Wo du in ${cityName} leichter neue Kontakte findest`)}</strong>
+            <p>{score !== null ? scoreSummary(cityName, score, city.acf?.flirt_factor_text) : (city.acf?.city_highlight_text || `Welche Orte sich in ${cityName} für erste Treffen eignen, worauf du achten kannst und wie du entspannt ins Kennenlernen startest.`)}</p>
           </article>
           <article className="overview-intent-card overview-intent-card-trust city-intro-card">
             <span>Was du mitnimmst</span>
-            <strong>{tocItems.length ? `${tocItems.length} klare Themenblöcke statt Textwüste` : `Kompakte Orientierung statt unnötiger Umwege`}</strong>
-            <p>So kommst du schneller zu den Abschnitten, die gerade wirklich zu deiner Situation und deinem Tempo passen.</p>
+            <strong>{tocItems.length ? `${tocItems.length} klare Themenblöcke statt Textwüste` : `Worauf Singles in ${cityName} besonders achten sollten`}</strong>
+            <p>Du siehst schneller, welche Orte, Tipps und nächsten Schritte für deine Situation in ${cityName} wirklich hilfreich sind.</p>
           </article>
           <article className="overview-intent-card overview-intent-card-featured city-intro-card">
             <span>Nächster Schritt</span>
@@ -754,7 +754,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               <section className="city-sidebar-card city-sidebar-cta" aria-label="Kostenlos starten">
                 <p className="eyebrow">{city.acf?.city_sidebar_eyebrow || "Bereit für den nächsten Schritt?"}</p>
                 <strong>{city.acf?.city_sidebar_title || "Starte kostenlos und schau dich in deiner Region um."}</strong>
-                <p>{city.acf?.city_sidebar_text || "Ohne Druck, aber mit einem klaren nächsten Schritt für neue Kontakte ab 50."}</p>
+                <p>{city.acf?.city_sidebar_text || `Schau kostenlos, wer in ${cityName} zu dir passen könnte, und starte in deinem eigenen Tempo.`}</p>
                 <a className="button-primary" href={sidebarCtaHref}>{sidebarCtaLabel}</a>
               </section>
             </div>
@@ -766,7 +766,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 <div className="section-heading compact-heading">
                   <p className="eyebrow">Signal-Check</p>
                   <h2>Weitere Kennzahlen für {cityName}</h2>
-                  <p>Diese zusätzlichen Signale ergänzen den schnellen Überblick oben und helfen dir, {cityName} noch genauer einzuordnen.</p>
+                  <p>Diese zusätzlichen Zahlen zeigen dir, wie gut {cityName} für neue Kontakte, entspannte erste Dates und passende Treffpunkte taugt.</p>
                 </div>
                 <div className="city-score-grid">
                   {remainingStatCards.map((card, index) => (
@@ -912,7 +912,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 return (
                   <a className="category-topic-card" href={cityPath(publicSlug)} key={item.slug}>
                     <span>{item.acf?.city_name || sanitizeTitle(item.title)}</span>
-                    <strong>{item.acf?.city_hero_claim || item.acf?.city_dating_angle || `Mehr Orientierung und regionale Dating-Inhalte für ${item.acf?.city_name || sanitizeTitle(item.title)}.`}</strong>
+                    <strong>{item.acf?.city_hero_claim || item.acf?.city_dating_angle || `Singles ab 50 in ${item.acf?.city_name || sanitizeTitle(item.title)} kennenlernen: Treffpunkte, Date-Ideen und neue Kontakte.`}</strong>
                     <em className="card-read-more">Stadtseite öffnen</em>
                   </a>
                 );
