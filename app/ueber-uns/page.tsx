@@ -100,7 +100,7 @@ export default function UeberUnsPage() {
             <div>
               <p className="eyebrow">Hinter den Kulissen</p>
               <h1>Über ab50.de</h1>
-              <p className="lead">ab50.de für Singles mit Lebenserfahrung: kostenlos Kontakte finden, Nachrichten schreiben, neue Menschen kennenlernen.</p>
+              <p className="lead">ab50.de: Kostenlos Singles 50+ kennenlernen, Nachrichten schreiben, erste Dates planen. Ohne versteckte Kosten, mit echten, verifizierten Profilen.</p>
               <div className="trust-chip-row" aria-label="Wichtige Infos zu ab50.de">
                 <span>Unsere Geschichte</span>
                 <span>Social Media & Community</span>
@@ -136,8 +136,8 @@ export default function UeberUnsPage() {
             <div className="city-sidebar-stack">
               <section className="city-sidebar-card magazine-about-sidebar" aria-label="Schnelllinks">
                 <p className="eyebrow">Schnell zum Punkt</p>
-                <strong>Was willst du über ab50.de wissen?</strong>
-                <p>Hier sind die wichtigsten Links: Wie wir entstanden sind, was echte Singles sagen, wo du uns online findest.</p>
+                <strong>Deine wichtigsten Fragen zu ab50.de</strong>
+                <p>Gibt es echte Profile? Wie starte ich? Was sagen andere Singles? Die Antworten auf dieser Seite.</p>
                 <ul className="city-key-points about-quick-links">
                   {aboutQuickLinks.map((link) => (
                     <li key={link.href}><a href={link.href}>{link.label}</a></li>
@@ -155,8 +155,8 @@ export default function UeberUnsPage() {
             <section className="section-block about-main-intro-card">
               <div className="section-heading">
                 <p className="eyebrow">Vier wichtige Seiten</p>
-                <h2>Was willst du über ab50.de erfahren?</h2>
-                <p>Geschichte, Bewertungen, Social Media und Tipps — alles, um ab50.de besser kennenzulernen.</p>
+                <h2>Die wichtigsten Infos über ab50.de</h2>
+                <p>Unsere Geschichte seit 2011, Bewertungen von echten Nutzern, Community & YouTube, und Tipps zu Dating und Sicherheit.</p>
               </div>
               <div className="card-grid standard-card-grid">
                 {aboutCards.map((card) => (
@@ -173,8 +173,8 @@ export default function UeberUnsPage() {
             <section className="two-column standard-split-section about-bottom-split">
               <div className="stats-panel standard-info-panel">
                 <p className="eyebrow">Warum diese Seite wichtig ist</p>
-                <h2>Lerne ab50.de kennen, bevor du startest</h2>
-                <p>Was ist ab50.de? Wie ist es entstanden? Was sagen andere Nutzer? Schau dir die Geschichte, Bewertungen und Tipps an — dann weißt du, ob es zu dir passt.</p>
+                <h2>Bevor du startest: Wer ist ab50.de wirklich?</h2>
+                <p>Gegründet 2011. Millionen von Nutzern. Bewertungen von echten Singles. Erfolgsgeschichten. Sicherheit & Verifizierung. Alles, um zu sehen, ob ab50.de zu dir passt.</p>
               </div>
               <div className="city-cta-box city-cta-box-compact">
                 <p className="eyebrow">Direkter Einstieg</p>
