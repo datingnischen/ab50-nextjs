@@ -353,19 +353,21 @@ function SourceBox({
   reviewedAt,
   reviewNote,
   displayMode,
+  cityName,
 }: {
   sources: WpSourceItem[];
   intro?: string | null;
   reviewedAt?: string | null;
   reviewNote?: string | null;
   displayMode?: string | null;
+  cityName?: string;
 }) {
   if (displayMode === "hidden" || (!sources.length && !reviewedAt && !reviewNote)) return null;
 
   return (
     <section className={`city-source-box city-source-box-${displayMode || "auto"}`} aria-label="Quellen und Aktualität">
       <p className="eyebrow">Quellen, Bilder & Aktualität</p>
-      {intro ? <p>{intro}</p> : <p>Diese Seite wird redaktionell gepflegt. Die folgenden Quellen stützen Stadtprofil, Zahlen und lokale Einordnung.</p>}
+      {intro ? <p>{intro}</p> : <p>Die Daten und Fakten unten stammen aus öffentlichen Quellen und zeigen die echte Situation in {cityName} für Singles ab 50.</p>}
       {reviewedAt || reviewNote ? (
         <div className="city-source-review-note">
           {reviewedAt ? <strong>Geprüft am {reviewedAt}</strong> : null}
@@ -395,7 +397,7 @@ function FlirtFactorVisualCard({ cityName, score, text }: { cityName: string; sc
       <div>
         <span className="flirt-factor-kicker">Flirt-Faktor</span>
         <strong>{safeScore !== null ? `${formatScoreValue(safeScore)}/100` : `Dating ab 50 in ${cityName}`}</strong>
-        <p>{text || `Ein ruhiger Überblick darüber, wie gut ${cityName} für neue Kontakte, passende Orte und einen entspannten Start geeignet ist.`}</p>
+        <p>{text || `So findest du neue Kontakte in ${cityName}: Die besten Orte, wie du sicher startest und wo echte Menschen wie du unterwegs sind.`}</p>
       </div>
       {safeScore !== null ? (
         <div className="flirt-meter" aria-hidden="true">
@@ -449,7 +451,7 @@ function CityHeroVisual({
         <div className="city-profile-card">
           <span>{profileEyebrow || "Dein Einstieg"}</span>
           <strong>{profileTitle || `Neue Kontakte in ${cityName}`}</strong>
-          <p>{profileText || `Regionale Orientierung, konkrete Dating-Ideen und ein ruhiger Einstieg für Singles ab 50.`}</p>
+          <p>{profileText || `Wie du in ${cityName} echte Menschen triffst: Wo Kontakte entstehen, wie du dein Profil machst und worauf es wirklich ankommt.`}</p>
         </div>
       </div>
       <FlirtFactorVisualCard cityName={cityName} score={score} text={scoreText} />
@@ -870,9 +872,10 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
               reviewedAt={reviewDate}
               reviewNote={city.acf?.content_review_note}
               displayMode={sourceDisplayMode}
+              cityName={cityName}
             />
 
-            <section className="magazine-author-box city-author-box" aria-label="Autor und Einordnung">
+            <section className="magazine-author-box city-author-box" aria-label="Wer diese Inhalte schreibt">
               <div className="magazine-author-avatar" aria-hidden="true">
                 <Image
                   src={cityAuthor.imageSrc}
