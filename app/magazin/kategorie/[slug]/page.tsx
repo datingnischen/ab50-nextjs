@@ -73,7 +73,7 @@ export default async function CategoryPage({ params }: PageProps) {
         </div>
         <aside className="category-hero-sidecard" aria-label="Beliebte Artikel in dieser Rubrik">
           <p className="eyebrow">Top Artikel</p>
-          <strong>Meistgelesen in {category.name}</strong>
+          <strong>Meistgelesen in {category.name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</strong>
           <p>Diese Beiträge helfen dir am schnellsten weiter: Praktische Tipps, echte Lösungen und das Wichtigste zu diesem Thema — ohne Umschweife.</p>
           <div className="index-mini-list">
             {featuredPosts.map((post) => (
