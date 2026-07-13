@@ -18,6 +18,20 @@ export const metadata: Metadata = {
 
 const aboutCards = [
   {
+    eyebrow: "ab50.de & ICONY",
+    title: "Verlässliche Betreuung im Hintergrund",
+    text: "Im Hintergrund wird ab50.de von ICONY begleitet. ICONY ist der Betreiber und rechtliche Ansprechpartner der Plattform und kümmert sich um Support, technische Betreuung und die laufende Weiterentwicklung – damit du dich auf das konzentrieren kannst, was wirklich zählt: passende Kontakte und gute Gespräche.",
+    href: "https://www.icony.com/",
+    label: "Mehr über ICONY erfahren",
+  },
+  {
+    eyebrow: "Christian M. Haas",
+    title: "Autor mit Dating-Erfahrung",
+    text: "Christian M. Haas steht im ab50.de Magazin für klare Worte, langjährige Erfahrung und Inhalte, die Singles wirklich weiterhelfen. Auf seiner Autorenseite erfährst du mehr darüber, wie sein Blick auf Online-Dating, Beziehungen und echte Begegnungen entstanden ist.",
+    href: "/magazin/christian-m-haas",
+    label: "Zur Autorenseite",
+  },
+  {
     eyebrow: "Unsere Geschichte",
     title: "So hat sich ab50.de entwickelt",
     text: "Gegründet 2011. Von den frühen Anfängen bis zur heutigen Plattform mit Millionen von Nutzern: Web-Snapshots zeigen die Entwicklung.",
@@ -69,6 +83,7 @@ const aboutIntroCards = [
 ] as const;
 
 const aboutQuickLinks = [
+  { href: "/magazin/christian-m-haas", label: "Christian M. Haas kennenlernen" },
   { href: ABOUT_HISTORY_PATH, label: "Unsere Geschichte lesen" },
   { href: ABOUT_SOCIAL_PATH, label: "Social Media entdecken" },
   { href: ABOUT_REVIEWS_PATH, label: "Bewertungen & Erfahrungen ansehen" },
@@ -154,9 +169,9 @@ export default function UeberUnsPage() {
           <div className="article-main-column">
             <section className="section-block about-main-intro-card">
               <div className="section-heading">
-                <p className="eyebrow">Vier wichtige Seiten</p>
-                <h2>Die wichtigsten Infos über ab50.de</h2>
-                <p>Unsere Geschichte seit 2011, Bewertungen von echten Nutzern, Community & YouTube, und Tipps zu Dating und Sicherheit.</p>
+                <p className="eyebrow">Wer steht dahinter?</p>
+                <h2>Christian M. Haas, ICONY und unsere Gemeinschaft</h2>
+                <p>ab50.de wird von klaren Köpfen geprägt: Christian M. Haas mit langjähriger Dating-Erfahrung im Magazin, ICONY als Betreiber und technischer Partner – und vor allem von dir und der Community. Hier erfährst du, wer wirklich dahintersteckt.</p>
               </div>
               <div className="card-grid standard-card-grid">
                 {aboutCards.map((card) => (
