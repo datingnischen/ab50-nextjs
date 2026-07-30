@@ -44,6 +44,35 @@ function getSocialActionLabel(link: NonNullable<StandardPage["socialLinks"]>[num
   return link.kind.toLowerCase().includes("gruppe") ? "Gruppe öffnen" : "Seite ansehen";
 }
 
+function getPlatformLabel(platform: "facebook" | "youtube") {
+  return platform === "facebook" ? "Facebook" : "YouTube";
+}
+
+function SocialHeroAside({ page }: { page: StandardPage }) {
+  const socialLinks = page.socialLinks?.slice(0, 3) ?? [];
+
+  return (
+    <aside className="standard-hero-card social-hero-card" aria-label={`${siteConfig.name} Social Media`}>
+      <p className="social-hero-card-eyebrow">Beliebte Einstiege</p>
+      <strong>Folge {siteConfig.name} auch außerhalb der Partnersuche</strong>
+      <div className="social-hero-link-stack">
+        {socialLinks.map((link) => (
+          <a className={`social-hero-link social-hero-link-${link.platform}`} href={link.href} key={link.href} {...externalAttrs(link.external)}>
+            <span className={`social-icon social-icon-${link.platform}`}>
+              <SocialIcon platform={link.platform} />
+            </span>
+            <span className="social-hero-link-copy">
+              <small>{getPlatformLabel(link.platform)}</small>
+              <span className="social-hero-link-title">{link.label}</span>
+            </span>
+            <em>{link.kind}</em>
+          </a>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 function StandardHero({ page }: { page: StandardPage }) {
   return (
     <header className="standard-hero ab50-standard-hero">
@@ -67,12 +96,16 @@ function StandardHero({ page }: { page: StandardPage }) {
             ) : null}
           </div>
         </div>
-        <aside className="standard-hero-card ab50-standard-hero-card" aria-label={`${siteConfig.name} Hinweis`}>
-          <strong>{siteConfig.name}</strong>
-          <span>für Singles mit Lebenserfahrung</span>
-          <span>für Menschen, die es ernst meinen</span>
-          <span>mit echten Bewertungen</span>
-        </aside>
+        {page.template === "social" && page.socialLinks?.length ? (
+          <SocialHeroAside page={page} />
+        ) : (
+          <aside className="standard-hero-card ab50-standard-hero-card" aria-label={`${siteConfig.name} Hinweis`}>
+            <strong>{siteConfig.name}</strong>
+            <span>für Singles mit Lebenserfahrung</span>
+            <span>für Menschen, die es ernst meinen</span>
+            <span>mit echten Bewertungen</span>
+          </aside>
+        )}
       </div>
     </header>
   );
@@ -161,6 +194,9 @@ function SocialSection({ page }: { page: StandardPage }) {
         <p className="eyebrow">Kanäle & Community</p>
         <h2>Social-Media-Übersicht</h2>
         <p>Hier findest du die wichtigsten Facebook- und YouTube-Einstiege, wenn du ab50.de auch außerhalb der Plattform begleiten möchtest.</p>
+        <div className="social-intro-pills" aria-label="Social-Media-Vorteile">
+          {page.highlights.map((item) => <span key={item}>{item}</span>)}
+        </div>
       </div>
       <div className="card-grid standard-card-grid social-card-grid">
         {page.socialLinks.map((link) => (
@@ -170,7 +206,7 @@ function SocialSection({ page }: { page: StandardPage }) {
                 <SocialIcon platform={link.platform} />
               </span>
               <div className="social-card-meta">
-                <small>{link.platform === "facebook" ? "Facebook" : "YouTube"}</small>
+                <small>{getPlatformLabel(link.platform)}</small>
                 <span>{link.kind}</span>
               </div>
             </div>
