@@ -1,6 +1,13 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   poweredByHeader: false,
   trailingSlash: false,
   images: {
@@ -22,9 +29,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn3.icony-hosting.de",
-      }
-    ]
-  }
+      },
+      {
+        protocol: "https",
+        hostname: "static-cms.icony-hosting.de",
+        pathname: "/cms/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -43,6 +43,24 @@ const cityWidgetLocations: Record<string, IconyWidgetLocation> = {
   wiesbaden: { country: 49, zip: "65" },
   wuppertal: { country: 49, zip: "42" },
   jena: { country: 49, zip: "07" },
+  zuerich: { country: 41, zip: "80" },
+  genf: { country: 41, zip: "12" },
+  basel: { country: 41, zip: "40,41" },
+  bern: { country: 41, zip: "30" },
+  lausanne: { country: 41, zip: "10" },
+  winterthur: { country: 41, zip: "84" },
+  "st-gallen": { country: 41, zip: "90" },
+  lugano: { country: 41, zip: "69" },
+  fribourg: { country: 41, zip: "17" },
+  thun: { country: 41, zip: "36" },
+  koeniz: { country: 41, zip: "30" },
+  "biel-bienne": { country: 41, zip: "25" },
+  schaffhausen: { country: 41, zip: "82" },
+  "la-chaux-de-fonds": { country: 41, zip: "23" },
+  luzern: { country: 41, zip: "60" },
+  chur: { country: 41, zip: "70" },
+  zug: { country: 41, zip: "63" },
+  aarau: { country: 41, zip: "50" },
 };
 
 function normalizeLocationKey(value: string) {
@@ -56,6 +74,6 @@ function normalizeLocationKey(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function getIconyWidgetLocation(city: string): IconyWidgetLocation {
-  return cityWidgetLocations[normalizeLocationKey(city)] || { country: 49 };
+export function getIconyWidgetLocation(city: string, fallbackCountry: 49 | 43 | 41 = 49): IconyWidgetLocation {
+  return cityWidgetLocations[normalizeLocationKey(city)] || { country: fallbackCountry };
 }

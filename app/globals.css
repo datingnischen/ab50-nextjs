@@ -2361,3 +2361,24 @@ main { min-height: 60vh; }
     display: none;
   }
 }
+
+/* Multi-market partnersuche overview */
+.market-overview-editorial {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.market-overview-editorial .article-main-column {
+  width: 100%;
+  max-width: none;
+  grid-column: 1 / -1;
+}
+
+.market-overview-editorial .article-content-card,
+.market-overview-editorial .city-source-box {
+  width: 100%;
+}
+
+.market-overview-editorial .article-content > .panel {
+  width: 100%;
+  max-width: none;
+}

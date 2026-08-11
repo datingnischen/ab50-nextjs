@@ -158,7 +158,7 @@ export function IconyIframeSinglesWidget({
             srcDoc={frameDocument({ city: cityLabel, platformId, location, gender: 2, profileClickUrl, fallbackSearchUrl: searchUrl })}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           />
         </div>
         <div className="icony-iframe-panel icony-iframe-panel-men">
@@ -167,7 +167,7 @@ export function IconyIframeSinglesWidget({
             srcDoc={frameDocument({ city: cityLabel, platformId, location, gender: 1, profileClickUrl, fallbackSearchUrl: searchUrl })}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+            sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           />
         </div>
       </div>
