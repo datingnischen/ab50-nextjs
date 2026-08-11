@@ -1,6 +1,6 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
@@ -93,14 +93,11 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             </div>
           </div>
           <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${city.name} auf einen Blick`}>
-            <Image
-              priority
-              src={city.heroImage.url}
-              alt={city.heroImage.alt}
-              width={1000}
-              height={667}
-              className="city-phone-image"
-              sizes="(max-width: 980px) 100vw, 420px"
+            <CityImageDialog
+              city={city.name}
+              imageUrl={city.heroImage.url}
+              imageAlt={city.heroImage.alt}
+              registrationUrl={registration}
             />
           </aside>
         </div>
@@ -148,11 +145,6 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             <div className="article-content-card">
               <MarketHtml market="ch" html={city.contentHtml} />
             </div>
-            <section className="city-source-box" aria-label="Quelle und Bildherkunft">
-              <p className="eyebrow">Quelle & Bildherkunft</p>
-              <p>Die redaktionellen Ausgangsinhalte und Bilder stammen von der bestehenden öffentlichen Stadtseite auf ab50.ch und wurden für die neue Marktstruktur aufbereitet.</p>
-              <a href={city.sourceUrl} rel="nofollow noopener noreferrer" target="_blank">Öffentliche Originalseite auf ab50.ch</a>
-            </section>
           </div>
         </section>
 

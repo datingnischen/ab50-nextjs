@@ -1222,6 +1222,142 @@ main { min-height: 60vh; }
   display: block;
   background: linear-gradient(135deg, #edf3fc, #fff);
 }
+.city-image-dialog-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 26px;
+  background: transparent;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.city-image-dialog-trigger:focus-visible {
+  outline: 3px solid var(--city-accent, #1a4c95);
+  outline-offset: 4px;
+}
+.city-image-dialog-trigger .city-phone-image {
+  transition: transform .24s ease, filter .24s ease;
+}
+.city-image-dialog-trigger:hover .city-phone-image {
+  transform: scale(1.025);
+  filter: brightness(.92);
+}
+.city-image-dialog-hint {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(10, 28, 53, .82);
+  box-shadow: 0 8px 24px rgba(10, 28, 53, .22);
+  font-size: .84rem;
+  font-weight: 750;
+  letter-spacing: .01em;
+  pointer-events: none;
+}
+.city-image-dialog {
+  width: min(1240px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  color: var(--city-ink, #17263c);
+  background: #fff;
+  box-shadow: 0 28px 90px rgba(5, 18, 37, .38);
+  overflow: auto;
+}
+.city-image-dialog::backdrop {
+  background: rgba(7, 18, 35, .78);
+  backdrop-filter: blur(7px);
+}
+.city-image-dialog-panel {
+  position: relative;
+  padding: clamp(14px, 2vw, 24px);
+}
+.city-image-dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 24px;
+  right: 24px;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(8, 24, 48, .82);
+  box-shadow: 0 8px 25px rgba(0,0,0,.22);
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+}
+.city-image-dialog-close:hover,
+.city-image-dialog-close:focus-visible {
+  background: #0d376d;
+}
+.city-image-dialog-image-wrap {
+  overflow: hidden;
+  border-radius: 20px;
+  background: #e9f0f8;
+}
+.city-image-dialog-image {
+  display: block;
+  width: 100%;
+  max-height: min(68dvh, 820px);
+  object-fit: contain;
+}
+.city-image-dialog-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(18px, 3vw, 28px) clamp(4px, 1vw, 10px) 4px;
+}
+.city-image-dialog-copy h2,
+.city-image-dialog-copy p {
+  margin-top: 0;
+}
+.city-image-dialog-copy h2 {
+  margin-bottom: 8px;
+}
+.city-image-dialog-copy p:last-child {
+  margin-bottom: 0;
+}
+.city-image-dialog-copy .button-primary {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .city-image-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 22px;
+  }
+  .city-image-dialog-panel {
+    padding: 10px;
+  }
+  .city-image-dialog-close {
+    top: 18px;
+    right: 18px;
+  }
+  .city-image-dialog-copy {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px 6px 6px;
+  }
+  .city-image-dialog-copy .button-primary {
+    width: 100%;
+    text-align: center;
+  }
+}
 .city-profile-card {
   margin: -58px 14px 4px;
   position: relative;

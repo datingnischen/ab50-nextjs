@@ -88,11 +88,6 @@ export default function SwissPartnersucheOverviewPage() {
           <div className="article-content-card">
             <MarketHtml market="ch" html={swissPartnersuche.overview.contentHtml} />
           </div>
-          <section className="city-source-box" aria-label="Quelle und Bildherkunft">
-            <p className="eyebrow">Quelle & Bildherkunft</p>
-            <p>Die Schweizer Übersicht wurde aus dem bestehenden öffentlichen ab50.ch-Auftritt übernommen und für die neue Marktstruktur aufbereitet.</p>
-            <a href={swissPartnersuche.overview.sourceUrl} rel="nofollow noopener noreferrer" target="_blank">Öffentliche Originalseite auf ab50.ch</a>
-          </section>
         </div>
       </section>
 

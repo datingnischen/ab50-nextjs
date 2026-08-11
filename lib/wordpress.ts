@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { siteConfig } from "@/data/site";
+import { postCardQuery } from "@/lib/wordpress-query";
 
 export type WpImage = {
   sourceUrl: string;
@@ -328,13 +329,7 @@ async function collectPaged<T>(path: string, params: Record<string, string | num
 }
 
 export const getLatestPosts = cache(async (first = 24) => {
-  const { data } = await wpRest<any>("/posts", {
-    per_page: first,
-    page: 1,
-    _embed: 1,
-    orderby: "date",
-    order: "desc",
-  });
+  const { data } = await wpRest<any>("/posts", postCardQuery(first));
   return data.map(normalizePost);
 });
 
@@ -385,12 +380,8 @@ export const getPostsByCategory = cache(async (slug: string, first = 18) => {
   const category = categoryData[0];
   if (!category) return null;
   const { data: postData } = await wpRest<any>("/posts", {
+    ...postCardQuery(first),
     categories: category.id,
-    per_page: first,
-    page: 1,
-    _embed: 1,
-    orderby: "date",
-    order: "desc",
   });
   return {
     id: category.id,
