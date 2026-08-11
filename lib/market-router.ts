@@ -24,6 +24,27 @@ function isPreviewHost(hostname: string) {
     || hostname.endsWith(".vercel.app");
 }
 
+export function resolveHostRequest(hostnameInput: string, pathname: string): PartnersucheResolution {
+  const hostname = normalizeHostname(hostnameInput);
+  if (isPreviewHost(hostname)) return { action: "pass" };
+
+  const hostMarket = countryHosts[hostname];
+  if (!hostMarket) return { action: "not-found" };
+  if (hostMarket === "de") return { action: "pass", market: "de" };
+
+  const isSwissRoute = pathname === "/partnersuche"
+    || pathname.startsWith("/partnersuche/")
+    || pathname === "/ch/partnersuche"
+    || pathname.startsWith("/ch/partnersuche/")
+    || pathname === "/sitemap.xml"
+    || pathname === "/robots.txt"
+    || pathname === "/ch/sitemap.xml"
+    || pathname === "/ch/robots.txt"
+    || pathname === "/ab50-ch-logo.svg";
+
+  return isSwissRoute ? { action: "pass", market: "ch" } : { action: "not-found" };
+}
+
 function prefixedMarket(pathname: string): RouteMarket | "unsupported" | null {
   const match = pathname.match(/^\/([^/]+)\/partnersuche(?:\/|$)/);
   if (!match) return null;

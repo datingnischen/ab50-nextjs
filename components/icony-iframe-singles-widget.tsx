@@ -153,6 +153,8 @@ export function IconyIframeSinglesWidget({
         <label htmlFor={`icony-men-${pageSafeId(city)}`}>Männer anzeigen</label>
 
         <div className="icony-iframe-panel icony-iframe-panel-women">
+          {/* Profile cards open the external registration flow in a new tab. Escaped popups are
+              required for that destination to work, while omitting allow-same-origin keeps srcDoc opaque. */}
           <iframe
             title={frameTitle(2, city)}
             srcDoc={frameDocument({ city: cityLabel, platformId, location, gender: 2, profileClickUrl, fallbackSearchUrl: searchUrl })}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MarketLink } from "@/components/market-link";
-import { markets, marketFromPathname, marketPartnersuchePath, marketPreviewPath, registrationUrl, type MarketCode } from "@/lib/markets";
+import { markets, marketFromLocation, marketPartnersuchePath, marketPreviewPath, registrationUrl, type MarketCode } from "@/lib/markets";
 
 function BrandLogo({ market, footer = false }: { market: MarketCode; footer?: boolean }) {
   const config = markets[market];
@@ -108,7 +108,7 @@ const chFooterColumns: FooterColumn[] = [
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const market = marketFromPathname(pathname);
+  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
   const config = markets[market];
   const partnersuche = marketPartnersuchePath(market);
 
@@ -151,7 +151,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   const pathname = usePathname();
-  const market = marketFromPathname(pathname);
+  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
   const config = markets[market];
   const footerColumns = market === "ch" ? chFooterColumns : deFooterColumns;
   const countryCopy = market === "ch" ? "in der Schweiz" : "in Deutschland";

@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { marketFromPathname, registrationUrl } from "@/lib/markets";
+import { marketFromLocation, registrationUrl } from "@/lib/markets";
 
 function aidFromPathname(pathname: string) {
   return pathname.includes("/partnersuche") ? "location" as const : "magazin" as const;
@@ -10,7 +10,7 @@ function aidFromPathname(pathname: string) {
 
 export function StickyCTAButton() {
   const pathname = usePathname();
-  const market = marketFromPathname(pathname);
+  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
   const [ctaText, setCtaText] = useState("Kostenlos registrieren");
   const [ctaUrl, setCtaUrl] = useState(registrationUrl(market, aidFromPathname(pathname)));
 

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  marketFromLocation,
   marketFromPathname,
   marketPreviewPath,
   publicMarketUrl,
@@ -11,6 +12,13 @@ test("marketFromPathname resolves explicit preview markets and defaults to DE", 
   assert.equal(marketFromPathname("/de/partnersuche"), "de");
   assert.equal(marketFromPathname("/ch/partnersuche/zuerich"), "ch");
   assert.equal(marketFromPathname("/partnersuche"), "de");
+});
+
+test("production host identity overrides a prefix-free visible pathname", () => {
+  assert.equal(marketFromLocation("/partnersuche", "ab50.ch"), "ch");
+  assert.equal(marketFromLocation("/partnersuche/zuerich", "www.ab50.ch"), "ch");
+  assert.equal(marketFromLocation("/partnersuche", "ab50.de"), "de");
+  assert.equal(marketFromLocation("/ch/partnersuche", "ab50-nextjs.vercel.app"), "ch");
 });
 
 test("marketPreviewPath adds exactly one market prefix and preserves query and hash", () => {

@@ -43,6 +43,13 @@ export function marketFromPathname(pathname: string): MarketCode {
   return "de";
 }
 
+export function marketFromLocation(pathname: string, hostname?: string): MarketCode {
+  const normalizedHost = hostname?.toLowerCase().replace(/:\d+$/, "").replace(/\.$/, "");
+  if (normalizedHost === "ab50.ch" || normalizedHost === "www.ab50.ch") return "ch";
+  if (normalizedHost === "ab50.de" || normalizedHost === "www.ab50.de") return "de";
+  return marketFromPathname(pathname);
+}
+
 export function marketPreviewPath(market: MarketCode, href: string) {
   const match = href.match(/^([^?#]*)([?#].*)?$/);
   const pathname = match?.[1] || "/";
