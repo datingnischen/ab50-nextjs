@@ -23,6 +23,11 @@ test("Swiss city cards present their destination as a button-style call to actio
   assert.match(globalCssSource, /\.city-card-button\s*\{/);
 });
 
+test("Swiss overview reserves Kostenlos starten for the clickable hero action", () => {
+  assert.match(overviewPageSource, /<span>Seriös kennenlernen<\/span>/);
+  assert.doesNotMatch(overviewPageSource, /<span>Kostenlos starten<\/span>/);
+});
+
 test("city image dialog is accessible and keeps registration available", () => {
   const source = readFileSync(componentUrl, "utf8");
 

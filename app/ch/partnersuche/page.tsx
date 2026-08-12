@@ -33,7 +33,7 @@ export default function SwissPartnersucheOverviewPage() {
           <div className="trust-chip-row" aria-label="Vorteile der Schweizer Stadtseiten">
             <span>18 Schweizer Städte</span>
             <span>Regionale Orientierung</span>
-            <span>Kostenlos starten</span>
+            <span>Seriös kennenlernen</span>
           </div>
           <div className="hero-actions">
             <a className="button-primary" href={registrationUrl("ch", "location")}>Kostenlos starten</a>
