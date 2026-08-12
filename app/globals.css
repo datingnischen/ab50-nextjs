@@ -387,6 +387,21 @@ main { min-height: 60vh; }
   font-style: normal;
   font-weight: 820;
 }
+.city-card-button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--brand-dark);
+  box-shadow: 0 10px 24px rgba(24, 77, 145, .18);
+  line-height: 1.2;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.post-card:hover .city-card-button,
+.post-card:focus-visible .city-card-button {
+  transform: translateY(-1px);
+  background: var(--brand);
+  box-shadow: 0 14px 28px rgba(24, 77, 145, .25);
+}
 .overview-highlight-section,
 .index-list-section,
 .section-block,

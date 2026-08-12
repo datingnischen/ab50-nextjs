@@ -76,7 +76,7 @@ export default function SwissPartnersucheOverviewPage() {
                 <span>Regionale Partnersuche · Schweiz</span>
                 <strong>Singles ab 50 in {city.name}</strong>
                 <p>{city.description}</p>
-                <em className="card-read-more">Stadtseite ansehen</em>
+                <em className="card-read-more city-card-button">Stadtseite ansehen</em>
               </div>
             </MarketLink>
           );

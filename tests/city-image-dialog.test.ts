@@ -18,6 +18,11 @@ test("Swiss partnersuche pages keep migration provenance out of the public page"
   assert.doesNotMatch(overviewPageSource, publicSourcePattern);
 });
 
+test("Swiss city cards present their destination as a button-style call to action", () => {
+  assert.match(overviewPageSource, /className="card-read-more city-card-button">Stadtseite ansehen/);
+  assert.match(globalCssSource, /\.city-card-button\s*\{/);
+});
+
 test("city image dialog is accessible and keeps registration available", () => {
   const source = readFileSync(componentUrl, "utf8");
 
