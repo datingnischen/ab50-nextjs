@@ -28,12 +28,19 @@ function extractBoundedBookImage(content: string) {
   if (end < start) return null;
 
   const markerBlock = content.slice(start, end);
-  const imageMatch = markerBlock.match(/<img\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/i);
-  if (!imageMatch) return null;
+  const imageTag = markerBlock.match(/<img\b[^>]*>/i)?.[0];
+  if (!imageTag) return null;
+  const imageAttribute = (name: string) => imageTag.match(new RegExp(`(?:^|\\s)${name}\\s*=\\s*(["'])(.*?)\\1`, "i"))?.[2];
+  const imageSource = imageAttribute("data-src") || imageAttribute("src");
+  if (!imageSource) return null;
 
   try {
-    const imageUrl = new URL(imageMatch[2].replace(/&amp;/gi, "&"));
-    return imageUrl.protocol === "https:" || imageUrl.protocol === "http:" ? imageUrl.toString() : null;
+    const imageUrl = new URL(imageSource.replace(/&amp;/gi, "&"));
+    return imageUrl.protocol === "https:"
+      && imageUrl.hostname === "ab50.de"
+      && imageUrl.pathname.startsWith("/magazin/wp-content/uploads/")
+      ? imageUrl.toString()
+      : null;
   } catch {
     return null;
   }

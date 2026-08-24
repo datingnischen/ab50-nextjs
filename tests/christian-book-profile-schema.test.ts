@@ -5,7 +5,7 @@ import { buildChristianBookProfileGraph } from "../lib/christian-book-profile-sc
 const markerContent = `
 <p>Profiltext</p>
 <!-- dating-ohne-bullshit-book:start -->
-<figure><img src="https://ab50.de/magazin/wp-content/uploads/2026/08/dating-ohne-bullshit.jpg" alt="Dating ohne Bullshit"></figure>
+<figure><img loading="lazy" data-src="https://ab50.de/magazin/wp-content/uploads/2026/08/dating-ohne-bullshit.jpg" src="data:image/svg+xml;base64,placeholder" alt="Dating ohne Bullshit"></figure>
 <!-- dating-ohne-bullshit-book:end -->
 `;
 
