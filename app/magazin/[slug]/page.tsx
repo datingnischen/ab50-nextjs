@@ -5,6 +5,7 @@ import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
+import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -243,19 +244,34 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const page = await getPageBySlug(slug);
   if (page) {
     const title = stripHtml(page.title);
+    const profileGraph = buildChristianBookProfileGraph({
+      slug,
+      christianSlug: "christian-m-haas",
+      content: page.content || "",
+      canonicalUrl: absoluteUrl(pagePath(page.slug)),
+      profileName: title,
+      profileDescription: stripHtml(page.content).slice(0, 160),
+      profileImage: knownAuthorProfiles["christian-m-haas"].imageSrc,
+      jobTitle: knownAuthorProfiles["christian-m-haas"].role,
+      breadcrumbRootName: siteConfig.magazineName,
+      breadcrumbRootUrl: absoluteUrl("/magazin"),
+    });
     return (
-      <article className="container article-page generic-magazine-page">
-        <header className="article-hero generic-page-hero">
-          <Breadcrumbs title={title} />
-          <p className="eyebrow">Sonderseite</p>
-          <h1>{title}</h1>
-        </header>
-        <section className="article-body-grid single-column-layout">
-          <div className="article-content-card">
-            <div className="article-content" dangerouslySetInnerHTML={{ __html: sanitizeContent(page.content) }} />
-          </div>
-        </section>
-      </article>
+      <>
+        {profileGraph ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(profileGraph) }} /> : null}
+        <article className="container article-page generic-magazine-page">
+          <header className="article-hero generic-page-hero">
+            <Breadcrumbs title={title} />
+            <p className="eyebrow">Sonderseite</p>
+            <h1>{title}</h1>
+          </header>
+          <section className="article-body-grid single-column-layout">
+            <div className="article-content-card">
+              <div className="article-content" dangerouslySetInnerHTML={{ __html: sanitizeContent(page.content) }} />
+            </div>
+          </section>
+        </article>
+      </>
     );
   }
 
