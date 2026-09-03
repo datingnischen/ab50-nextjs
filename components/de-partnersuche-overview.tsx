@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/seo";
 import { cityPath, getAllCities, getAllPublicCitySlugs, normalizeCitySlug, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
+import { cityCardCopy } from "@/lib/city-card-copy";
 
 export const metadata: Metadata = {
   title: "Partnersuche ab 50 in deiner Stadt",
@@ -39,7 +40,7 @@ export default async function PartnersucheOverviewPage() {
             <span>Aktuell gepflegt</span>
           </div>
           <div className="hero-actions">
-            <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+            <a className="button-primary" href={siteConfig.links.registrationLocation}>Kostenlos starten</a>
             <a className="button-secondary" href="/magazin">Zum Magazin</a>
           </div>
         </div>
@@ -59,7 +60,7 @@ export default async function PartnersucheOverviewPage() {
         {cities.map((city) => {
           const publicSlug = publicSlugMap.get(city.slug) || city.slug;
           return (
-            <a className="post-card" href={cityPath(publicSlug)} key={city.slug}>
+            <a className="post-card city-overview-card" href={cityPath(publicSlug)} key={city.slug}>
               {city.featuredImage?.sourceUrl ? (
                 <Image
                   src={city.featuredImage.sourceUrl}
@@ -75,8 +76,8 @@ export default async function PartnersucheOverviewPage() {
               <div className="post-card-body">
                 <span>Regionale Partnersuche</span>
                 <strong>{city.acf?.city_name ? `Singles ab 50 aus ${city.acf.city_name}` : stripHtml(city.title)}</strong>
-                <p>{city.acf?.city_hero_claim || city.acf?.city_dating_angle || "Finde den regionalen Einstieg in deine Partnersuche ab 50 – ruhig, verständlich und nah an deiner Stadt."}</p>
-                <em className="card-read-more">Stadtseite ansehen</em>
+                <p>{cityCardCopy("de", city.slug)}</p>
+                <em className="card-read-more city-card-button">Stadtseite ansehen</em>
               </div>
             </a>
           );

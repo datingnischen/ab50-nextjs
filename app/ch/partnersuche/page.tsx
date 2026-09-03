@@ -4,6 +4,7 @@ import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
 import { swissPartnersuche } from "@/lib/ch-partnersuche";
 import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
+import { cityCardCopy } from "@/lib/city-card-copy";
 
 const overviewPath = marketPartnersuchePath("ch");
 
@@ -63,7 +64,7 @@ export default function SwissPartnersucheOverviewPage() {
         {swissPartnersuche.cities.map((city) => {
           const route = marketPartnersuchePath("ch", city.slug);
           return (
-            <MarketLink className="post-card" href={route.publicUrl} previewHref={route.previewPath} key={city.slug}>
+            <MarketLink className="post-card city-overview-card" href={route.publicUrl} previewHref={route.previewPath} key={city.slug}>
               <Image
                 src={city.heroImage.url}
                 alt={city.heroImage.alt}
@@ -75,7 +76,7 @@ export default function SwissPartnersucheOverviewPage() {
               <div className="post-card-body">
                 <span>Regionale Partnersuche · Schweiz</span>
                 <strong>Singles ab 50 in {city.name}</strong>
-                <p>{city.description}</p>
+                <p>{cityCardCopy("ch", city.slug)}</p>
                 <em className="card-read-more city-card-button">Stadtseite ansehen</em>
               </div>
             </MarketLink>

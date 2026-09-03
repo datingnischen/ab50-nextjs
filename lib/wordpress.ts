@@ -415,7 +415,7 @@ export const getCityByPublicSlug = cache(async (publicSlug: string) => {
 });
 
 export const getAllPublicCitySlugs = cache(async () => {
-  const response = await fetch(`${siteConfig.links.home.replace(/\/$/, "")}/sitemap.php`, {
+  const response = await fetch(`${siteConfig.links.home.replace(/\/$/, "")}/partner_sitemap.php`, {
     headers: { "User-Agent": "Amigo ab50 Next.js/Vercel Cities" },
     next: { revalidate: 300 },
   });

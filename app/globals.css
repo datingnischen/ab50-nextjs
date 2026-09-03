@@ -402,6 +402,22 @@ main { min-height: 60vh; }
   background: var(--brand);
   box-shadow: 0 14px 28px rgba(24, 77, 145, .25);
 }
+.city-overview-card {
+  display: flex;
+  flex-direction: column;
+}
+.city-overview-card .post-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.city-overview-card .post-card-body p {
+  margin-bottom: 18px;
+}
+.city-overview-card .city-card-button {
+  align-self: flex-start;
+  margin-top: auto;
+}
 .overview-highlight-section,
 .index-list-section,
 .section-block,
