@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpLocalPlace, type WpSourceItem } from "@/lib/wordpress";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
-import { getIconyWidgetLocation } from "@/data/city-widget-locations";
+import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
+import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
 import { formatGermanDate } from "@/lib/format";
 
@@ -564,7 +565,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const sources = normalizeSources(city.acf?.sources);
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
-  const iconyLocation = getIconyWidgetLocation(cityName);
+  const iconyLocation = getIconyWidgetLocationForRoute(slug, 49);
+  const singlesSearchUrl = citySearchUrl("de", slug);
   const singlesWidgetEyebrow = city.acf?.city_singles_widget_eyebrow || null;
   const singlesWidgetTitle = city.acf?.city_singles_widget_title || null;
   const singlesWidgetText = city.acf?.city_singles_widget_text || null;
@@ -698,7 +700,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           city={cityName}
           platformId={siteConfig.icony.projectKey}
           location={iconyLocation}
-          searchUrl={siteConfig.links.searchLocation}
+          searchUrl={singlesSearchUrl}
           profileClickUrl={siteConfig.links.registrationLocation}
           eyebrow={singlesWidgetEyebrow || undefined}
           title={singlesWidgetTitle || undefined}

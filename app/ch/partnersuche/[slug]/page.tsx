@@ -4,10 +4,11 @@ import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
-import { getIconyWidgetLocation } from "@/data/city-widget-locations";
+import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { getSwissCity, getSwissCitySlugs, swissPartnersuche } from "@/lib/ch-partnersuche";
+import { citySearchUrl } from "@/lib/city-search";
 import { jsonLd } from "@/lib/seo";
-import { marketPartnersuchePath, publicMarketUrl, registrationUrl, searchUrl } from "@/lib/markets";
+import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -45,7 +46,7 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   const overviewRoute = marketPartnersuchePath("ch");
   const related = swissPartnersuche.cities.filter((item) => item.slug !== city.slug).slice(0, 6);
   const registration = registrationUrl("ch", "location");
-  const search = searchUrl("ch");
+  const search = citySearchUrl("ch", city.slug);
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -105,7 +106,7 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
         <IconyIframeSinglesWidget
           city={city.name}
           platformId="ab50ch"
-          location={getIconyWidgetLocation(city.name, 41)}
+          location={getIconyWidgetLocationForRoute(city.slug, 41)}
           searchUrl={search}
           profileClickUrl={registration}
           eyebrow="Singles in der Schweiz entdecken"

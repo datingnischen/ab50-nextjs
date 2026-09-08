@@ -63,6 +63,27 @@ const cityWidgetLocations: Record<string, IconyWidgetLocation> = {
   aarau: { country: 41, zip: "50" },
 };
 
+const routeLocationKeys: Record<string, string> = {
+  "singles-hannover": "hannover",
+  "singles-berlin": "berlin",
+  "singles-koeln": "koeln",
+  "singles-hamburg": "hamburg",
+  "singles-frankfurt-am-main": "frankfurt-am-main",
+  "singles-muenchen": "muenchen",
+  "singles-leipzig": "leipzig",
+  "singles-kassel": "kassel",
+  "rosenheim-singles": "rosenheim",
+  "singles-freiburg": "freiburg",
+  "singles-dortmund": "dortmund",
+  "singles-duesseldorf": "duesseldorf",
+  "singles-stuttgart": "stuttgart",
+  "singles-dresden": "dresden",
+  "singles-nuernberg": "nuernberg",
+  "singles-bremen": "bremen",
+  "singles-suhl": "suhl",
+  "singles-jena": "jena",
+};
+
 function normalizeLocationKey(value: string) {
   return value
     .toLowerCase()
@@ -76,4 +97,9 @@ function normalizeLocationKey(value: string) {
 
 export function getIconyWidgetLocation(city: string, fallbackCountry: 49 | 43 | 41 = 49): IconyWidgetLocation {
   return cityWidgetLocations[normalizeLocationKey(city)] || { country: fallbackCountry };
+}
+
+export function getIconyWidgetLocationForRoute(routeSlug: string, fallbackCountry: 49 | 43 | 41): IconyWidgetLocation {
+  const routeKey = normalizeLocationKey(routeSlug);
+  return cityWidgetLocations[routeLocationKeys[routeKey] || routeKey] || { country: fallbackCountry };
 }
