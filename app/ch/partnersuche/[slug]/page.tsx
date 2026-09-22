@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CityCharacterArt } from "@/components/city-character-art";
 import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
@@ -94,11 +95,11 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             </div>
           </div>
           <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${city.name} auf einen Blick`}>
-            <CityImageDialog
-              city={city.name}
-              imageUrl={city.heroImage.url}
-              imageAlt={city.heroImage.alt}
-              registrationUrl={registration}
+            <CityCharacterArt
+              slug={city.slug}
+              name={city.name}
+              variant="hero"
+              className="city-phone-image city-art-image"
             />
           </aside>
         </div>
@@ -143,6 +144,22 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
               <h2>Dating ab 50 in {city.name}</h2>
               <p>Diese Stadtseite bündelt lokale Anregungen, Treffpunkte und Wege, wie du in {city.name} entspannt neue Menschen kennenlernen kannst.</p>
             </section>
+            <figure className="city-stat-figure" aria-label={`${city.name} in Zahlen`}>
+              <figcaption className="city-stat-figure-head">
+                <p className="eyebrow">{city.name} in Zahlen</p>
+                <strong>Die Stadt-Statistik für Singles ab 50</strong>
+                <p>Einwohner, Quartiere und beliebte Treffpunkte auf einen Blick – tippe auf die Grafik für die grosse Ansicht.</p>
+              </figcaption>
+              <CityImageDialog
+                city={city.name}
+                imageUrl={city.heroImage.url}
+                imageAlt={`Statistik-Grafik: ${city.heroImage.alt}`}
+                registrationUrl={registration}
+                imageClassName="city-stat-image"
+                hint="Grafik vergrössern"
+              />
+            </figure>
+
             <div className="article-content-card">
               <MarketHtml market="ch" html={city.contentHtml} />
             </div>

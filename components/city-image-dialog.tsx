@@ -8,9 +8,23 @@ type CityImageDialogProps = {
   imageUrl: string;
   imageAlt: string;
   registrationUrl: string;
+  /** Bildklasse des Ausloesers - Standard ist das hochformatige Hero-Format. */
+  imageClassName?: string;
+  /** Beschriftung des Zoom-Hinweises. */
+  hint?: string;
+  /** Nur setzen, wenn das Bild oberhalb der Falz liegt. */
+  priority?: boolean;
 };
 
-export function CityImageDialog({ city, imageUrl, imageAlt, registrationUrl }: CityImageDialogProps) {
+export function CityImageDialog({
+  city,
+  imageUrl,
+  imageAlt,
+  registrationUrl,
+  imageClassName = "city-phone-image",
+  hint = "Bild vergrößern",
+  priority = false,
+}: CityImageDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   function openDialog() {
@@ -30,15 +44,15 @@ export function CityImageDialog({ city, imageUrl, imageAlt, registrationUrl }: C
         onClick={openDialog}
       >
         <Image
-          priority
+          priority={priority}
           src={imageUrl}
           alt={imageAlt}
           width={1000}
           height={667}
-          className="city-phone-image"
-          sizes="(max-width: 980px) 100vw, 420px"
+          className={imageClassName}
+          sizes="(max-width: 980px) 100vw, 720px"
         />
-        <span className="city-image-dialog-hint" aria-hidden="true">Bild vergrößern</span>
+        <span className="city-image-dialog-hint" aria-hidden="true">{hint}</span>
       </button>
 
       <dialog

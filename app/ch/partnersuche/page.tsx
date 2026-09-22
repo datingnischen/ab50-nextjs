@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
+import { CityCharacterArt } from "@/components/city-character-art";
 import { swissPartnersuche } from "@/lib/ch-partnersuche";
 import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 import { cityCardCopy } from "@/lib/city-card-copy";
@@ -65,13 +66,11 @@ export default function SwissPartnersucheOverviewPage() {
           const route = marketPartnersuchePath("ch", city.slug);
           return (
             <MarketLink className="post-card city-overview-card" href={route.publicUrl} previewHref={route.previewPath} key={city.slug}>
-              <Image
-                src={city.heroImage.url}
-                alt={city.heroImage.alt}
-                width={1000}
-                height={667}
-                className="post-card-image"
-                sizes="(max-width: 760px) 100vw, (max-width: 1180px) 50vw, 33vw"
+              <CityCharacterArt
+                slug={city.slug}
+                name={city.name}
+                variant="card"
+                className="post-card-image city-art-image"
               />
               <div className="post-card-body">
                 <span>Regionale Partnersuche · Schweiz</span>
