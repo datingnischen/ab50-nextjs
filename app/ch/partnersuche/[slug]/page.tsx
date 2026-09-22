@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CityCharacterArt } from "@/components/city-character-art";
+import {
+  ChCityAuthorBox,
+  ChCityStats,
+  ChFlirtFactorCard,
+  ChFlirtFactorNote,
+  ChPlaceCards,
+  flirtFactorHeadline,
+} from "@/components/ch-city-modules";
 import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
+import { getChCityFacts } from "@/data/ch-city-facts";
 import { getSwissCity, getSwissCitySlugs, swissPartnersuche } from "@/lib/ch-partnersuche";
 import { citySearchUrl } from "@/lib/city-search";
 import { jsonLd } from "@/lib/seo";
@@ -43,6 +52,7 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   const city = getSwissCity(slug);
   if (!city) notFound();
 
+  const facts = getChCityFacts(city.slug);
   const route = marketPartnersuchePath("ch", city.slug);
   const overviewRoute = marketPartnersuchePath("ch");
   const related = swissPartnersuche.cities.filter((item) => item.slug !== city.slug).slice(0, 6);
@@ -85,9 +95,9 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             <h1>{city.title}</h1>
             <p className="lead">{city.description}</p>
             <div className="trust-chip-row" aria-label="Stadtvorteile">
-              <span>Singles ab 50</span>
-              <span>{city.name} & Umgebung</span>
-              <span>Kostenlos starten</span>
+              {(facts?.heroChips ?? [`Singles ab 50`, `${city.name} & Umgebung`, "Kostenlos starten"]).map((chip) => (
+                <span key={chip}>{chip}</span>
+              ))}
             </div>
             <div className="hero-actions">
               <a className="button-primary" href={registration}>Kostenlos starten</a>
@@ -95,12 +105,17 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             </div>
           </div>
           <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${city.name} auf einen Blick`}>
-            <CityCharacterArt
-              slug={city.slug}
-              name={city.name}
-              variant="hero"
-              className="city-phone-image city-art-image"
-            />
+            <div className="city-visual-wrap">
+              <CityCharacterArt
+                slug={city.slug}
+                name={city.name}
+                variant="hero"
+                className="city-phone-image city-art-image"
+              />
+              {facts ? (
+                <ChFlirtFactorCard cityName={city.name} score={facts.flirtFaktor} text={facts.flirtFaktorText} />
+              ) : null}
+            </div>
           </aside>
         </div>
 
@@ -116,6 +131,42 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
           ctaLabel={`Ausführlicher in ${city.name} suchen`}
           note="Kostenlos starten · Schweizer Umkreis wählen · diskret stöbern"
         />
+
+        {facts ? (
+          <>
+            <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
+              <article className="overview-intent-card overview-intent-card-guide city-intro-card">
+                <span>Flirt-Faktor {city.name}</span>
+                <strong>{flirtFactorHeadline(facts.flirtFaktor)}</strong>
+                <p>{city.name}: {facts.flirtFaktor} Punkte. {facts.flirtFaktorText}</p>
+              </article>
+              <article className="overview-intent-card overview-intent-card-trust city-intro-card">
+                <span>Darum lohnt sich die Seite</span>
+                <strong>Wo du in {city.name} leichter ins Gespräch kommst</strong>
+                <p>Du bekommst Date-Ideen, passende Treffpunkte und konkrete Tipps, damit du in {city.name} entspannter neue Menschen kennenlernst.</p>
+              </article>
+              <article className="overview-intent-card overview-intent-card-featured city-intro-card">
+                <span>Nächster Schritt</span>
+                <strong>Danach kannst du direkt kostenlos weitermachen</strong>
+                <p>Wenn du nicht nur lesen, sondern wirklich neue Begegnungen in {city.name} entdecken möchtest, ist der Einstieg auf ab50.ch sofort greifbar.</p>
+              </article>
+            </section>
+
+            <div className="city-top-modules">
+              <ChCityStats cityName={city.name} facts={facts} />
+              <section className="city-cta-box city-cta-box-compact" aria-label="Nächster Schritt">
+                <p className="eyebrow">Bereit für den nächsten Schritt?</p>
+                <h2>Starte kostenlos und entdecke Singles ab 50 in {city.name}.</h2>
+                <p>Du kannst dich in Ruhe umsehen und selbst entscheiden, wie du den ersten Kontakt gestaltest.</p>
+                <div className="city-cta-actions">
+                  <a className="button-primary" href={registration}>Kostenlos starten</a>
+                  <MarketLink className="button-secondary" href={overviewRoute.publicUrl} previewHref={overviewRoute.previewPath}>Alle Schweizer Städte</MarketLink>
+                </div>
+                <small>Kostenlos starten · Schweizer Umkreis wählen · diskret stöbern</small>
+              </section>
+            </div>
+          </>
+        ) : null}
 
         <section className="article-body-grid city-body-grid">
           <aside className="article-side-column city-side-column">
@@ -160,9 +211,15 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
               />
             </figure>
 
+            {facts ? <ChPlaceCards cityName={city.name} places={facts.treffpunkte} /> : null}
+
             <div className="article-content-card">
               <MarketHtml market="ch" html={city.contentHtml} />
             </div>
+
+            {facts ? <ChFlirtFactorNote cityName={city.name} score={facts.flirtFaktor} /> : null}
+
+            <ChCityAuthorBox cityName={city.name} />
           </div>
         </section>
 
