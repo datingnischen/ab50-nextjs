@@ -862,11 +862,12 @@ function defaultScene(p: Pal, _uid: string): ReactNode {
 
 /* ---------------------------------------------------------------------- Rahmen */
 
-type Variant = "card" | "hero";
+type Variant = "card" | "hero" | "thumb";
 
 const LAYOUT: Record<Variant, {
   w: number; h: number; ground: number; scale: number; dx: number;
-  bandTop: number; padX: number; nameSize: number; taglineSize: number;
+  /** null = kein Textband (Vorschaubild). */
+  bandTop: number | null; padX: number; nameSize: number; taglineSize: number;
   sun: { cx: number; cy: number; r: number };
 }> = {
   card: {
@@ -878,6 +879,11 @@ const LAYOUT: Record<Variant, {
     w: 1000, h: 1063, ground: 726, scale: 1.2, dx: -100,
     bandTop: 872, padX: 62, nameSize: 56, taglineSize: 25,
     sun: { cx: 756, cy: 224, r: 60 },
+  },
+  thumb: {
+    w: 1000, h: 420, ground: 300, scale: 0.86, dx: 70,
+    bandTop: null, padX: 0, nameSize: 0, taglineSize: 0,
+    sun: { cx: 802, cy: 82, r: 34 },
   },
 };
 
@@ -997,34 +1003,37 @@ export function CityCharacterArt({ slug, name, variant, className }: CityCharact
         </>
       )}
 
-      <rect x={0} y={l.bandTop} width={l.w} height={r2(l.h - l.bandTop)} fill={`url(#${uid}-band)`} />
-      <rect x={0} y={l.bandTop} width={l.w} height={4} fill={p.accent} />
-
-      <text
-        x={l.padX}
-        y={r2(l.bandTop + (l.h - l.bandTop) * 0.46)}
-        fill="#ffffff"
-        fontFamily={FONT}
-        fontSize={l.nameSize}
-        fontWeight={800}
-        letterSpacing="-0.02em"
-      >
-        {name}
-      </text>
-      <text
-        x={l.padX}
-        y={r2(l.bandTop + (l.h - l.bandTop) * 0.74)}
-        fill="rgba(255,255,255,.82)"
-        fontFamily={FONT}
-        fontSize={l.taglineSize}
-        fontWeight={600}
-      >
-        {art.tagline}
-      </text>
-      <g transform={`translate(${r2(l.w - l.padX - 44)} ${r2(l.bandTop + (l.h - l.bandTop) * 0.3)})`}>
-        <circle cx={22} cy={22} r={22} fill="rgba(255,255,255,.12)" />
-        <Heart x={8} y={9} size={28} fill={p.accent} />
-      </g>
+      {l.bandTop !== null ? (
+        <>
+          <rect x={0} y={l.bandTop} width={l.w} height={r2(l.h - l.bandTop)} fill={`url(#${uid}-band)`} />
+          <rect x={0} y={l.bandTop} width={l.w} height={4} fill={p.accent} />
+          <text
+            x={l.padX}
+            y={r2(l.bandTop + (l.h - l.bandTop) * 0.46)}
+            fill="#ffffff"
+            fontFamily={FONT}
+            fontSize={l.nameSize}
+            fontWeight={800}
+            letterSpacing="-0.02em"
+          >
+            {name}
+          </text>
+          <text
+            x={l.padX}
+            y={r2(l.bandTop + (l.h - l.bandTop) * 0.74)}
+            fill="rgba(255,255,255,.82)"
+            fontFamily={FONT}
+            fontSize={l.taglineSize}
+            fontWeight={600}
+          >
+            {art.tagline}
+          </text>
+          <g transform={`translate(${r2(l.w - l.padX - 44)} ${r2(l.bandTop + (l.h - l.bandTop) * 0.3)})`}>
+            <circle cx={22} cy={22} r={22} fill="rgba(255,255,255,.12)" />
+            <Heart x={8} y={9} size={28} fill={p.accent} />
+          </g>
+        </>
+      ) : null}
     </svg>
   );
 }

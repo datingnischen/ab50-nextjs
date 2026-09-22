@@ -173,10 +173,20 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             <div className="city-sidebar-stack">
               <section className="city-sidebar-card city-sidebar-soft" aria-label="Kurz zusammengefasst">
                 <p className="eyebrow">Dein regionaler Einstieg</p>
-                <strong>Partnersuche ab 50 in {city.name}</strong>
+                <strong>{city.name} auf einen Blick</strong>
                 <ul className="city-key-points">
-                  <li>Lokale Orte und Ideen für erste Treffen</li>
-                  <li>Regionale Singles auf ab50.ch entdecken</li>
+                  {facts ? (
+                    <>
+                      <li><strong>Flirt-Faktor {facts.flirtFaktor}/100</strong> für {city.name}</li>
+                      <li><strong>{facts.einwohner} Einwohner</strong> · {facts.dritteKachel.wert} {facts.dritteKachel.label}</li>
+                      <li><strong>3 Date-Orte:</strong> {facts.treffpunkte.map((place) => place.name).join(", ")}</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>Lokale Orte und Ideen für erste Treffen</li>
+                      <li>Regionale Singles auf ab50.ch entdecken</li>
+                    </>
+                  )}
                   <li>Weitere Schweizer Städte direkt erreichbar</li>
                 </ul>
               </section>
@@ -232,7 +242,13 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             {related.map((item) => {
               const relatedRoute = marketPartnersuchePath("ch", item.slug);
               return (
-                <MarketLink className="category-topic-card" href={relatedRoute.publicUrl} previewHref={relatedRoute.previewPath} key={item.slug}>
+                <MarketLink className="category-topic-card city-related-card" href={relatedRoute.publicUrl} previewHref={relatedRoute.previewPath} key={item.slug}>
+                  <CityCharacterArt
+                    slug={item.slug}
+                    name={item.name}
+                    variant="thumb"
+                    className="city-related-thumb"
+                  />
                   <span>{item.name}</span>
                   <strong>Singles ab 50 in {item.name} kennenlernen</strong>
                   <em className="card-read-more">Stadtseite öffnen</em>

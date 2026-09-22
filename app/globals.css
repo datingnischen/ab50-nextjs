@@ -2651,3 +2651,123 @@ main { min-height: 60vh; }
     width: min(100%, 320px);
   }
 }
+
+/* --- Sidebar-Karten der Stadtseiten (DE + CH) --------------------------- */
+
+/* Der Stapel bleibt beim Scrollen in Sichtweite, solange Platz ist. */
+.city-sidebar-card {
+  position: relative;
+  overflow: hidden;
+}
+.city-sidebar-card > .eyebrow {
+  margin-bottom: 8px;
+}
+.city-sidebar-card strong {
+  font-size: 1.12rem;
+  letter-spacing: -.02em;
+  color: var(--brand-dark);
+}
+
+/* Stichpunkte als Zeilen mit Haken statt als Aufzaehlungspunkte. */
+.city-sidebar-soft .city-key-points {
+  padding-left: 0;
+}
+.city-key-points {
+  gap: 0;
+  margin-top: 14px;
+}
+/* Kein Grid/Flex auf dem li: sonst werden <strong> und Textknoten
+   zu eigenen Items und jedes Wort landet in einer eigenen Zeile. */
+.city-key-points li {
+  position: relative;
+  padding: 11px 0 11px 33px;
+  border-top: 1px solid rgba(26,76,149,.1);
+  line-height: 1.5;
+  font-size: .97rem;
+  color: var(--city-muted, var(--muted));
+}
+.city-key-points li:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+.city-key-points li:last-child {
+  padding-bottom: 0;
+}
+.city-key-points li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(26,76,149,.1);
+  color: var(--brand);
+  font-size: .7rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.city-key-points li:first-child::before {
+  top: 2px;
+}
+/* Hervorgehobene Zeile, z. B. der Flirt-Faktor. */
+.city-key-points li strong {
+  display: inline;
+  font-size: inherit;
+  color: var(--brand-dark);
+}
+
+/* CTA-Karte klarer vom Infoblock abgesetzt. */
+.city-sidebar-cta {
+  border-color: rgba(26,76,149,.18);
+  background: linear-gradient(160deg, #ffffff 0%, #eef4fc 62%, #e6eefa 100%);
+}
+.city-sidebar-cta::after {
+  content: "";
+  position: absolute;
+  right: -56px;
+  top: -46px;
+  width: 168px;
+  height: 168px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(136,40,42,.13), transparent 68%);
+  pointer-events: none;
+}
+.city-sidebar-cta > * {
+  position: relative;
+  z-index: 1;
+}
+.city-sidebar-cta p {
+  margin: 10px 0 0;
+  color: var(--city-muted, var(--muted));
+  font-size: .96rem;
+  line-height: 1.55;
+}
+
+/* Vorschaubilder in "Weitere regionale Einstiege" */
+.city-related-card {
+  padding: 14px 14px 18px;
+}
+.city-related-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1000 / 420;
+  margin-bottom: 14px;
+  border-radius: 18px;
+  transition: transform .24s ease;
+}
+.city-related-card > span,
+.city-related-card > strong,
+.city-related-card > .card-read-more {
+  padding-inline: 6px;
+}
+.city-related-card:hover .city-related-thumb {
+  transform: scale(1.015);
+}
+@media (max-width: 760px) {
+  .city-related-thumb {
+    border-radius: 14px;
+  }
+}
