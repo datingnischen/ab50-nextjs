@@ -410,3 +410,15 @@ export const fallbackCityArt: CityArtConfig = {
 export function getCityArt(slug: string): CityArtConfig {
   return cityArt[slug] ?? fallbackCityArt;
 }
+
+/** Varianten, die als eigenstaendige SVG-Datei ausgeliefert werden. */
+export type CityArtFileVariant = "card" | "thumb";
+
+/** Pfad der vorgerenderten Stadtgrafik (siehe app/stadtbild/[file]/route.ts). */
+export function cityArtImageSrc(slug: string, variant: CityArtFileVariant) {
+  return `/stadtbild/${slug}-${variant}.svg`;
+}
+
+export function cityArtAltText(slug: string, name: string) {
+  return `${name}: ${getCityArt(slug).motif}`;
+}

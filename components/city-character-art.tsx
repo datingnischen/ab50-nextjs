@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { getCityArt, type CityArtPalette } from "@/lib/city-art";
+import { cityArtAltText, getCityArt, type CityArtPalette } from "@/lib/city-art";
+
+export type { CityArtFileVariant } from "@/lib/city-art";
 
 /**
  * Selbst gezeichnete Stadtgrafiken ("Stadtporträts").
@@ -892,10 +894,11 @@ export type CityCharacterArtProps = {
   name: string;
   variant: Variant;
   className?: string;
-  priority?: boolean;
+  /** Fuer die als Datei ausgelieferten Grafiken: feste Groesse am <svg> setzen. */
+  standalone?: boolean;
 };
 
-export function CityCharacterArt({ slug, name, variant, className }: CityCharacterArtProps) {
+export function CityCharacterArt({ slug, name, variant, className, standalone }: CityCharacterArtProps) {
   const art = getCityArt(slug);
   const p = art.palette;
   const l = LAYOUT[variant];
@@ -903,12 +906,13 @@ export function CityCharacterArt({ slug, name, variant, className }: CityCharact
   const scene = SCENES[slug] ?? defaultScene;
   const isLand = LAND_CITIES.has(slug);
   const stageTransform = `translate(${l.dx} ${r2(l.ground - GROUND * l.scale)}) scale(${l.scale})`;
-  const title = `${name}: ${art.motif}`;
+  const title = cityArtAltText(slug, name);
 
   return (
     <svg
       className={className}
       viewBox={`0 0 ${l.w} ${l.h}`}
+      {...(standalone ? { width: l.w, height: l.h } : null)}
       preserveAspectRatio="xMidYMid slice"
       role="img"
       aria-label={title}

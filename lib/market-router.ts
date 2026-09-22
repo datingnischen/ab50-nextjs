@@ -40,9 +40,15 @@ export function resolveHostRequest(hostnameInput: string, pathname: string): Par
     || pathname === "/robots.txt"
     || pathname === "/ch/sitemap.xml"
     || pathname === "/ch/robots.txt"
-    || pathname === "/ab50-ch-logo.svg";
+    || pathname === "/ab50-ch-logo.svg"
+    || isCityArtAsset(pathname);
 
   return isSwissRoute ? { action: "pass", market: "ch" } : { action: "not-found" };
+}
+
+/** Vorgerenderte Stadtgrafiken, streng auf Slug-Dateinamen begrenzt. */
+function isCityArtAsset(pathname: string) {
+  return /^\/stadtbild\/[a-z0-9-]+-(card|thumb)\.svg$/.test(pathname);
 }
 
 function prefixedMarket(pathname: string): RouteMarket | "unsupported" | null {

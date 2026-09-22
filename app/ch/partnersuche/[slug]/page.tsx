@@ -15,6 +15,7 @@ import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { getChCityFacts } from "@/data/ch-city-facts";
+import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { getSwissCity, getSwissCitySlugs, swissPartnersuche } from "@/lib/ch-partnersuche";
 import { citySearchUrl } from "@/lib/city-search";
 import { jsonLd } from "@/lib/seo";
@@ -243,10 +244,14 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
               const relatedRoute = marketPartnersuchePath("ch", item.slug);
               return (
                 <MarketLink className="category-topic-card city-related-card" href={relatedRoute.publicUrl} previewHref={relatedRoute.previewPath} key={item.slug}>
-                  <CityCharacterArt
-                    slug={item.slug}
-                    name={item.name}
-                    variant="thumb"
+                  {/* eslint-disable-next-line @next/next/no-img-element -- fertiges SVG, keine Optimierung noetig */}
+                  <img
+                    src={cityArtImageSrc(item.slug, "thumb")}
+                    alt={cityArtAltText(item.slug, item.name)}
+                    width={1000}
+                    height={420}
+                    loading="lazy"
+                    decoding="async"
                     className="city-related-thumb"
                   />
                   <span>{item.name}</span>

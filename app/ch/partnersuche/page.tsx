@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
-import { CityCharacterArt } from "@/components/city-character-art";
+import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { swissPartnersuche } from "@/lib/ch-partnersuche";
 import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 import { cityCardCopy } from "@/lib/city-card-copy";
@@ -62,14 +62,18 @@ export default function SwissPartnersucheOverviewPage() {
       </div>
 
       <div className="post-grid">
-        {swissPartnersuche.cities.map((city) => {
+        {swissPartnersuche.cities.map((city, index) => {
           const route = marketPartnersuchePath("ch", city.slug);
           return (
             <MarketLink className="post-card city-overview-card" href={route.publicUrl} previewHref={route.previewPath} key={city.slug}>
-              <CityCharacterArt
-                slug={city.slug}
-                name={city.name}
-                variant="card"
+              {/* eslint-disable-next-line @next/next/no-img-element -- fertiges SVG, keine Optimierung noetig */}
+              <img
+                src={cityArtImageSrc(city.slug, "card")}
+                alt={cityArtAltText(city.slug, city.name)}
+                width={1000}
+                height={625}
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
                 className="post-card-image city-art-image"
               />
               <div className="post-card-body">

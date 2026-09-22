@@ -54,6 +54,15 @@ test("the CH production host cannot expose the DE application tree", () => {
   assert.deepEqual(resolveHostRequest("ab50.ch", "/ab50-ch-logo.svg"), { action: "pass", market: "ch" });
 });
 
+test("the CH host serves prerendered city art but nothing else under that path", () => {
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/zuerich-card.svg"), { action: "pass", market: "ch" });
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/la-chaux-de-fonds-thumb.svg"), { action: "pass", market: "ch" });
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/zuerich-hero.svg"), { action: "not-found" });
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/"), { action: "not-found" });
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/../magazin"), { action: "not-found" });
+  assert.deepEqual(resolveHostRequest("ab50.ch", "/stadtbild/x-card.svg/../../magazin"), { action: "not-found" });
+});
+
 test("DE, preview, and unknown hosts follow an explicit application-host policy", () => {
   assert.deepEqual(resolveHostRequest("ab50.de", "/magazin"), { action: "pass", market: "de" });
   assert.deepEqual(resolveHostRequest("ab50-nextjs.vercel.app", "/ch/partnersuche"), { action: "pass" });
