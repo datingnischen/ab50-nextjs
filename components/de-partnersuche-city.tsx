@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpLocalPlace, type WpSourceItem } from "@/lib/wordpress";
+import { CityFurtherCities } from "@/components/city-further-cities";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
+import { pickFurtherCities } from "@/lib/further-cities";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
@@ -554,7 +556,24 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const cityName = city.acf?.city_name || title;
   const lead = cityLead(city) || `Hier erfährst du, wo Singles ab 50 in ${cityName} leichter ins Gespräch kommen, welche Orte sich für erste Dates eignen und wie du kostenlos starten kannst.`;
   const publicSlugMap = buildPublicSlugMap(publicCitySlugs);
-  const relatedCities = allCities.filter((item: typeof allCities[number]) => item.slug !== city.slug).slice(0, 6);
+  const cityTiles = allCities.map((item: typeof allCities[number]) => {
+    const itemName = item.acf?.city_name || sanitizeTitle(item.title);
+    const itemPath = cityPath(publicSlugMap.get(item.slug) || item.slug);
+    return {
+      key: item.slug,
+      name: itemName,
+      path: itemPath,
+      href: itemPath,
+      hasImage: Boolean(item.featuredImage?.sourceUrl),
+      image: item.featuredImage?.sourceUrl ? {
+        src: item.featuredImage.sourceUrl,
+        alt: item.featuredImage.altText || `Singles ab 50 aus ${itemName}`,
+        width: item.featuredImage.width || 900,
+        height: item.featuredImage.height || 600,
+      } : null,
+    };
+  });
+  const furtherCities = pickFurtherCities(cityTiles, cityPath(publicSlugMap.get(city.slug) || city.slug));
   const readingMinutes = estimateReadingTime(city.content);
   const tocItems = extractTocItems(city.content);
   const safeHtml = sanitizeContent(city.content, tocItems, cityName);
@@ -901,26 +920,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </div>
         </section>
 
-        {relatedCities.length ? (
-          <div className="category-topic-strip city-related-strip" aria-label="Weitere Städte">
-            <div className="section-heading compact-heading">
-              <p className="eyebrow">Weitere Städte</p>
-              <h2>Weitere regionale Einstiege</h2>
-            </div>
-            <div className="category-topic-grid">
-              {relatedCities.map((item: typeof relatedCities[number]) => {
-                const publicSlug = publicSlugMap.get(item.slug) || item.slug;
-                return (
-                  <a className="category-topic-card" href={cityPath(publicSlug)} key={item.slug}>
-                    <span>{item.acf?.city_name || sanitizeTitle(item.title)}</span>
-                    <strong>{item.acf?.city_hero_claim || item.acf?.city_dating_angle || `Singles ab 50 in ${item.acf?.city_name || sanitizeTitle(item.title)} kennenlernen: Treffpunkte, Date-Ideen und neue Kontakte.`}</strong>
-                    <em className="card-read-more">Stadtseite öffnen</em>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
+        <CityFurtherCities tiles={furtherCities} totalCities={allCities.length} overviewHref="/partnersuche" />
 
         <section className="overview-cta-strip category-final-cta" aria-label="Nächster Schritt">
           <div>

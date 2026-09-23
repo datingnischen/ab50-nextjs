@@ -9,6 +9,7 @@ import {
   ChPlaceCards,
   flirtFactorHeadline,
 } from "@/components/ch-city-modules";
+import { CityFurtherCities } from "@/components/city-further-cities";
 import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
@@ -18,6 +19,7 @@ import { getChCityFacts } from "@/data/ch-city-facts";
 import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { getSwissCity, getSwissCitySlugs, swissPartnersuche } from "@/lib/ch-partnersuche";
 import { citySearchUrl } from "@/lib/city-search";
+import { pickFurtherCities } from "@/lib/further-cities";
 import { jsonLd } from "@/lib/seo";
 import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 
@@ -56,7 +58,27 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   const facts = getChCityFacts(city.slug);
   const route = marketPartnersuchePath("ch", city.slug);
   const overviewRoute = marketPartnersuchePath("ch");
-  const related = swissPartnersuche.cities.filter((item) => item.slug !== city.slug).slice(0, 6);
+  const furtherCities = pickFurtherCities(
+    swissPartnersuche.cities.map((item) => {
+      const itemRoute = marketPartnersuchePath("ch", item.slug);
+      return {
+        key: item.slug,
+        name: item.name,
+        path: itemRoute.publicPath,
+        href: itemRoute.publicUrl,
+        previewHref: itemRoute.previewPath,
+        hasImage: true,
+        image: {
+          src: cityArtImageSrc(item.slug, "thumb"),
+          alt: cityArtAltText(item.slug, item.name),
+          width: 1000,
+          height: 420,
+          unoptimized: true,
+        },
+      };
+    }),
+    route.publicPath,
+  );
   const registration = registrationUrl("ch", "location");
   const search = citySearchUrl("ch", city.slug);
   const schema = {
@@ -234,34 +256,12 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
           </div>
         </section>
 
-        <div className="category-topic-strip city-related-strip" aria-label="Weitere Schweizer Städte">
-          <div className="section-heading compact-heading">
-            <p className="eyebrow">Weitere Städte</p>
-            <h2>Weitere regionale Einstiege in der Schweiz</h2>
-          </div>
-          <div className="category-topic-grid">
-            {related.map((item) => {
-              const relatedRoute = marketPartnersuchePath("ch", item.slug);
-              return (
-                <MarketLink className="category-topic-card city-related-card" href={relatedRoute.publicUrl} previewHref={relatedRoute.previewPath} key={item.slug}>
-                  {/* eslint-disable-next-line @next/next/no-img-element -- fertiges SVG, keine Optimierung noetig */}
-                  <img
-                    src={cityArtImageSrc(item.slug, "thumb")}
-                    alt={cityArtAltText(item.slug, item.name)}
-                    width={1000}
-                    height={420}
-                    loading="lazy"
-                    decoding="async"
-                    className="city-related-thumb"
-                  />
-                  <span>{item.name}</span>
-                  <strong>Singles ab 50 in {item.name} kennenlernen</strong>
-                  <em className="card-read-more">Stadtseite öffnen</em>
-                </MarketLink>
-              );
-            })}
-          </div>
-        </div>
+        <CityFurtherCities
+          tiles={furtherCities}
+          totalCities={swissPartnersuche.cities.length}
+          overviewHref={overviewRoute.publicUrl}
+          overviewPreviewHref={overviewRoute.previewPath}
+        />
 
         <section className="overview-cta-strip category-final-cta" aria-label="Kostenlos starten">
           <div>

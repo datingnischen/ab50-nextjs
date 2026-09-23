@@ -1595,7 +1595,6 @@ main { min-height: 60vh; }
 .city-source-box,
 .article-content-card,
 .city-author-box,
-.city-related-strip .category-topic-card,
 .category-final-cta {
   border: 1px solid var(--city-line);
   box-shadow: 0 18px 54px rgba(26,76,149,.06);
@@ -1638,12 +1637,6 @@ main { min-height: 60vh; }
 }
 .city-author-box {
   background: linear-gradient(180deg, #fff, #f8f2f3);
-}
-.city-related-strip .category-topic-card {
-  background: linear-gradient(180deg, #fff, #f8fbff);
-}
-.city-related-strip .category-topic-card:hover {
-  transform: translateY(-2px);
 }
 
 .site-footer-shell {
@@ -2746,29 +2739,177 @@ main { min-height: 60vh; }
   line-height: 1.55;
 }
 
-/* Vorschaubilder in "Weitere regionale Einstiege" */
-.city-related-card {
-  padding: 14px 14px 18px;
+/* "Singles ab 50 in weiteren Städten" am Ende jeder Stadtseite (DE + CH) */
+.city-further {
+  margin: 0 0 28px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--city-line, var(--line));
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(136,40,42,.08), transparent 22rem),
+    radial-gradient(circle at 0% 100%, rgba(26,76,149,.09), transparent 24rem),
+    linear-gradient(180deg, #fff, var(--brand-soft));
+  box-shadow: 0 18px 54px rgba(26,76,149,.06);
 }
-.city-related-thumb {
+.city-further-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.city-further-head h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+  line-height: 1.12;
+  letter-spacing: -.03em;
+  color: var(--city-ink, var(--text));
+}
+.city-further-all {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--city-line, var(--line));
+  border-radius: 999px;
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.city-further-all:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.city-further-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.city-further-tile {
+  position: relative;
   display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--brand-soft);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(20,61,119,.12);
+  transition: transform .24s ease, box-shadow .24s ease;
+}
+.city-further-tile:hover,
+.city-further-tile:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(20,61,119,.2);
+}
+.city-further-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 1000 / 420;
-  margin-bottom: 14px;
-  border-radius: 18px;
-  transition: transform .24s ease;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
 }
-.city-related-card > span,
-.city-related-card > strong,
-.city-related-card > .card-read-more {
-  padding-inline: 6px;
+.city-further-placeholder {
+  display: block;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
 }
-.city-related-card:hover .city-related-thumb {
-  transform: scale(1.015);
+.city-further-tile:hover .city-further-image,
+.city-further-tile:focus-visible .city-further-image {
+  transform: scale(1.07);
+}
+.city-further-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15,26,45,0) 38%, rgba(15,26,45,.78) 100%);
+}
+.city-further-label {
+  position: absolute;
+  left: 18px;
+  right: 70px;
+  bottom: 16px;
+  display: grid;
+  gap: 2px;
+  line-height: 1.1;
+}
+.city-further-label small {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .88;
+}
+.city-further-label strong {
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 900;
+  letter-spacing: -.02em;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25);
+  overflow-wrap: anywhere;
+}
+.city-further-arrow {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--brand-dark);
+  font-weight: 900;
+  transition: background .2s ease, color .2s ease;
+}
+.city-further-tile:hover .city-further-arrow,
+.city-further-tile:focus-visible .city-further-arrow {
+  background: var(--accent);
+  color: #fff;
+}
+@media (max-width: 960px) {
+  .city-further-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
 }
 @media (max-width: 760px) {
-  .city-related-thumb {
-    border-radius: 14px;
+  .city-further {
+    border-radius: 22px;
+  }
+  .city-further-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .city-further-tile {
+    border-radius: 16px;
+  }
+  .city-further-label {
+    left: 12px;
+    right: 48px;
+    bottom: 12px;
+  }
+  .city-further-label small {
+    font-size: .62rem;
+  }
+  .city-further-label strong {
+    font-size: 1.08rem;
+  }
+  .city-further-arrow {
+    right: 10px;
+    bottom: 10px;
+    width: 30px;
+    height: 30px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-further-tile,
+  .city-further-image {
+    transition: none;
   }
 }
 
