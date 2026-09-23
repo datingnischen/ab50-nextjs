@@ -180,14 +180,26 @@ function RelatedArticles({ posts }: { posts: Awaited<ReturnType<typeof getLatest
 
 function FinalArticleCta() {
   return (
-    <section className="article-final-cta" aria-label="Kostenlos starten">
-      <p className="eyebrow">Bereit für den nächsten Schritt?</p>
-      <h2>Lerne neue Menschen kennen – mit mehr Ruhe, Klarheit und echtem Interesse.</h2>
-      <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um.</p>
-      <div className="article-final-actions">
-        <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-        <a className="button-secondary" href="/magazin">Weitere Themen lesen</a>
+    <section className="article-final-cta article-final-cta-radar" aria-label="Kostenlos starten">
+      <div>
+        <p className="eyebrow">Bereit für den nächsten Schritt?</p>
+        <h2>Lerne neue Menschen kennen – mit mehr Ruhe, Klarheit und echtem Interesse.</h2>
+        <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um.</p>
+        <div className="article-final-actions">
+          <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+          <a className="button-secondary" href="/magazin">Weitere Themen lesen</a>
+        </div>
       </div>
+      <a className="article-radar-card" href={siteConfig.links.registrationCommon}>
+        <img
+          src="/umkreissuche-radar.svg"
+          alt="Umkreissuche: Singles ab 50 in deiner Nähe – kostenlos anmelden"
+          width={320}
+          height={480}
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
     </section>
   );
 }
