@@ -6,6 +6,7 @@ import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { swissPartnersuche } from "@/lib/ch-partnersuche";
 import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 import { cityCardCopy } from "@/lib/city-card-copy";
+import { CitySearchFallback } from "@/components/city-search-fallback";
 
 const overviewPath = marketPartnersuchePath("ch");
 
@@ -86,6 +87,8 @@ export default function SwissPartnersucheOverviewPage() {
           );
         })}
       </div>
+
+      <CitySearchFallback market="ch" />
 
       <section className="article-body-grid city-body-grid market-overview-editorial" aria-label="Partnersuche ab 50 in der Schweiz">
         <div className="article-main-column">

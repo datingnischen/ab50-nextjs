@@ -4,6 +4,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { cityPath, getAllCities, getAllPublicCitySlugs, normalizeCitySlug, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { cityCardCopy } from "@/lib/city-card-copy";
+import { CitySearchFallback } from "@/components/city-search-fallback";
 
 export const metadata: Metadata = {
   title: "Partnersuche ab 50 in deiner Stadt",
@@ -83,6 +84,8 @@ export default async function PartnersucheOverviewPage() {
           );
         })}
       </div>
+
+      <CitySearchFallback market="de" />
     </section>
   );
 }

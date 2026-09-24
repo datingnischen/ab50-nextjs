@@ -2941,3 +2941,33 @@ main { min-height: 60vh; }
   .article-final-cta-radar { grid-template-columns: 1fr; }
   .article-radar-card { width: 100%; max-width: 320px; margin: 0 auto; }
 }
+
+/* Hinweis auf die individuelle Suche unter dem Städte-Grid */
+.category-editorial-note.city-search-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 28px 0 0;
+  padding: clamp(22px, 3vw, 30px);
+  background: linear-gradient(135deg, var(--brand-soft), rgba(136,40,42,.06), #fff);
+}
+.city-search-fallback h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.2;
+}
+.city-search-fallback p:not(.eyebrow) {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+}
+.city-search-fallback .button-primary {
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .category-editorial-note.city-search-fallback {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
