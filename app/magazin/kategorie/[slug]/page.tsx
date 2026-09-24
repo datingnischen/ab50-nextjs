@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { absoluteUrl } from "@/lib/seo";
 import { categoryPath, getCategories, getPostsByCategory, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { formatGermanDate } from "@/lib/format";
+import { formatUpdatedLabel } from "@/lib/format";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -139,7 +139,7 @@ export default async function CategoryPage({ params }: PageProps) {
               <div className="post-card-placeholder" />
             )}
             <div className="post-card-body">
-              <span>{formatGermanDate(post.date) || siteConfig.magazineName}</span>
+              <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
               <strong>{stripHtml(post.title)}</strong>
               <p>{stripHtml(post.excerpt).slice(0, 160)}…</p>
               <em className="card-read-more">Beitrag lesen</em>

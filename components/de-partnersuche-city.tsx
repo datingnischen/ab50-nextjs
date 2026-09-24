@@ -9,7 +9,6 @@ import { pickFurtherCities } from "@/lib/further-cities";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
-import { formatGermanDate } from "@/lib/format";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -353,28 +352,25 @@ function TableOfContents({ items }: { items: TocItem[] }) {
 function SourceBox({
   sources,
   intro,
-  reviewedAt,
   reviewNote,
   displayMode,
   cityName,
 }: {
   sources: WpSourceItem[];
   intro?: string | null;
-  reviewedAt?: string | null;
   reviewNote?: string | null;
   displayMode?: string | null;
   cityName?: string;
 }) {
-  if (displayMode === "hidden" || (!sources.length && !reviewedAt && !reviewNote)) return null;
+  if (displayMode === "hidden" || (!sources.length && !reviewNote)) return null;
 
   return (
     <section className={`city-source-box city-source-box-${displayMode || "auto"}`} aria-label="Quellen und Aktualität">
       <p className="eyebrow">Quellen, Bilder & Aktualität</p>
       {intro ? <p>{intro}</p> : <p>Die Daten und Fakten unten stammen aus öffentlichen Quellen und zeigen die echte Situation in {cityName} für Singles ab 50.</p>}
-      {reviewedAt || reviewNote ? (
+      {reviewNote ? (
         <div className="city-source-review-note">
-          {reviewedAt ? <strong>Geprüft am {reviewedAt}</strong> : null}
-          {reviewNote ? <span>{reviewNote}</span> : null}
+          <span>{reviewNote}</span>
         </div>
       ) : null}
       {sources.length ? (
@@ -577,8 +573,6 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const readingMinutes = estimateReadingTime(city.content);
   const tocItems = extractTocItems(city.content);
   const safeHtml = sanitizeContent(city.content, tocItems, cityName);
-  const lastUpdated = city.modified ? formatGermanDate(city.modified) : null;
-  const reviewDate = city.acf?.content_reviewed_at ? formatGermanDate(city.acf.content_reviewed_at) : null;
   const sourceIntro = city.acf?.sources_intro || null;
   const sourceDisplayMode = city.acf?.sources_display_mode || "auto";
   const sources = normalizeSources(city.acf?.sources);
@@ -623,7 +617,6 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const quickFacts = [
     { label: "Fokus", value: `Partnersuche ab 50 in ${cityName}` },
     { label: "Lesezeit", value: `${readingMinutes} Min.` },
-    { label: "Aktualisiert", value: lastUpdated || "regelmäßig aktualisiert" },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -798,8 +791,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                     </article>
                   ))}
                 </div>
-                {reviewDate || city.acf?.content_review_note ? (
-                  <p className="city-data-note">{reviewDate ? `Datenstand geprüft am ${reviewDate}. ` : ""}{city.acf?.content_review_note || ""}</p>
+                {city.acf?.content_review_note ? (
+                  <p className="city-data-note">{city.acf.content_review_note}</p>
                 ) : null}
               </section>
             ) : null}
@@ -890,7 +883,6 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <SourceBox
               sources={sources}
               intro={sourceIntro}
-              reviewedAt={reviewDate}
               reviewNote={city.acf?.content_review_note}
               displayMode={sourceDisplayMode}
               cityName={cityName}
@@ -912,7 +904,6 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
                 <div className="magazine-author-meta">
                   <span>Treffpunkte in {cityName}</span>
                   <span>Erste Dates ab 50</span>
-                  {lastUpdated ? <span>Aktualisiert am {lastUpdated}</span> : null}
                 </div>
                 <a className="button-secondary magazine-author-link" href={cityAuthor.href}>Mehr von Christian lesen</a>
               </div>

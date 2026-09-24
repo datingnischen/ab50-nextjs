@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { formatGermanDate } from "@/lib/format";
+import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
 
 type PageProps = {
@@ -169,7 +169,7 @@ function RelatedArticles({ posts }: { posts: Awaited<ReturnType<typeof getLatest
                 sizes="(max-width: 760px) 100vw, 25vw"
               />
             ) : <span className="related-card-placeholder" aria-hidden="true" />}
-            <span>{formatGermanDate(post.date) || siteConfig.magazineName}</span>
+            <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
             <strong>{stripHtml(post.title)}</strong>
           </a>
         ))}
@@ -296,6 +296,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const title = stripHtml(post.title);
   const lead = stripHtml(post.excerpt || post.content).slice(0, 220);
   const readingMinutes = estimateReadingTime(post.content);
+  const updatedLabel = formatUpdatedLabel(post);
   const safeHtml = sanitizeContent(post.content, tocItems);
   const authorName = post.author?.name || "ab50.de Redaktion";
   const authorSlug = post.author?.slug || "redaktion";
@@ -365,8 +366,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
               </span>
             </div>
             <div className="article-byline-facts">
-              {post.date ? <span>Veröffentlicht: {formatGermanDate(post.date)}</span> : null}
-              {post.modified && post.modified !== post.date ? <span>Aktualisiert: {formatGermanDate(post.modified)}</span> : null}
+              {updatedLabel ? <span>{updatedLabel}</span> : null}
               <span>{readingMinutes} Min. Lesezeit</span>
             </div>
           </div>
@@ -400,7 +400,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
                 <p className="magazine-author-role">{authorRole}</p>
                 <p>{authorDescription}</p>
                 <div className="magazine-author-meta">
-                  {post.date ? <span>Veröffentlicht am {formatGermanDate(post.date)}</span> : null}
+                  {updatedLabel ? <span>{updatedLabel}</span> : null}
                   {authorHref ? <span>Autorenprofil verfügbar</span> : null}
                 </div>
                 {authorHref ? <a className="button-secondary magazine-author-link" href={authorHref}>Zum Autorenprofil</a> : null}

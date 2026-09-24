@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPages, getCategories, getLatestPosts, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { formatGermanDate } from "@/lib/format";
+import { formatUpdatedLabel } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "50plus Magazin – alle Beiträge im Überblick",
@@ -159,7 +159,7 @@ export default async function MagazinOverviewPage() {
                   <div className="section-index-placeholder" />
                 )}
                 <div className="section-index-card-body">
-                  <span>{formatGermanDate(post.date) || siteConfig.magazineName}</span>
+                  <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
                   <strong>{stripHtml(post.title)}</strong>
                   <p>{stripHtml(post.excerpt).slice(0, 170)}…</p>
                   <em className="card-read-more">Beitrag lesen</em>
