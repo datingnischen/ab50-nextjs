@@ -55,8 +55,8 @@ export function marketFromLocation(pathname: string, hostname?: string): MarketC
 const FILE_PATH_PATTERN = /\/[^/]*\.[a-z0-9]+$/i;
 
 /**
- * Seitenpfade enden immer auf einen Schr‰gstrich, wie die ICONY-Plattform (/login/, /suche/).
- * Dateien wie /sitemap.xml bleiben ohne. Query und Anker h‰ngen hinter dem Schr‰gstrich.
+ * Seitenpfade enden immer auf einen Schr√§gstrich, wie die ICONY-Plattform (/login/, /suche/).
+ * Dateien wie /sitemap.xml bleiben ohne. Query und Anker h√§ngen hinter dem Schr√§gstrich.
  */
 export function withTrailingSlash(pathname: string): string {
   const match = pathname.match(/^([^?#]*)(.*)$/);
