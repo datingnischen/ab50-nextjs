@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { withSlashedPageLinks } from "@/lib/markets";
 import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
@@ -95,7 +96,7 @@ function sanitizeContent(html?: string | null, tocItems: TocItem[] = []) {
     .replace(/<img(?![^>]*loading=)/gi, '<img loading="lazy"')
     .replace(/<img(?![^>]*decoding=)/gi, '<img decoding="async"');
 
-  return injectInlineCta(addHeadingIds(cleaned, tocItems));
+  return injectInlineCta(addHeadingIds(withSlashedPageLinks(cleaned), tocItems));
 }
 
 function estimateReadingTime(html?: string | null) {

@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { withSlashedPageLinks } from "@/lib/markets";
 import { cityPath, getAllCities, getAllPublicCitySlugs, getCityByPublicSlug, normalizeCitySlug, stripHtml, type WpCityStatCard, type WpCityTip, type WpLocalPlace, type WpSourceItem } from "@/lib/wordpress";
 import { CityFurtherCities } from "@/components/city-further-cities";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
@@ -133,7 +134,7 @@ function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], cityNam
     .replace(/<img(?![^>]*loading=)/gi, '<img loading="lazy"')
     .replace(/<img(?![^>]*decoding=)/gi, '<img decoding="async"');
 
-  return injectInlineCta(addHeadingIds(cleaned, tocItems), cityName);
+  return injectInlineCta(addHeadingIds(withSlashedPageLinks(cleaned), tocItems), cityName);
 }
 
 function buildPublicSlugMap(citySlugs: string[]) {

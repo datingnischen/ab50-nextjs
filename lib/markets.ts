@@ -68,6 +68,21 @@ export function withTrailingSlash(pathname: string): string {
   return `${path}/${suffix}`;
 }
 
+const OWN_PAGE_HREF_PATTERN = /(href=["'])((?:https?:\/\/(?:www\.)?ab50\.(?:de|ch))?\/(?!\/)[^"'#?]*)([?#][^"']*)?(["'])/gi;
+const NON_PAGE_PATH_PATTERN = /^\/(?:_next|app-assets|api|wp-content|magazin\/wp-(?:content|includes|json))\//;
+
+/**
+ * Eigene Seitenlinks in importiertem HTML (WordPress, ICONY-Snapshot) bekommen den Schrägstrich,
+ * damit kein Klick über die 308-Umleitung läuft. Dateien und fremde Hosts bleiben unverändert.
+ */
+export function withSlashedPageLinks(html: string): string {
+  return html.replace(OWN_PAGE_HREF_PATTERN, (match, start: string, href: string, suffix: string | undefined, end: string) => {
+    const pathname = href.replace(/^https?:\/\/[^/]+/, "") || "/";
+    if (NON_PAGE_PATH_PATTERN.test(pathname)) return match;
+    return `${start}${withTrailingSlash(href)}${suffix || ""}${end}`;
+  });
+}
+
 export function marketPreviewPath(market: MarketCode, href: string) {
   const match = href.match(/^([^?#]*)([?#].*)?$/);
   const pathname = match?.[1] || "/";

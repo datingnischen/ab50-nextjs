@@ -4,6 +4,7 @@ import {
   marketFromLocation,
   marketFromPathname,
   marketPreviewPath,
+  withSlashedPageLinks,
   withTrailingSlash,
   publicMarketUrl,
   registrationUrl,
@@ -47,4 +48,27 @@ test("withTrailingSlash appends the slash to page paths only", () => {
   assert.equal(withTrailingSlash("/partnersuche?x=1#top"), "/partnersuche/?x=1#top");
   assert.equal(withTrailingSlash("/sitemap.xml"), "/sitemap.xml");
   assert.equal(withTrailingSlash("/stadtbild/zuerich-card.svg"), "/stadtbild/zuerich-card.svg");
+});
+
+test("withSlashedPageLinks adds the slash to own page links in imported HTML only", () => {
+  const html = [
+    '<a href="/partnersuche/bern">Bern</a>',
+    '<a href="https://ab50.de/partnersuche/singles-kassel">Kassel</a>',
+    '<a href="/partnersuche?x=1#top">Hub</a>',
+    '<a href="/partnersuche/">Hub</a>',
+    '<a href="https://ab50.ch/impressum.html">Impressum</a>',
+    '<a href="https://ab50.de/magazin/wp-content/uploads/a">Datei</a>',
+    '<a href="https://example.com/seite">Fremd</a>',
+    '<a href="#abschnitt">Anker</a>',
+  ].join("");
+  assert.equal(withSlashedPageLinks(html), [
+    '<a href="/partnersuche/bern/">Bern</a>',
+    '<a href="https://ab50.de/partnersuche/singles-kassel/">Kassel</a>',
+    '<a href="/partnersuche/?x=1#top">Hub</a>',
+    '<a href="/partnersuche/">Hub</a>',
+    '<a href="https://ab50.ch/impressum.html">Impressum</a>',
+    '<a href="https://ab50.de/magazin/wp-content/uploads/a">Datei</a>',
+    '<a href="https://example.com/seite">Fremd</a>',
+    '<a href="#abschnitt">Anker</a>',
+  ].join(""));
 });

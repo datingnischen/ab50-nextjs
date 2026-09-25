@@ -2,7 +2,7 @@
 
 import type { MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { marketPreviewPath, type MarketCode } from "@/lib/markets";
+import { marketPreviewPath, withSlashedPageLinks, type MarketCode } from "@/lib/markets";
 
 function isPreviewHost(hostname: string) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".vercel.app");
@@ -32,5 +32,5 @@ export function MarketHtml({ html, market }: { html: string; market: MarketCode 
     router.push(marketPreviewPath(market, rawHref));
   }
 
-  return <div className="article-content" onClick={handleClick} dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className="article-content" onClick={handleClick} dangerouslySetInnerHTML={{ __html: withSlashedPageLinks(html) }} />;
 }
