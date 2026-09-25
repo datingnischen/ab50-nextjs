@@ -6,6 +6,7 @@ import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPage
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
+import { staticAsset } from "@/lib/static-asset";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -192,7 +193,7 @@ function FinalArticleCta() {
       </div>
       <a className="article-radar-card" href={siteConfig.links.registrationCommon}>
         <img
-          src="/umkreissuche-radar.svg"
+          src={staticAsset("/umkreissuche-radar.svg")}
           alt="Umkreissuche: Singles ab 50 in deiner Nähe – kostenlos anmelden"
           width={320}
           height={480}

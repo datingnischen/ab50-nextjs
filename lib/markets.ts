@@ -1,3 +1,5 @@
+import { staticAsset } from "./static-asset.ts";
+
 export type MarketCode = "de" | "ch";
 export type Aid = "magazin" | "location";
 
@@ -21,7 +23,7 @@ export const markets: Record<MarketCode, MarketConfig> = {
     siteName: "ab50.de",
     domain: "ab50.de",
     homeUrl: "https://ab50.de/",
-    logoSrc: "/ab50-logo.png",
+    logoSrc: staticAsset("/ab50-logo.png"),
     logoAlt: "ab50.de Logo",
     iconyProjectKey: "ab50de",
   },
@@ -32,7 +34,7 @@ export const markets: Record<MarketCode, MarketConfig> = {
     siteName: "ab50.ch",
     domain: "ab50.ch",
     homeUrl: "https://ab50.ch/",
-    logoSrc: "/ab50-ch-logo.svg",
+    logoSrc: staticAsset("/ab50-ch-logo.svg"),
     logoAlt: "ab50.ch Logo",
     iconyProjectKey: "ab50ch",
   },

@@ -9,6 +9,7 @@ import { pickFurtherCities } from "@/lib/further-cities";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
+import { staticAsset } from "@/lib/static-asset";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -699,7 +700,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         {/* Conversion Banner */}
         <section className="city-banner-conversion" aria-label="Call-to-Action Banner">
           <Image
-            src="/ab50-banner-conversion-langformat.png"
+            src={staticAsset("/ab50-banner-conversion-langformat.png")}
             alt="Neue Menschen ab 50 in deiner Nähe kennenlernen"
             width={1200}
             height={800}

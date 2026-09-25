@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { StickyCTAButton } from "@/components/sticky-cta-button";
 import { siteConfig } from "@/data/site";
+import { staticAsset } from "@/lib/static-asset";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.baseUrl),
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
     template: "%s | ab50.de",
   },
   description: "Das 50plus Magazin von ab50.de: Dating, Beziehung, Sicherheit und Neuanfang für Singles ab 50.",
+  icons: {
+    icon: staticAsset("/brand/icon.png"),
+    apple: staticAsset("/brand/apple-icon.png"),
+  },
   alternates: { canonical: siteConfig.magazinePath },
   openGraph: {
     type: "website",

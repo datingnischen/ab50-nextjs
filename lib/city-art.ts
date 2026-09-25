@@ -1,3 +1,5 @@
+import { staticAsset } from "./static-asset.ts";
+
 export type CityArtPalette = {
   sky1: string;
   sky2: string;
@@ -416,7 +418,7 @@ export type CityArtFileVariant = "card" | "thumb";
 
 /** Pfad der vorgerenderten Stadtgrafik (siehe app/stadtbild/[file]/route.ts). */
 export function cityArtImageSrc(slug: string, variant: CityArtFileVariant) {
-  return `/stadtbild/${slug}-${variant}.svg`;
+  return staticAsset(`/stadtbild/${slug}-${variant}.svg`);
 }
 
 export function cityArtAltText(slug: string, name: string) {
