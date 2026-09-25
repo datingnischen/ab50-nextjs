@@ -13,5 +13,5 @@ export function getSwissCitySlugs() {
 }
 
 export function swissCityPath(slug: string) {
-  return `/partnersuche/${slug}`;
+  return `/partnersuche/${slug}/`;
 }

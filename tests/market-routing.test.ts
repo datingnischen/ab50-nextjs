@@ -4,6 +4,7 @@ import {
   marketFromLocation,
   marketFromPathname,
   marketPreviewPath,
+  withTrailingSlash,
   publicMarketUrl,
   registrationUrl,
 } from "../lib/markets.ts";
@@ -22,16 +23,28 @@ test("production host identity overrides a prefix-free visible pathname", () => 
 });
 
 test("marketPreviewPath adds exactly one market prefix and preserves query and hash", () => {
-  assert.equal(marketPreviewPath("de", "/partnersuche?from=footer#cities"), "/de/partnersuche?from=footer#cities");
-  assert.equal(marketPreviewPath("ch", "/ch/partnersuche/zuerich"), "/ch/partnersuche/zuerich");
+  assert.equal(marketPreviewPath("de", "/partnersuche?from=footer#cities"), "/de/partnersuche/?from=footer#cities");
+  assert.equal(marketPreviewPath("ch", "/ch/partnersuche/zuerich"), "/ch/partnersuche/zuerich/");
+  assert.equal(marketPreviewPath("ch", "/partnersuche/zuerich/"), "/ch/partnersuche/zuerich/");
 });
 
-test("publicMarketUrl emits prefix-free country URLs", () => {
-  assert.equal(publicMarketUrl("de", "/partnersuche"), "https://ab50.de/partnersuche");
-  assert.equal(publicMarketUrl("ch", "/partnersuche/zuerich"), "https://ab50.ch/partnersuche/zuerich");
+test("publicMarketUrl emits prefix-free country URLs with trailing slash", () => {
+  assert.equal(publicMarketUrl("de", "/partnersuche"), "https://ab50.de/partnersuche/");
+  assert.equal(publicMarketUrl("de", "/"), "https://ab50.de/");
+  assert.equal(publicMarketUrl("de", "/sitemap.xml"), "https://ab50.de/sitemap.xml");
+  assert.equal(publicMarketUrl("ch", "/partnersuche/zuerich"), "https://ab50.ch/partnersuche/zuerich/");
 });
 
 test("location registration URLs are market-specific", () => {
   assert.equal(registrationUrl("de", "location"), "https://ab50.de/?AID=location");
   assert.equal(registrationUrl("ch", "location"), "https://ab50.ch/?AID=location");
+});
+
+test("withTrailingSlash appends the slash to page paths only", () => {
+  assert.equal(withTrailingSlash("/magazin"), "/magazin/");
+  assert.equal(withTrailingSlash("/magazin/"), "/magazin/");
+  assert.equal(withTrailingSlash("/"), "/");
+  assert.equal(withTrailingSlash("/partnersuche?x=1#top"), "/partnersuche/?x=1#top");
+  assert.equal(withTrailingSlash("/sitemap.xml"), "/sitemap.xml");
+  assert.equal(withTrailingSlash("/stadtbild/zuerich-card.svg"), "/stadtbild/zuerich-card.svg");
 });

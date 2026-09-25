@@ -47,7 +47,7 @@ export function AboutHistoryPage() {
             </div>
             <div className="hero-actions">
               <a className="button-primary" href="#jahr-2001">Zur Timeline</a>
-              <a className="button-secondary" href="/ueber-uns">Zur Über-uns-Seite</a>
+              <a className="button-secondary" href="/ueber-uns/">Zur Über-uns-Seite</a>
             </div>
           </div>
         </header>
@@ -95,7 +95,7 @@ export function AboutHistoryPage() {
             <p>Aus frühen, teils sehr schlichten Web-Spuren ist über viele Stationen eine Plattform entstanden, die Singles ab 50 Orientierung, Magazin-Inhalte und direkte Einstiege in die Partnersuche bietet.</p>
             <div className="city-cta-actions">
               <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
-              <a className="button-secondary" href="/partnersuche">Partnersuche nach Städten</a>
+              <a className="button-secondary" href="/partnersuche/">Partnersuche nach Städten</a>
             </div>
           </div>
         </section>

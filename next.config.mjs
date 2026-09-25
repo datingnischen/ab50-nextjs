@@ -31,7 +31,10 @@ export default function nextConfig(phase) {
   return {
     turbopack: { root: projectRoot },
     poweredByHeader: false,
-    trailingSlash: false,
+    // Seitenpfade enden auf "/" (wie ICONY /login/). Die Umleitung macht proxy.ts, weil nur dort der
+    // interne Marktpräfix (/ch/..., /de/...) bekannt ist.
+    trailingSlash: true,
+    skipTrailingSlashRedirect: true,
     assetPrefix: isDev ? undefined : `${assetHost}${assetPathPrefix}`,
     images: {
       // nginx vor den Live-Domains reicht /_next/image nicht weiter, darum optimiert der Vercel-Host.

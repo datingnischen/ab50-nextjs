@@ -280,7 +280,7 @@ export function StandardContentPage({ page }: { page: StandardPage }) {
           <p>Schau dich in Ruhe um, entdecke passende Kontakte und entscheide selbst, wen du näher kennenlernen möchtest.</p>
           <div className="city-cta-actions">
             <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
-            <a className="button-secondary" href="/partnersuche">Partnersuche nach Städten</a>
+            <a className="button-secondary" href="/partnersuche/">Partnersuche nach Städten</a>
           </div>
         </div>
       </section>

@@ -202,15 +202,15 @@ export function stripHtml(value?: string | null) {
 }
 
 export function postPath(slug: string) {
-  return `/magazin/${slug}`;
+  return `/magazin/${slug}/`;
 }
 
 export function pagePath(slug: string) {
-  return `/magazin/${slug}`;
+  return `/magazin/${slug}/`;
 }
 
 export function categoryPath(slug: string) {
-  return `/magazin/kategorie/${slug}`;
+  return `/magazin/kategorie/${slug}/`;
 }
 
 export function cityPath(slug: string) {

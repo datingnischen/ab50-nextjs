@@ -118,7 +118,7 @@ function rotateRelated(posts: Awaited<ReturnType<typeof getLatestPosts>>, slug: 
 function Breadcrumbs({ title }: { title: string }) {
   return (
     <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-      <a href="/magazin">50plus Magazin</a>
+      <a href="/magazin/">50plus Magazin</a>
       <span aria-hidden="true">/</span>
       <span>{title}</span>
     </nav>
@@ -188,7 +188,7 @@ function FinalArticleCta() {
         <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um.</p>
         <div className="article-final-actions">
           <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-          <a className="button-secondary" href="/magazin">Weitere Themen lesen</a>
+          <a className="button-secondary" href="/magazin/">Weitere Themen lesen</a>
         </div>
       </div>
       <a className="article-radar-card" href={siteConfig.links.registrationCommon}>
@@ -267,7 +267,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       profileImage: knownAuthorProfiles["christian-m-haas"].imageSrc,
       jobTitle: knownAuthorProfiles["christian-m-haas"].role,
       breadcrumbRootName: siteConfig.magazineName,
-      breadcrumbRootUrl: absoluteUrl("/magazin"),
+      breadcrumbRootUrl: absoluteUrl("/magazin/"),
     });
     return (
       <>

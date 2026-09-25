@@ -54,7 +54,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <div className="category-hero-card">
         <div className="category-hero-copy">
           <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-            <a href="/magazin">50plus Magazin</a>
+            <a href="/magazin/">50plus Magazin</a>
             <span aria-hidden="true">/</span>
             <span>{category.name}</span>
           </nav>
@@ -68,7 +68,7 @@ export default async function CategoryPage({ params }: PageProps) {
           </div>
           <div className="hero-actions">
             <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-            <a className="button-secondary" href="/magazin">Alle Themen ansehen</a>
+            <a className="button-secondary" href="/magazin/">Alle Themen ansehen</a>
           </div>
         </div>
         <aside className="category-hero-sidecard" aria-label="Beliebte Artikel in dieser Rubrik">
@@ -96,7 +96,7 @@ export default async function CategoryPage({ params }: PageProps) {
           <p className="eyebrow">Von Christian M. Haas</p>
           <strong>Warum diese Tipps wirklich helfen</strong>
           <p>Die Artikel in dieser Rubrik sind aus echten Fragen und Erfahrungen entstanden — damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
-          <a className="card-read-more" href="/magazin/christian-m-haas">Mehr zum Autorenprofil von Christian M. Haas</a>
+          <a className="card-read-more" href="/magazin/christian-m-haas/">Mehr zum Autorenprofil von Christian M. Haas</a>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default async function CategoryPage({ params }: PageProps) {
         </div>
         <div className="overview-cta-actions">
           <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-          <a className="button-secondary" href="/magazin">Zum Magazin</a>
+          <a className="button-secondary" href="/magazin/">Zum Magazin</a>
         </div>
       </section>
     </section>

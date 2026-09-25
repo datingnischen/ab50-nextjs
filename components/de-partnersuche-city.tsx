@@ -48,7 +48,7 @@ const cityAuthor = {
   role: "Autor & Dating-Experte bei ab50.de",
   imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
   imageAlt: "Christian M. Haas",
-  href: "/magazin/christian-m-haas",
+  href: "/magazin/christian-m-haas/",
 };
 
 function sanitizeTitle(value?: string | null) {
@@ -595,7 +595,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const places = normalizePlaces(city.acf?.local_places);
   const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
   const primaryCtaLabel = city.acf?.primary_cta_label || "Kostenlos starten";
-  const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche";
+  const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche/";
   const secondaryCtaLabel = city.acf?.secondary_cta_label || "Alle Städte";
   const sidebarCtaHref = city.acf?.city_sidebar_cta_url || primaryCtaHref;
   const sidebarCtaLabel = city.acf?.city_sidebar_cta_label || primaryCtaLabel;
@@ -649,7 +649,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         "@type": "ListItem",
         position: 1,
         name: "Partnersuche",
-        item: absoluteUrl("/partnersuche"),
+        item: absoluteUrl("/partnersuche/"),
       },
       {
         "@type": "ListItem",
@@ -668,7 +668,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         <div className="category-hero-card city-overview-hero city-detail-hero city-premium-hero">
           <div className="category-hero-copy">
             <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-              <a href="/partnersuche">Partnersuche</a>
+              <a href="/partnersuche/">Partnersuche</a>
               <span aria-hidden="true">/</span>
               <span>{cityName}</span>
             </nav>
@@ -912,7 +912,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </div>
         </section>
 
-        <CityFurtherCities tiles={furtherCities} totalCities={allCities.length} overviewHref="/partnersuche" />
+        <CityFurtherCities tiles={furtherCities} totalCities={allCities.length} overviewHref="/partnersuche/" />
 
         <section className="overview-cta-strip category-final-cta" aria-label="Nächster Schritt">
           <div>
@@ -923,7 +923,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           </div>
           <div className="overview-cta-actions">
             <a className="button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
-            <a className="button-secondary" href="/magazin">Zum Magazin</a>
+            <a className="button-secondary" href="/magazin/">Zum Magazin</a>
           </div>
         </section>
       </article>

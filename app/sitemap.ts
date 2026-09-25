@@ -15,8 +15,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: `${siteConfig.baseUrl}/`, lastModified: now },
-    { url: `${siteConfig.baseUrl}/magazin`, lastModified: now },
-    { url: `${siteConfig.baseUrl}/partnersuche`, lastModified: now },
+    { url: `${siteConfig.baseUrl}/magazin/`, lastModified: now },
+    { url: `${siteConfig.baseUrl}/partnersuche/`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_ROOT_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_HISTORY_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_SOCIAL_PATH}`, lastModified: now },

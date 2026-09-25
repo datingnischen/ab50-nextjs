@@ -1,3 +1,5 @@
+import { publicMarketUrl, withTrailingSlash } from "./markets.ts";
+
 export type RouteMarket = "de" | "ch";
 
 export type PartnersucheResolution =
@@ -119,7 +121,7 @@ export function resolvePartnersucheRequest(hostnameInput: string, pathname: stri
   if (prefix === hostMarket) {
     return {
       action: "redirect",
-      destination: `https://ab50.${hostMarket}${stripMarketPrefix(pathname, hostMarket)}`,
+      destination: publicMarketUrl(hostMarket, stripMarketPrefix(pathname, hostMarket)),
     };
   }
 
@@ -128,4 +130,34 @@ export function resolvePartnersucheRequest(hostnameInput: string, pathname: stri
     destination: `/${hostMarket}${pathname}`,
     market: hostMarket,
   };
+}
+
+const NO_SLASH_PREFIXES = ["/_next/", "/app-assets/", "/api/", "/.well-known/"];
+
+export type TrailingSlashRedirect = { destination: string; absolute: boolean };
+
+/**
+ * Seitenpfade enden immer auf "/" (wie ICONY /login/, /suche/). Ersetzt die eingebaute Umleitung von
+ * Next.js (skipTrailingSlashRedirect): Die kennt nur den Upstream-Pfad. Pfade mit internem Marktpräfix
+ * (/ch/partnersuche/..., /de/partnersuche/...) gehen absolut auf die öffentliche Landesdomain ohne
+ * Präfix, alles andere relativ auf denselben Host. Dateien, /_next/, /app-assets/ bleiben unberührt.
+ */
+export function resolveTrailingSlashRedirect(hostnameInput: string, pathname: string): TrailingSlashRedirect | null {
+  if (
+    pathname.endsWith("/")
+    || withTrailingSlash(pathname) === pathname
+    || NO_SLASH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  ) {
+    return null;
+  }
+
+  const target = withTrailingSlash(pathname);
+  const marketMatch = target.match(/^\/(de|ch)(\/.*)$/);
+  if (!marketMatch) return { destination: target, absolute: false };
+
+  const market = marketMatch[1] as RouteMarket;
+  const hostMarket = countryHosts[normalizeHostname(hostnameInput)];
+  // Fremdes Marktpräfix auf einer Landesdomain: kein Sprung auf die andere Domain, der Router antwortet 404.
+  if (hostMarket && hostMarket !== market) return null;
+  return { destination: publicMarketUrl(market, marketMatch[2]), absolute: true };
 }

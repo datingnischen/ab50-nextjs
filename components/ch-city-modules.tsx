@@ -15,7 +15,7 @@ export const chCityAuthor = {
   imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
   imageAlt: "Christian M. Haas",
   // Das Magazin liegt auf ab50.de; auf dem Schweizer Host ist /magazin nicht erreichbar.
-  href: "https://ab50.de/magazin/christian-m-haas",
+  href: "https://ab50.de/magazin/christian-m-haas/",
 };
 
 export function flirtFactorHeadline(score: number) {

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resolveHostRequest, resolveMarketResourceRequest, resolvePartnersucheRequest } from "@/lib/market-router";
+import {
+  resolveHostRequest,
+  resolveMarketResourceRequest,
+  resolvePartnersucheRequest,
+  resolveTrailingSlashRedirect,
+} from "@/lib/market-router";
 
 export function proxy(request: NextRequest) {
   // Host is matched against the closed application allowlist before route-specific resolution.
@@ -17,7 +22,6 @@ export function proxy(request: NextRequest) {
     ? resolveMarketResourceRequest(requestHost, request.nextUrl.pathname)
     : resolvePartnersucheRequest(requestHost, request.nextUrl.pathname);
 
-  if (resolution.action === "pass") return NextResponse.next();
   if (resolution.action === "not-found") {
     return new NextResponse("Not Found", {
       status: 404,
@@ -29,6 +33,21 @@ export function proxy(request: NextRequest) {
     destination.search = request.nextUrl.search;
     return NextResponse.redirect(destination, 308);
   }
+
+  // Seitenpfade enden immer auf "/". Vor dem Rewrite, damit ab50.ch/partnersuche/zuerich erst auf
+  // ab50.ch/partnersuche/zuerich/ springt; interne Präfixpfade gehen absolut auf die Landesdomain.
+  const slashRedirect = resolveTrailingSlashRedirect(requestHost, request.nextUrl.pathname);
+  if (slashRedirect) {
+    if (slashRedirect.absolute) {
+      return NextResponse.redirect(`${slashRedirect.destination}${request.nextUrl.search}`, 308);
+    }
+    // Plain URL statt nextUrl.clone(): NextURL normalisiert den Schrägstrich sonst selbst.
+    const destination = new URL(request.nextUrl.href);
+    destination.pathname = slashRedirect.destination;
+    return NextResponse.redirect(destination, 308);
+  }
+
+  if (resolution.action === "pass") return NextResponse.next();
 
   const destination = request.nextUrl.clone();
   destination.pathname = resolution.destination;

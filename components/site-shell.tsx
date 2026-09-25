@@ -32,34 +32,34 @@ const deFooterColumns: FooterColumn[] = [
   {
     title: "Über uns",
     links: [
-      { label: "Über ab50.de", href: "/ueber-uns" },
-      { label: "Geschichte", href: "/ueber-uns/geschichte" },
-      { label: "Social Media", href: "/ueber-uns/social-media" },
-      { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen" },
+      { label: "Über ab50.de", href: "/ueber-uns/" },
+      { label: "Geschichte", href: "/ueber-uns/geschichte/" },
+      { label: "Social Media", href: "/ueber-uns/social-media/" },
+      { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen/" },
     ],
   },
   {
     title: "Magazin",
     links: [
-      { label: "50plus Magazin", href: "/magazin" },
-      { label: "Online-Dating ab 50", href: "/magazin/kategorie/online-dating-ab-50" },
-      { label: "Beziehung & Nähe", href: "/magazin/kategorie/beziehung-naehe" },
-      { label: "Sicherheit & Vertrauen", href: "/magazin/kategorie/sicherheit-vertrauen" },
+      { label: "50plus Magazin", href: "/magazin/" },
+      { label: "Online-Dating ab 50", href: "/magazin/kategorie/online-dating-ab-50/" },
+      { label: "Beziehung & Nähe", href: "/magazin/kategorie/beziehung-naehe/" },
+      { label: "Sicherheit & Vertrauen", href: "/magazin/kategorie/sicherheit-vertrauen/" },
     ],
   },
   {
     title: "Themen",
     links: [
-      { label: "Leben & Neuanfang ab 50", href: "/magazin/kategorie/leben" },
-      { label: "Profil & Kommunikation", href: "/magazin/kategorie/profil-kommunikation" },
-      { label: "Singlebörsen & Vergleiche", href: "/magazin/kategorie/singleboersen-vergleiche" },
-      { label: "Freizeit & Aktiv bleiben", href: "/magazin/kategorie/freizeit-aktiv-bleiben" },
+      { label: "Leben & Neuanfang ab 50", href: "/magazin/kategorie/leben/" },
+      { label: "Profil & Kommunikation", href: "/magazin/kategorie/profil-kommunikation/" },
+      { label: "Singlebörsen & Vergleiche", href: "/magazin/kategorie/singleboersen-vergleiche/" },
+      { label: "Freizeit & Aktiv bleiben", href: "/magazin/kategorie/freizeit-aktiv-bleiben/" },
     ],
   },
   {
     title: "Service",
     links: [
-      { label: "Regionale Partnersuche", href: "https://ab50.de/partnersuche" },
+      { label: "Regionale Partnersuche", href: "https://ab50.de/partnersuche/" },
       { label: "Impressum", href: "https://ab50.de/impressum.html", external: true },
       { label: "Datenschutz", href: "https://ab50.de/datenschutz.html", external: true },
       { label: "AGB", href: "https://ab50.de/agb.html", external: true },
@@ -71,10 +71,10 @@ const chFooterColumns: FooterColumn[] = [
   {
     title: "Partnersuche",
     links: [
-      { label: "Schweizer Städte", href: "https://ab50.ch/partnersuche" },
-      { label: "Singles in Zürich", href: "https://ab50.ch/partnersuche/zuerich" },
-      { label: "Singles in Basel", href: "https://ab50.ch/partnersuche/basel" },
-      { label: "Singles in Bern", href: "https://ab50.ch/partnersuche/bern" },
+      { label: "Schweizer Städte", href: "https://ab50.ch/partnersuche/" },
+      { label: "Singles in Zürich", href: "https://ab50.ch/partnersuche/zuerich/" },
+      { label: "Singles in Basel", href: "https://ab50.ch/partnersuche/basel/" },
+      { label: "Singles in Bern", href: "https://ab50.ch/partnersuche/bern/" },
     ],
   },
   {
@@ -127,10 +127,10 @@ export function SiteHeader() {
               <nav className="main-nav compact-menu-nav" aria-label={`${config.siteName} Navigation`}>
                 {market === "de" ? (
                   <>
-                    <a href="/magazin">Magazin-Start</a>
-                    <a href="/magazin/kategorie/online-dating-ab-50">Online-Dating ab 50</a>
-                    <a href="/magazin/kategorie/beziehung-naehe">Beziehung & Nähe</a>
-                    <a href="/magazin/kategorie/sicherheit-vertrauen">Sicherheit & Vertrauen</a>
+                    <a href="/magazin/">Magazin-Start</a>
+                    <a href="/magazin/kategorie/online-dating-ab-50/">Online-Dating ab 50</a>
+                    <a href="/magazin/kategorie/beziehung-naehe/">Beziehung & Nähe</a>
+                    <a href="/magazin/kategorie/sicherheit-vertrauen/">Sicherheit & Vertrauen</a>
                   </>
                 ) : (
                   <>

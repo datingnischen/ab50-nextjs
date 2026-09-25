@@ -8,11 +8,11 @@ import { formatUpdatedLabel } from "@/lib/format";
 export const metadata: Metadata = {
   title: "50plus Magazin – alle Beiträge im Überblick",
   description: "Aktuelle Themen aus dem 50plus Magazin: Dating ab 50, Beziehung, Vertrauen, Profil und Neuanfang.",
-  alternates: { canonical: "/magazin" },
+  alternates: { canonical: "/magazin/" },
   openGraph: {
     title: "50plus Magazin – alle Beiträge im Überblick",
     description: "Tipps zu Dating, Profil, Sicherheit und Partnersuche für Singles ab 50.",
-    url: absoluteUrl("/magazin"),
+    url: absoluteUrl("/magazin/"),
     type: "website",
     locale: "de_DE",
     siteName: siteConfig.name,
@@ -74,7 +74,7 @@ export default async function MagazinOverviewPage() {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: siteConfig.magazineName,
-    url: absoluteUrl("/magazin"),
+    url: absoluteUrl("/magazin/"),
     blogPost: posts.map((post) => ({
       "@type": "BlogPosting",
       headline: stripHtml(post.title),
@@ -183,12 +183,12 @@ export default async function MagazinOverviewPage() {
                 <p>{stripHtml(post.excerpt).slice(0, 140)}…</p>
               </a>
             ))}
-            <a className="overview-intent-card overview-intent-card-guide" href="/magazin/kategorie/online-dating-ab-50">
+            <a className="overview-intent-card overview-intent-card-guide" href="/magazin/kategorie/online-dating-ab-50/">
               <span>Profil & Kontakte</span>
               <strong>Mit besserer Strategie zu echten Matches</strong>
               <p>Tipps für dein Profil, erste Gespräche, Erwartungen setzen und sichere erste Kontakte.</p>
             </a>
-            <a className="overview-intent-card overview-intent-card-trust" href="/magazin/kategorie/sicherheit-vertrauen">
+            <a className="overview-intent-card overview-intent-card-trust" href="/magazin/kategorie/sicherheit-vertrauen/">
               <span>Sicherheit</span>
               <strong>Fake-Profile erkennen und gut schützen</strong>
               <p>Warnsignale, rote Flaggen und wie du vertrauensvoll unterwegs bist.</p>

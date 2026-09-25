@@ -9,11 +9,11 @@ import { CitySearchFallback } from "@/components/city-search-fallback";
 export const metadata: Metadata = {
   title: "Partnersuche ab 50 in deiner Stadt",
   description: "Stadtseiten für Singles ab 50: regionale Orientierung, Dating-Inhalte und lokale Einstiege aus dem ab50.de Magazin.",
-  alternates: { canonical: "/partnersuche" },
+  alternates: { canonical: "/partnersuche/" },
   openGraph: {
     title: "Partnersuche ab 50 in deiner Stadt",
     description: "Stadtseiten für Singles ab 50: regionale Orientierung, Dating-Inhalte und lokale Einstiege aus dem ab50.de Magazin.",
-    url: absoluteUrl("/partnersuche"),
+    url: absoluteUrl("/partnersuche/"),
     type: "website",
     locale: "de_DE",
     siteName: siteConfig.name,
@@ -42,7 +42,7 @@ export default async function PartnersucheOverviewPage() {
           </div>
           <div className="hero-actions">
             <a className="button-primary" href={siteConfig.links.registrationLocation}>Kostenlos starten</a>
-            <a className="button-secondary" href="/magazin">Zum Magazin</a>
+            <a className="button-secondary" href="/magazin/">Zum Magazin</a>
           </div>
         </div>
         <aside className="category-hero-sidecard" aria-label="Was dich hier erwartet">

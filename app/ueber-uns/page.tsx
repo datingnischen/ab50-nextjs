@@ -28,7 +28,7 @@ const aboutCards = [
     eyebrow: "Christian M. Haas",
     title: "Autor mit Dating-Erfahrung",
     text: "Christian M. Haas steht im ab50.de Magazin für klare Worte, langjährige Erfahrung und Inhalte, die Singles wirklich weiterhelfen. Auf seiner Autorenseite erfährst du mehr darüber, wie sein Blick auf Online-Dating, Beziehungen und echte Begegnungen entstanden ist.",
-    href: "/magazin/christian-m-haas",
+    href: "/magazin/christian-m-haas/",
     label: "Zur Autorenseite",
   },
   {
@@ -56,7 +56,7 @@ const aboutCards = [
     eyebrow: "50plus Magazin",
     title: "Tipps zu Dating, Sicherheit und Profil",
     text: "Wie du ein starkes Profil schreibst, Fakes erkennst, sicher bleibst und neue Menschen kennenlernst.",
-    href: "/magazin",
+    href: "/magazin/",
     label: "Zum Magazin",
   },
 ];
@@ -83,11 +83,11 @@ const aboutIntroCards = [
 ] as const;
 
 const aboutQuickLinks = [
-  { href: "/magazin/christian-m-haas", label: "Christian M. Haas kennenlernen" },
+  { href: "/magazin/christian-m-haas/", label: "Christian M. Haas kennenlernen" },
   { href: ABOUT_HISTORY_PATH, label: "Unsere Geschichte lesen" },
   { href: ABOUT_SOCIAL_PATH, label: "Social Media entdecken" },
   { href: ABOUT_REVIEWS_PATH, label: "Bewertungen & Erfahrungen ansehen" },
-  { href: "/magazin", label: "Zum 50plus Magazin" },
+  { href: "/magazin/", label: "Zum 50plus Magazin" },
 ];
 
 export default function UeberUnsPage() {
@@ -197,7 +197,7 @@ export default function UeberUnsPage() {
                 <p>Du kannst jederzeit kostenlos starten, Profile ansehen und selbst entscheiden, ob ab50.de zu deinem Tempo und deiner Art der Partnersuche passt.</p>
                 <div className="city-cta-actions">
                   <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
-                  <a className="button-secondary" href="/partnersuche">Stadtseiten ansehen</a>
+                  <a className="button-secondary" href="/partnersuche/">Stadtseiten ansehen</a>
                 </div>
               </div>
             </section>

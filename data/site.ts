@@ -5,7 +5,7 @@ export const siteConfig = {
   wordpressUrl: "https://ab50.de/magazin",
   wordpressRestEndpoint:
     process.env.WORDPRESS_REST_ENDPOINT || "https://ab50.de/magazin/wp-json/wp/v2",
-  magazinePath: "/magazin",
+  magazinePath: "/magazin/",
   colors: {
     primary: "#1A4C95",
     primaryDark: "#1A4C95",
@@ -18,7 +18,7 @@ export const siteConfig = {
     registrationCommon: "https://ab50.de/?AID=magazin",
     registrationLocation: "https://ab50.de/?AID=location",
     searchLocation: "https://ab50.de/suche/?AID=location",
-    magazine: "/magazin",
+    magazine: "/magazin/",
     imprint: "https://ab50.de/impressum.html",
     privacy: "https://ab50.de/datenschutz.html",
     terms: "https://ab50.de/agb.html",

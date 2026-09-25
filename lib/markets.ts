@@ -52,18 +52,34 @@ export function marketFromLocation(pathname: string, hostname?: string): MarketC
   return marketFromPathname(pathname);
 }
 
+const FILE_PATH_PATTERN = /\/[^/]*\.[a-z0-9]+$/i;
+
+/**
+ * Seitenpfade enden immer auf einen Schrägstrich, wie die ICONY-Plattform (/login/, /suche/).
+ * Dateien wie /sitemap.xml bleiben ohne. Query und Anker hängen hinter dem Schrägstrich.
+ */
+export function withTrailingSlash(pathname: string): string {
+  const match = pathname.match(/^([^?#]*)(.*)$/);
+  const path = match?.[1] ?? pathname;
+  const suffix = match?.[2] ?? "";
+  if (!path || path.endsWith("/") || FILE_PATH_PATTERN.test(path)) {
+    return `${path || "/"}${suffix}`;
+  }
+  return `${path}/${suffix}`;
+}
+
 export function marketPreviewPath(market: MarketCode, href: string) {
   const match = href.match(/^([^?#]*)([?#].*)?$/);
   const pathname = match?.[1] || "/";
   const suffix = match?.[2] || "";
-  if (new RegExp(`^/${market}(?:/|$)`).test(pathname)) return `${pathname}${suffix}`;
+  if (new RegExp(`^/${market}(?:/|$)`).test(pathname)) return withTrailingSlash(`${pathname}${suffix}`);
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  return `/${market}${normalized === "/" ? "" : normalized}${suffix}`;
+  return withTrailingSlash(`/${market}${normalized === "/" ? "" : normalized}${suffix}`);
 }
 
 export function publicMarketUrl(market: MarketCode, pathname = "/") {
   const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  return `https://${markets[market].domain}${normalized}`;
+  return `https://${markets[market].domain}${withTrailingSlash(normalized)}`;
 }
 
 export function registrationUrl(market: MarketCode, aid: Aid) {
