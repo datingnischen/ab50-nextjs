@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
+import { SiteSearchForm } from "@/components/site-search-form";
 import { ABOUT_HISTORY_PATH, ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
 
 export const metadata: Metadata = {
@@ -135,6 +136,12 @@ export default function UeberUnsPage() {
             </aside>
           </div>
         </header>
+
+        <section className="container section-block about-search-block" aria-label="Seitensuche">
+          <p className="eyebrow">Suche</p>
+          <h2>Du suchst etwas Bestimmtes?</h2>
+          <SiteSearchForm label="Magazin-Artikel und Stadtseiten durchsuchen" />
+        </section>
 
         <section className="container section-block overview-intent-grid" aria-label="Schnelleinstieg Über ab50.de">
           {aboutIntroCards.map((card) => (

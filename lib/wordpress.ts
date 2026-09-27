@@ -353,6 +353,28 @@ export const getAllPageSlugs = cache(async () => {
   return pages.map((page) => page.slug).filter(Boolean);
 });
 
+export type WpSearchEntry = { slug: string; title: string; excerpt: string };
+
+function normalizeSearchEntry(raw: any): WpSearchEntry {
+  return {
+    slug: raw.slug,
+    title: decodeHtmlEntities(raw?.title?.rendered || ""),
+    excerpt: stripHtml(raw?.excerpt?.rendered || ""),
+  };
+}
+
+/** Schlanke Liste aller Artikel für die Seitensuche (nur Slug, Titel, Auszug; Fetch-Cache wie überall 300 s). */
+export const getSearchablePosts = cache(async () => {
+  const posts = await collectPaged<any>("/posts", { _fields: "slug,title,excerpt" });
+  return posts.filter((post) => post?.slug).map(normalizeSearchEntry);
+});
+
+/** Wie getSearchablePosts, für WordPress-Seiten unter /magazin/<slug>/. */
+export const getSearchablePages = cache(async () => {
+  const pages = await collectPaged<any>("/pages", { _fields: "slug,title,excerpt" });
+  return pages.filter((page) => page?.slug).map(normalizeSearchEntry);
+});
+
 export const getAllPages = cache(async () => {
   const pages = await collectPaged<any>("/pages");
   return pages.map(normalizePage);

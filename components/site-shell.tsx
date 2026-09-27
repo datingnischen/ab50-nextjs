@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MarketLink } from "@/components/market-link";
+import { SiteSearchForm } from "@/components/site-search-form";
 import { markets, marketFromLocation, marketPartnersuchePath, marketPreviewPath, registrationUrl, type MarketCode } from "@/lib/markets";
 
 function BrandLogo({ market, footer = false }: { market: MarketCode; footer?: boolean }) {
@@ -36,6 +37,7 @@ const deFooterColumns: FooterColumn[] = [
       { label: "Geschichte", href: "/ueber-uns/geschichte/" },
       { label: "Social Media", href: "/ueber-uns/social-media/" },
       { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen/" },
+      { label: "Suche", href: "/ueber-uns/suche/" },
     ],
   },
   {
@@ -124,6 +126,7 @@ export function SiteHeader() {
               <span className="header-menu-label">Menü</span>
             </summary>
             <div className="header-menu-panel">
+              {market === "de" ? <SiteSearchForm compact label="Magazin & Städte durchsuchen" /> : null}
               <nav className="main-nav compact-menu-nav" aria-label={`${config.siteName} Navigation`}>
                 {market === "de" ? (
                   <>
