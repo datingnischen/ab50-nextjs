@@ -2,12 +2,16 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
-import { withSlashedPageLinks } from "@/lib/markets";
+import { marketPartnersuchePath, withSlashedPageLinks } from "@/lib/markets";
 import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
 import { staticAsset } from "@/lib/static-asset";
+import { excerptText, themeFor } from "@/lib/magazine-themes";
+import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon } from "@/components/ab-icons";
+import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
+import "@/components/ab-magazine/ab-magazine.css";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -50,7 +54,8 @@ function extractTocItems(html?: string | null): TocItem[] {
   return Array.from(source.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi))
     .map((match) => stripHtml(match[1]))
     .filter(Boolean)
-    .slice(0, 8)
+    .filter((label) => !/^artikel kurz anhören$/i.test(label))
+    .slice(0, 10)
     .map((label) => {
       const base = slugifyHeading(label);
       const count = seen.get(base) || 0;
@@ -60,11 +65,11 @@ function extractTocItems(html?: string | null): TocItem[] {
 }
 
 function addHeadingIds(html: string, tocItems: TocItem[]) {
-  let index = 0;
+  const byLabel = new Map(tocItems.map((item) => [item.label, item.id]));
   return html.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi, (match, attrs, inner) => {
-    const id = tocItems[index]?.id;
-    index += 1;
+    const id = byLabel.get(stripHtml(inner));
     if (!id || /\sid=/.test(attrs)) return match;
+    byLabel.delete(stripHtml(inner));
     return `<h2${attrs} id="${id}">${inner}</h2>`;
   });
 }
@@ -84,19 +89,26 @@ function injectInlineCta(html: string) {
   let headingCount = 0;
   return html.replace(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi, (match) => {
     headingCount += 1;
-    if (headingCount === 2) return `${match}${inlineArticleCta()}`;
+    if (headingCount === 3) return `${inlineArticleCta()}${match}`;
     return match;
   });
 }
 
-function sanitizeContent(html?: string | null, tocItems: TocItem[] = []) {
+function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], withCta = true) {
   const cleaned = (html || "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
+    // Lazy-Load-Plugin aus WordPress: echte Quelle statt 1×1-Platzhalter
+    .replace(/\ssrc="data:image\/[^"]*"/gi, "")
+    .replace(/\sdata-srcset=/gi, " srcset=")
+    .replace(/\sdata-sizes=/gi, " sizes=")
+    .replace(/\sdata-src=/gi, " src=")
+    .replace(/class=("|')([^"']*?)lazyload([^"']*?)(\1)/gi, 'class="$2$3"')
     .replace(/<img(?![^>]*loading=)/gi, '<img loading="lazy"')
     .replace(/<img(?![^>]*decoding=)/gi, '<img decoding="async"');
 
-  return injectInlineCta(addHeadingIds(withSlashedPageLinks(cleaned), tocItems));
+  const linked = addHeadingIds(withSlashedPageLinks(cleaned), tocItems);
+  return withCta ? injectInlineCta(linked) : linked;
 }
 
 function estimateReadingTime(html?: string | null) {
@@ -108,7 +120,7 @@ function getAuthorProfile(authorSlug?: string | null) {
   return authorSlug ? knownAuthorProfiles[authorSlug] || null : null;
 }
 
-function rotateRelated(posts: Awaited<ReturnType<typeof getLatestPosts>>, slug: string, count = 4) {
+function rotateRelated(posts: Awaited<ReturnType<typeof getLatestPosts>>, slug: string, count = 3) {
   const remaining = posts.filter((post) => post.slug !== slug);
   if (!remaining.length) return [];
   const hash = Array.from(slug).reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
@@ -116,92 +128,41 @@ function rotateRelated(posts: Awaited<ReturnType<typeof getLatestPosts>>, slug: 
   return [...remaining.slice(offset), ...remaining.slice(0, offset)].slice(0, count);
 }
 
-function Breadcrumbs({ title }: { title: string }) {
+function Crumbs({ title, category }: { title: string; category?: { name: string; slug: string } | null }) {
   return (
-    <nav className="article-breadcrumbs" aria-label="Breadcrumb">
+    <nav className="ab-light-crumbs" aria-label="Breadcrumb">
       <a href="/magazin/">50plus Magazin</a>
-      <span aria-hidden="true">/</span>
-      <span>{title}</span>
+      {category ? (
+        <>
+          <span aria-hidden="true">›</span>
+          <a href={categoryPath(category.slug)}>{category.name}</a>
+        </>
+      ) : null}
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{title}</span>
     </nav>
   );
 }
 
-function TableOfContents({ items }: { items: TocItem[] }) {
-  if (!items.length) return null;
+function RadarCta() {
+  const partnersuche = marketPartnersuchePath("de");
   return (
-    <nav className="article-toc" aria-label="Inhaltsverzeichnis">
-      <p className="eyebrow">In diesem Beitrag</p>
-      <ol>
-        {items.map((item) => (
-          <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
-
-function TakeawayBox({ description, items }: { description: string; items: TocItem[] }) {
-  return (
-    <section className="article-takeaway-box" aria-label="Kurz zusammengefasst">
-      <p className="eyebrow">Kurz gesagt</p>
-      <h2>Das Wichtigste auf einen Blick</h2>
-      {description ? <p>{description}</p> : null}
-      {items.length ? <ul>{items.slice(0, 3).map((item) => <li key={item.id}>{item.label}</li>)}</ul> : null}
-    </section>
-  );
-}
-
-function RelatedArticles({ posts }: { posts: Awaited<ReturnType<typeof getLatestPosts>> }) {
-  if (!posts.length) return null;
-  return (
-    <section className="related-articles" aria-label="Weitere Artikel">
-      <div className="section-heading compact-heading">
-        <p className="eyebrow">Weiterlesen</p>
-        <h2>Weitere Beiträge aus dem 50plus Magazin</h2>
-      </div>
-      <div className="related-article-grid">
-        {posts.map((post) => (
-          <a className="related-article-card" href={postPath(post.slug)} key={post.slug}>
-            {post.featuredImage?.sourceUrl ? (
-              <Image
-                src={post.featuredImage.sourceUrl}
-                alt={post.featuredImage.altText || stripHtml(post.title)}
-                width={post.featuredImage.width || 700}
-                height={post.featuredImage.height || 460}
-                sizes="(max-width: 760px) 100vw, 25vw"
-              />
-            ) : <span className="related-card-placeholder" aria-hidden="true" />}
-            <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
-            <strong>{stripHtml(post.title)}</strong>
-          </a>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FinalArticleCta() {
-  return (
-    <section className="article-final-cta article-final-cta-radar" aria-label="Kostenlos starten">
-      <div>
-        <p className="eyebrow">Bereit für den nächsten Schritt?</p>
-        <h2>Lerne neue Menschen kennen – mit mehr Ruhe, Klarheit und echtem Interesse.</h2>
-        <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um.</p>
-        <div className="article-final-actions">
-          <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-          <a className="button-secondary" href="/magazin/">Weitere Themen lesen</a>
+    <section className="ab-wrap ab-section" aria-label="Kostenlos starten">
+      <div className="abg-radar">
+        <div>
+          <p className="ab-eyebrow"><PinIcon />Umkreissuche</p>
+          <h2>Lerne neue Menschen kennen – mit mehr Ruhe, Klarheit und echtem Interesse.</h2>
+          <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um, wer in deiner Nähe ebenfalls neu anfangen möchte.</p>
+          <div className="ab-actions">
+            <a className="ab-btn ab-btn-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+            <a className="ab-btn ab-btn-ghost" href={partnersuche.publicUrl}>Singles in deiner Stadt</a>
+          </div>
         </div>
+        <a className="abg-radar-card" href={siteConfig.links.registrationCommon} tabIndex={-1} aria-hidden="true">
+          {/* eslint-disable-next-line @next/next/no-img-element -- statische SVG-Grafik */}
+          <img src={staticAsset("/umkreissuche-radar.svg")} alt="" width={320} height={480} loading="lazy" decoding="async" />
+        </a>
       </div>
-      <a className="article-radar-card" href={siteConfig.links.registrationCommon}>
-        <img
-          src={staticAsset("/umkreissuche-radar.svg")}
-          alt="Umkreissuche: Singles ab 50 in deiner Nähe – kostenlos anmelden"
-          width={320}
-          height={480}
-          loading="lazy"
-          decoding="async"
-        />
-      </a>
     </section>
   );
 }
@@ -235,7 +196,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug);
   if (!post) return {};
   const title = stripHtml(post.title);
-  const description = stripHtml(post.excerpt || post.content).slice(0, 170);
+  const description = excerptText(post.excerpt || post.content, 160);
   return {
     title,
     description,
@@ -270,20 +231,38 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       breadcrumbRootName: siteConfig.magazineName,
       breadcrumbRootUrl: absoluteUrl("/magazin/"),
     });
+    const isAuthor = slug === "christian-m-haas";
+    const pageToc = extractTocItems(page.content);
     return (
       <>
         {profileGraph ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(profileGraph) }} /> : null}
-        <article className="container article-page generic-magazine-page">
-          <header className="article-hero generic-page-hero">
-            <Breadcrumbs title={title} />
-            <p className="eyebrow">Sonderseite</p>
-            <h1>{title}</h1>
-          </header>
-          <section className="article-body-grid single-column-layout">
-            <div className="article-content-card">
-              <div className="article-content" dangerouslySetInnerHTML={{ __html: sanitizeContent(page.content) }} />
+        <article className="abg abg-article">
+          <header className="ab-light-hero abg-ahero">
+            <div className="ab-wrap abg-ahero-inner">
+              <Crumbs title={title} />
+              <span className="abg-kind">{isAuthor ? "Autorenprofil" : "Ratgeber"}</span>
+              <h1>{title}</h1>
             </div>
-          </section>
+          </header>
+          <div className={`ab-wrap abg-layout${pageToc.length >= 3 ? "" : " abg-layout-solo"}`}>
+            <div className="abg-body">
+              {isAuthor && knownAuthorProfiles["christian-m-haas"].imageSrc ? (
+                <figure className="abg-author-portrait">
+                  <Image src={knownAuthorProfiles["christian-m-haas"].imageSrc} alt="Christian M. Haas" width={243} height={300} priority />
+                </figure>
+              ) : null}
+              <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: isAuthor ? sanitizeContent(page.content, pageToc, false).replace(/<img\b[^>]*Christian-M-Haas[^>]*>/i, "") : sanitizeContent(page.content, pageToc, false) }} />
+            </div>
+            {pageToc.length >= 3 ? (
+              <aside className="abg-side">
+                <nav className="abg-toc" aria-label="Inhaltsverzeichnis">
+                  <span><BookIcon />Auf dieser Seite</span>
+                  <ol>{pageToc.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
+                </nav>
+              </aside>
+            ) : null}
+          </div>
+          <RadarCta />
         </article>
       </>
     );
@@ -293,10 +272,10 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   if (!post) notFound();
 
   const latestPosts = await getLatestPosts(12);
-  const relatedPosts = rotateRelated(latestPosts, post.slug, 4);
+  const relatedPosts = rotateRelated(latestPosts, post.slug, 3);
   const tocItems = extractTocItems(post.content);
   const title = stripHtml(post.title);
-  const lead = stripHtml(post.excerpt || post.content).slice(0, 220);
+  const lead = excerptText(post.excerpt || post.content, 260);
   const readingMinutes = estimateReadingTime(post.content);
   const updatedLabel = formatUpdatedLabel(post);
   const safeHtml = sanitizeContent(post.content, tocItems);
@@ -310,6 +289,8 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     ? stripHtml(post.author.description)
     : (authorProfile?.fallbackDescription || "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah.");
   const category = post.categories?.[0];
+  const theme = themeFor(category?.slug);
+  const initials = authorName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AB";
   const schema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -331,87 +312,95 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
-      <article className="container article-page magazine-article-page">
-        <header className="article-hero">
-          <Breadcrumbs title={title} />
-          {category ? <a className="article-category-chip" href={categoryPath(category.slug)}>{category.name}</a> : null}
-          <h1>{title}</h1>
-          {lead ? <p className="article-lead">{lead}</p> : null}
-          {post.featuredImage?.sourceUrl ? (
+      <article className="abg abg-article">
+        <header className={`ab-light-hero abg-ahero abg-tone-${theme.tone}`}>
+          <div className="ab-wrap abg-ahero-inner">
+            <Crumbs title={title} category={category} />
+            {category ? <a className="abg-kind" href={categoryPath(category.slug)}><ThemeIconView icon={theme.icon} />{category.name}</a> : null}
+            <h1>{title}</h1>
+            {lead ? <p className="ab-light-lead">{lead}</p> : null}
+            <div className="abg-meta">
+              <span className="abg-meta-author">
+                <span className="abg-avatar" aria-hidden="true">
+                  {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt="" width={48} height={48} /> : initials}
+                </span>
+                {authorHref ? <a href={authorHref}>{authorName}</a> : <strong>{authorName}</strong>}
+              </span>
+              {updatedLabel ? <span><CalendarIcon />{updatedLabel}</span> : null}
+              <span><ClockIcon />{readingMinutes} Min. Lesezeit</span>
+            </div>
+          </div>
+        </header>
+
+        {post.featuredImage?.sourceUrl ? (
+          <figure className="ab-wrap abg-figure">
             <Image
               src={post.featuredImage.sourceUrl}
               alt={post.featuredImage.altText || title}
               width={post.featuredImage.width || 1200}
               height={post.featuredImage.height || 700}
-              className="article-hero-image"
               priority
-              sizes="(max-width: 760px) 100vw, (max-width: 1180px) 90vw, 1020px"
+              sizes="(max-width: 1240px) 100vw, 1200px"
             />
-          ) : null}
-          <div className="article-byline">
-            <div className="article-byline-author">
-              <span className="article-byline-avatar" aria-hidden="true">
-                {authorProfile?.imageSrc ? (
-                  <Image
-                    src={authorProfile.imageSrc}
-                    alt={authorProfile.imageAlt || authorName}
-                    width={54}
-                    height={54}
-                  />
-                ) : (
-                  authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"
-                )}
-              </span>
-              <span>
-                {authorHref ? <a className="article-author-link" href={authorHref}><strong>{authorName}</strong></a> : <strong>{authorName}</strong>}
-                <em>{authorRole}</em>
-              </span>
-            </div>
-            <div className="article-byline-facts">
-              {updatedLabel ? <span>{updatedLabel}</span> : null}
-              <span>{readingMinutes} Min. Lesezeit</span>
-            </div>
-          </div>
-        </header>
+          </figure>
+        ) : null}
 
-        <section className="article-body-grid">
-          <aside className="article-side-column">
-            <TableOfContents items={tocItems} />
-          </aside>
-          <div className="article-main-column">
-            <TakeawayBox description={lead} items={tocItems} />
-            <div className="article-content-card">
-              <div className="article-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
-            </div>
-            <section className="magazine-author-box" aria-label="Autor">
-              <div className="magazine-author-avatar" aria-hidden="true">
-                {authorProfile?.imageSrc ? (
-                  <Image
-                    src={authorProfile.imageSrc}
-                    alt={authorProfile.imageAlt || authorName}
-                    width={96}
-                    height={96}
-                  />
-                ) : (
-                  authorName.split(/\s+/).filter(Boolean).slice(0,2).map((part) => part[0]?.toUpperCase()).join("") || "AB"
-                )}
-              </div>
+        <div className={`ab-wrap abg-layout${tocItems.length >= 3 ? "" : " abg-layout-solo"}`}>
+          <div className="abg-body">
+            {tocItems.length >= 3 ? (
+              <details className="abg-toc-mobile">
+                <summary><BookIcon />In diesem Beitrag</summary>
+                <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
+              </details>
+            ) : null}
+            <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
+
+            <section className="abg-author" aria-label="Autor">
+              <span className="abg-author-avatar" aria-hidden="true">
+                {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt="" width={96} height={118} /> : initials}
+              </span>
               <div>
-                <p className="eyebrow">Verfasst von</p>
+                <p className="ab-eyebrow">Verfasst von</p>
                 <h2>{authorName}</h2>
-                <p className="magazine-author-role">{authorRole}</p>
+                <p className="abg-author-role">{authorRole}</p>
                 <p>{authorDescription}</p>
-                <div className="magazine-author-meta">
-                  {updatedLabel ? <span>{updatedLabel}</span> : null}
-                  {authorHref ? <span>Autorenprofil verfügbar</span> : null}
-                </div>
-                {authorHref ? <a className="button-secondary magazine-author-link" href={authorHref}>Zum Autorenprofil</a> : null}
+                {authorHref ? <a className="abg-author-link" href={authorHref}>Zum Autorenprofil <ArrowIcon /></a> : null}
               </div>
             </section>
-            <RelatedArticles posts={relatedPosts} />
-            <FinalArticleCta />
           </div>
-        </section>
+
+          {tocItems.length >= 3 ? (
+            <aside className="abg-side">
+              <nav className="abg-toc" aria-label="Inhaltsverzeichnis">
+                <span><BookIcon />In diesem Beitrag</span>
+                <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
+              </nav>
+              <a className="abg-side-cta" href={siteConfig.links.registrationCommon}>
+                <HeartIcon />
+                <strong>Singles ab 50 in deiner Nähe</strong>
+                <span>Kostenlos registrieren und in Ruhe schauen, wer zu dir passt.</span>
+                <em>Jetzt starten <ArrowIcon /></em>
+              </a>
+            </aside>
+          ) : null}
+        </div>
+
+        <RadarCta />
+
+        {relatedPosts.length ? (
+          <section className="ab-wrap ab-section" aria-labelledby="abg-related-title">
+            <div className="abg-head-row">
+              <div className="ab-head">
+                <p className="ab-eyebrow"><HeartIcon />Weiterlesen</p>
+                <h2 id="abg-related-title">Weitere Beiträge aus dem 50plus Magazin</h2>
+              </div>
+              <a className="ab-btn ab-btn-outline ab-btn-small" href="/magazin/">Alle Beiträge <ArrowIcon /></a>
+            </div>
+            <div className="abg-grid">
+              {relatedPosts.map((item) => <PostCard key={item.slug} post={item} />)}
+            </div>
+          </section>
+        ) : null}
       </article>
     </>
   );

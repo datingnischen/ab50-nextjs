@@ -1,10 +1,13 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl } from "@/lib/seo";
 import { categoryPath, getCategories, getPostsByCategory, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { formatUpdatedLabel } from "@/lib/format";
+import { themeFor } from "@/lib/magazine-themes";
+import { ArrowIcon } from "@/components/ab-icons";
+import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
+import { CtaBand } from "@/components/ab-city/city-parts";
+import "@/components/ab-magazine/ab-magazine.css";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -38,6 +41,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
+
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const [category, allCategories] = await Promise.all([
@@ -46,119 +51,95 @@ export default async function CategoryPage({ params }: PageProps) {
   ]);
   if (!category) notFound();
 
-  const relatedCategories = allCategories.filter((item) => item.slug !== category.slug).slice(0, 6);
-  const featuredPosts = category.posts.slice(0, 2);
+  const theme = themeFor(category.slug);
+  const relatedCategories = allCategories.filter((item) => item.slug !== category.slug);
+  const [featured, ...rest] = category.posts;
 
   return (
-    <section className="container section-block category-page">
-      <div className="category-hero-card">
-        <div className="category-hero-copy">
-          <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-            <a href="/magazin/">50plus Magazin</a>
-            <span aria-hidden="true">/</span>
-            <span>{category.name}</span>
-          </nav>
-          <p className="eyebrow">Magazin-Kategorie</p>
-          <h1>{category.name}</h1>
-          <p className="lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
-          <div className="trust-chip-row" aria-label="Was du hier findest">
-            <span>Echte Tipps zum Thema</span>
-            <span>Von Dating-Experten</span>
-            <span>Für Singles ab 50</span>
+    <article className="abg">
+      <header className={`ab-hero abg-hero abg-hero-theme abg-tone-${theme.tone}`}>
+        <div className="ab-wrap abg-hero-grid">
+          <div>
+            <nav className="ab-crumbs" aria-label="Brotkrumen">
+              <a href="/magazin/">50plus Magazin</a>
+              <span aria-hidden="true">›</span>
+              <span aria-current="page">{category.name}</span>
+            </nav>
+            <span className="ab-badge"><ThemeIconView icon={theme.icon} />Themenwelt</span>
+            <h1>{category.name}</h1>
+            <p className="ab-lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
+            <ul className="ab-chips">
+              <li><strong>{category.count ?? category.posts.length}</strong> Beiträge</li>
+              <li>Für Singles ab 50</li>
+            </ul>
           </div>
-          <div className="hero-actions">
-            <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-            <a className="button-secondary" href="/magazin/">Alle Themen ansehen</a>
-          </div>
-        </div>
-        <aside className="category-hero-sidecard" aria-label="Beliebte Artikel in dieser Rubrik">
-          <p className="eyebrow">Top Artikel</p>
-          <strong>Meistgelesen in {category.name.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</strong>
-          <p>Diese Beiträge helfen dir am schnellsten weiter: Praktische Tipps, echte Lösungen und das Wichtigste zu diesem Thema — ohne Umschweife.</p>
-          <div className="index-mini-list">
-            {featuredPosts.map((post) => (
-              <a href={postPath(post.slug)} key={post.slug}>{stripHtml(post.title)}</a>
-            ))}
-          </div>
-        </aside>
-      </div>
-
-      <div className="category-editorial-note">
-        <div className="category-editorial-avatar">
-          <Image
-            src="https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png"
-            alt="Christian M. Haas"
-            width={72}
-            height={72}
-          />
-        </div>
-        <div>
-          <p className="eyebrow">Von Christian M. Haas</p>
-          <strong>Warum diese Tipps wirklich helfen</strong>
-          <p>Die Artikel in dieser Rubrik sind aus echten Fragen und Erfahrungen entstanden — damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
-          <a className="card-read-more" href="/magazin/christian-m-haas/">Mehr zum Autorenprofil von Christian M. Haas</a>
-        </div>
-      </div>
-
-      {relatedCategories.length ? (
-        <div className="category-topic-strip" aria-label="Weitere Magazin-Themen">
-          <div className="section-heading compact-heading">
-            <p className="eyebrow">Weitere Themen</p>
-            <h2>Vielleicht auch interessant für dich</h2>
-          </div>
-          <div className="category-topic-grid">
-            {relatedCategories.map((item) => (
-              <a className="category-topic-card" href={categoryPath(item.slug)} key={item.slug}>
-                <span>{item.name}</span>
-                <strong>{item.description || `Praktische Tipps und echte Antworten zum Thema ${item.name.toLowerCase()}.`}</strong>
-                <em className="card-read-more">Thema öffnen</em>
-              </a>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      <div className="section-heading wide-heading">
-        <p className="eyebrow">Beiträge in dieser Rubrik</p>
-        <h2>Alle Artikel zu {category.name}</h2>
-      </div>
-
-      <div className="post-grid">
-        {category.posts.map((post) => (
-          <a className="post-card" href={postPath(post.slug)} key={post.slug}>
-            {post.featuredImage?.sourceUrl ? (
-              <Image
-                src={post.featuredImage.sourceUrl}
-                alt={post.featuredImage.altText || stripHtml(post.title)}
-                width={post.featuredImage.width || 900}
-                height={post.featuredImage.height || 600}
-                className="post-card-image"
-                sizes="(max-width: 760px) 100vw, (max-width: 1180px) 50vw, 33vw"
-              />
-            ) : (
-              <div className="post-card-placeholder" />
-            )}
-            <div className="post-card-body">
-              <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
-              <strong>{stripHtml(post.title)}</strong>
-              <p>{stripHtml(post.excerpt).slice(0, 160)}…</p>
-              <em className="card-read-more">Beitrag lesen</em>
+          {featured ? (
+            <div className="abg-hero-feature">
+              <span className="abg-hero-kicker">Meistgelesen in dieser Rubrik</span>
+              <PostCard post={featured} categories={allCategories} large />
             </div>
-          </a>
-        ))}
-      </div>
-
-      <section className="overview-cta-strip category-final-cta" aria-label="Weitere Schritte">
-        <div>
-          <p className="eyebrow">Mehr entdecken</p>
-          <h2>Such dir den nächsten Einstieg aus dem Magazin oder starte direkt auf ab50.de.</h2>
-          <p>Wenn du lieber direkt aktiv werden willst, kannst du kostenlos starten oder noch weitere Themen aus dem Magazin in Ruhe durchstöbern.</p>
+          ) : null}
         </div>
-        <div className="overview-cta-actions">
-          <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-          <a className="button-secondary" href="/magazin/">Zum Magazin</a>
+      </header>
+
+      <nav className="ab-wrap abg-themenav" aria-label="Kategorien">
+        <a href="/magazin/">Alle Themen</a>
+        {allCategories.map((item) => (
+          <a key={item.slug} href={categoryPath(item.slug)} aria-current={item.slug === category.slug ? "page" : undefined}>{item.name}</a>
+        ))}
+      </nav>
+
+      <section className="ab-wrap ab-section" aria-labelledby="abg-cat-title">
+        <div className="ab-head">
+          <p className="ab-eyebrow">Beiträge in dieser Rubrik</p>
+          <h2 id="abg-cat-title">Alle Artikel zu {category.name}</h2>
+        </div>
+        <div className="abg-grid">
+          {rest.map((post) => <PostCard key={post.slug} post={post} categories={allCategories} />)}
+        </div>
+        {!rest.length && featured ? <p className="abg-empty">Mehr Beiträge zu diesem Thema folgen bald. <a href={postPath(featured.slug)}>{stripHtml(featured.title)}</a></p> : null}
+      </section>
+
+      <section className="ab-wrap ab-section abg-author-band" aria-label="Autor">
+        {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
+        <img src={AUTHOR_IMAGE} alt="Christian M. Haas" width={140} height={172} loading="lazy" />
+        <div>
+          <p className="ab-eyebrow">Von Christian M. Haas</p>
+          <h2>Warum diese Tipps wirklich helfen</h2>
+          <p>Die Artikel in dieser Rubrik sind aus echten Fragen und Erfahrungen entstanden – damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
+          <a className="ab-btn ab-btn-outline ab-btn-small" href="/magazin/christian-m-haas/">Mehr zum Autorenprofil <ArrowIcon /></a>
         </div>
       </section>
-    </section>
+
+      {relatedCategories.length ? (
+        <section className="ab-wrap ab-section" aria-labelledby="abg-more-title">
+          <div className="ab-head">
+            <p className="ab-eyebrow">Weitere Themen</p>
+            <h2 id="abg-more-title">Vielleicht auch interessant für dich</h2>
+          </div>
+          <div className="abg-themes">
+            {relatedCategories.map((item) => {
+              const itemTheme = themeFor(item.slug);
+              return (
+                <a key={item.slug} className={`abg-theme abg-tone-${itemTheme.tone}`} href={categoryPath(item.slug)}>
+                  <ThemeIconView icon={itemTheme.icon} />
+                  <strong>{item.name}</strong>
+                  <span>{item.description || `Praktische Tipps zum Thema ${item.name.toLowerCase()}.`}</span>
+                  <em>Thema öffnen <ArrowIcon /></em>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      <CtaBand
+        eyebrow="Mehr entdecken"
+        title="Vom Lesen ins Kennenlernen"
+        text="Wenn du lieber direkt aktiv werden willst, kannst du kostenlos starten oder weitere Themen in Ruhe durchstöbern."
+        primary={{ label: "Kostenlos starten", href: siteConfig.links.registrationCommon }}
+        secondary={{ label: "Zum Magazin", href: "/magazin/" }}
+      />
+    </article>
   );
 }

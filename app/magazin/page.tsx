@@ -1,9 +1,13 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPages, getCategories, getLatestPosts, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { formatUpdatedLabel } from "@/lib/format";
+import { themeFor } from "@/lib/magazine-themes";
+import { marketPartnersuchePath } from "@/lib/markets";
+import { ArrowIcon, BookIcon, HeartIcon, ShieldIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
+import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
+import { CtaBand } from "@/components/ab-city/city-parts";
+import "@/components/ab-magazine/ab-magazine.css";
 
 export const metadata: Metadata = {
   title: "50plus Magazin – alle Beiträge im Überblick",
@@ -19,45 +23,13 @@ export const metadata: Metadata = {
   },
 };
 
-type PagePresentation = {
-  label: string;
-  icon: string;
-  description: string;
-  className: string;
-};
+const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
 
-function getPagePresentation(title: string, slug?: string | null): PagePresentation {
-  const haystack = `${title} ${slug || ""}`.toLowerCase();
-  if (haystack.includes("christian") || haystack.includes("autor")) {
-    return {
-      label: "Über den Autor",
-      icon: "✓",
-      description: "Christian über seine Erfahrung und Perspektive.",
-      className: "magazine-page-card-expert",
-    };
-  }
-  if (haystack.includes("inhaltsverzeichnis")) {
-    return {
-      label: "Übersicht",
-      icon: "◎",
-      description: "Alle Magazin-Inhalte und Kategorien auf einen Blick.",
-      className: "magazine-page-card-guide",
-    };
-  }
-  if (haystack.includes("sudoku") || haystack.includes("kreuzwort")) {
-    return {
-      label: "Spiel & Pause",
-      icon: "✦",
-      description: "Knobelspaß zwischen dem Lesen.",
-      className: "magazine-page-card-lifestyle",
-    };
-  }
-  return {
-    label: "Ratgeber",
-    icon: "→",
-    description: "Praktischer Guide zum Thema.",
-    className: "magazine-page-card-guide",
-  };
+function pageKind(slug: string) {
+  if (slug.includes("christian")) return { label: "Über den Autor", icon: <UserIcon /> };
+  if (slug.includes("inhaltsverzeichnis")) return { label: "Übersicht", icon: <BookIcon /> };
+  if (slug.includes("sudoku") || slug.includes("kreuzwort")) return { label: "Spiel & Pause", icon: <SparkIcon /> };
+  return { label: "Ratgeber", icon: <BookIcon /> };
 }
 
 export default async function MagazinOverviewPage() {
@@ -67,8 +39,9 @@ export default async function MagazinOverviewPage() {
     getAllPages(),
   ]);
 
-  const featuredPosts = posts.slice(0, 3);
+  const [featured, ...rest] = posts;
   const visiblePages = pages.filter((page) => page.slug);
+  const partnersuche = marketPartnersuchePath("de");
 
   const schema = {
     "@context": "https://schema.org",
@@ -94,147 +67,119 @@ export default async function MagazinOverviewPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
-      <article className="section-index-page section-theme-magazine magazine-index-page">
-        <header className="index-hero magazine-index-hero">
-          <div className="container index-hero-grid">
+      <article className="abg">
+        <header className="ab-hero abg-hero">
+          <div className="ab-wrap abg-hero-grid">
             <div>
-              <p className="eyebrow">ab50.de · 50plus Magazin</p>
-              <h1>Dating ab 50: Sicherheit, Klarheit und echte Verbindungen.</h1>
-              <p className="lead">
-                Tipps zu Profil, ersten Gesprächen, Sicherheit und neuen Kontakten — für Singles ab 50, die es direkt angehen wollen.
-              </p>
-              <div className="trust-chip-row index-chip-row" aria-label="Magazin-Vorteile">
-                <span>{posts.length} Beiträge</span>
-                <span>{visiblePages.length} Ratgeberseiten</span>
-                <span>Von Profil bis Sicherheit</span>
-                <span>Für Singles 50+</span>
-              </div>
-              <div className="hero-actions index-actions">
-                <a className="button-primary" href="#articles">Neueste Beiträge lesen</a>
-                <a className="button-secondary" href="#topics">Themen entdecken</a>
-                <a className="button-secondary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+              <span className="ab-badge"><BookIcon />ab50.de · 50plus Magazin</span>
+              <h1>Dating ab 50: Sicherheit, Klarheit und <em>echte Verbindungen.</em></h1>
+              <p className="ab-lead">Tipps zu Profil, ersten Gesprächen, Sicherheit und neuen Kontakten – für Singles ab 50, die es direkt angehen wollen.</p>
+              <ul className="ab-chips">
+                <li><strong>{posts.length}</strong> Beiträge</li>
+                <li><strong>{categories.length}</strong> Themenwelten</li>
+                <li>Von Christian M. Haas &amp; Redaktion</li>
+              </ul>
+              <div className="ab-actions">
+                <a className="ab-btn ab-btn-primary" href="#articles">Neueste Beiträge lesen</a>
+                <a className="ab-btn ab-btn-ghost" href="#themen">Themen entdecken</a>
               </div>
             </div>
-            <aside className="index-feature-card magazine-feature-card" aria-label="Magazin-Fokus">
-              <span>Gut zu wissen</span>
-              <strong>Sicherheit beim Online-Dating</strong>
-              <p>Wie du sichere Entscheidungen triffst und Fake-Profile erkennst – ohne Umstände.</p>
-              <div className="index-mini-list">
-                {categories.slice(0, 6).map((category) => (
-                  <a href={categoryPath(category.slug)} key={category.slug}>{category.name}</a>
-                ))}
+            {featured ? (
+              <div className="abg-hero-feature">
+                <span className="abg-hero-kicker"><SparkIcon />Neu im Magazin</span>
+                <PostCard post={featured} categories={categories} large />
               </div>
-            </aside>
+            ) : null}
           </div>
         </header>
 
-        <section className="container index-list-section magazine-latest-section" id="articles">
-          <div className="index-section-heading">
-            <p className="eyebrow">Neu im Magazin</p>
-            <h2>Aktuelle Beiträge zu Dating, Profil und Sicherheit</h2>
-            <p>Finde praktische Antworten auf deine Dating-Fragen.</p>
-          </div>
+        <nav className="ab-wrap abg-themenav" aria-label="Kategorien">
+          <a href="/magazin/" aria-current="page">Alle Themen</a>
+          {categories.map((category) => <a key={category.slug} href={categoryPath(category.slug)}>{category.name}</a>)}
+        </nav>
 
-          <div className="category-filter-row" aria-label="Kategorien">
-            {categories.map((category) => (
-              <a href={categoryPath(category.slug)} key={category.slug}>
-                {category.name}
-              </a>
-            ))}
+        <section id="themen" className="ab-wrap ab-section" aria-labelledby="abg-themes-title">
+          <div className="ab-head">
+            <p className="ab-eyebrow"><HeartIcon />Themenwelten</p>
+            <h2 id="abg-themes-title">Worüber möchtest du lesen?</h2>
+            <p>Von der ersten Nachricht bis zur neuen Partnerschaft: Die Beiträge sind nach Themen sortiert, damit du schnell findest, was dich gerade beschäftigt.</p>
           </div>
-
-          <div className="section-index-grid magazine-index-grid">
-            {posts.map((post) => (
-              <a className="section-index-card magazine-index-card" href={postPath(post.slug)} key={post.slug}>
-                {post.featuredImage?.sourceUrl ? (
-                  <Image
-                    src={post.featuredImage.sourceUrl}
-                    alt={post.featuredImage.altText || stripHtml(post.title)}
-                    width={post.featuredImage.width || 900}
-                    height={post.featuredImage.height || 600}
-                    className="section-index-image"
-                    sizes="(max-width: 760px) 100vw, (max-width: 1180px) 50vw, 33vw"
-                  />
-                ) : (
-                  <div className="section-index-placeholder" />
-                )}
-                <div className="section-index-card-body">
-                  <span>{formatUpdatedLabel(post) || siteConfig.magazineName}</span>
-                  <strong>{stripHtml(post.title)}</strong>
-                  <p>{stripHtml(post.excerpt).slice(0, 170)}…</p>
-                  <em className="card-read-more">Beitrag lesen</em>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="container overview-highlight-section magazine-overview-highlights">
-          <div className="index-section-heading">
-            <p className="eyebrow">Häufig gefragt</p>
-            <h2>Häufige Fragen zum Dating ab 50</h2>
-            <p>Diese Antworten helfen dir direkt weiter.</p>
-          </div>
-          <div className="overview-intent-grid">
-            {featuredPosts.map((post, index) => (
-              <a className="overview-intent-card overview-intent-card-featured" href={postPath(post.slug)} key={post.slug}>
-                <span>Praktischer Tipp {index + 1}</span>
-                <strong>{stripHtml(post.title)}</strong>
-                <p>{stripHtml(post.excerpt).slice(0, 140)}…</p>
-              </a>
-            ))}
-            <a className="overview-intent-card overview-intent-card-guide" href="/magazin/kategorie/online-dating-ab-50/">
-              <span>Profil & Kontakte</span>
-              <strong>Mit besserer Strategie zu echten Matches</strong>
-              <p>Tipps für dein Profil, erste Gespräche, Erwartungen setzen und sichere erste Kontakte.</p>
-            </a>
-            <a className="overview-intent-card overview-intent-card-trust" href="/magazin/kategorie/sicherheit-vertrauen/">
-              <span>Sicherheit</span>
-              <strong>Fake-Profile erkennen und gut schützen</strong>
-              <p>Warnsignale, rote Flaggen und wie du vertrauensvoll unterwegs bist.</p>
-            </a>
-          </div>
-        </section>
-
-        <section className="container index-list-section magazine-cms-pages-section" id="topics">
-          <div className="index-section-heading">
-            <p className="eyebrow">Ausführlich erklärt</p>
-            <h2>Spezialseiten und Guides</h2>
-            <p>Tiefe Guides zu Profil, Sicherheit, Gesprächstipps und mehr.</p>
-          </div>
-          <div className="section-index-grid magazine-page-grid">
-            {visiblePages.map((page) => {
-              const title = stripHtml(page.title);
-              const presentation = getPagePresentation(title, page.slug);
-              const teaser = stripHtml(page.content).slice(0, 155);
+          <div className="abg-themes">
+            {categories.map((category) => {
+              const theme = themeFor(category.slug);
               return (
-                <a className={`section-index-card magazine-page-card ${presentation.className}`} href={pagePath(page.slug)} key={page.slug}>
-                  <div className="section-index-card-body magazine-page-card-body">
-                    <div className="magazine-page-card-topline">
-                      <span>{presentation.label}</span>
-                      <i aria-hidden="true">{presentation.icon}</i>
-                    </div>
-                    <strong>{title}</strong>
-                    <p>{teaser || presentation.description}…</p>
-                    <em className="card-read-more">Seite öffnen</em>
-                  </div>
+                <a key={category.slug} className={`abg-theme abg-tone-${theme.tone}`} href={categoryPath(category.slug)}>
+                  <ThemeIconView icon={theme.icon} />
+                  <strong>{category.name}</strong>
+                  <span>{category.description || `Beiträge zum Thema ${category.name}.`}</span>
+                  <em>{category.count ? `${category.count} Beiträge` : "Thema öffnen"} <ArrowIcon /></em>
                 </a>
               );
             })}
           </div>
         </section>
 
-        <section className="container overview-cta-strip magazine-overview-cta" aria-label="ab50 Registrierung">
+        <section className="ab-wrap ab-section abg-author-band" aria-label="Autor">
+          {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
+          <img src={AUTHOR_IMAGE} alt="Christian M. Haas" width={140} height={172} loading="lazy" />
           <div>
-            <p className="eyebrow">Nächster Schritt</p>
-            <h2>Wenn du nicht nur lesen, sondern neue Kontakte aufbauen möchtest</h2>
-            <p>Starte kostenlos auf ab50.de und triff echte Menschen, die ebenfalls bereit sind für echte Verbindungen.</p>
-          </div>
-          <div className="overview-cta-actions">
-            <a className="button-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
-            <a className="button-secondary" href={siteConfig.links.home}>ab50.de ansehen</a>
+            <p className="ab-eyebrow">Wer hier schreibt</p>
+            <h2>Christian M. Haas – Dating-Experte mit Blick fürs Alltägliche</h2>
+            <p>Die Beiträge im 50plus Magazin sind aus echten Fragen von Singles ab 50 entstanden: ruhig, verständlich und praxisnah – ohne Floskeln.</p>
+            <a className="ab-btn ab-btn-outline ab-btn-small" href="/magazin/christian-m-haas/">Zum Autorenprofil <ArrowIcon /></a>
           </div>
         </section>
+
+        <section id="articles" className="ab-wrap ab-section" aria-labelledby="abg-latest-title">
+          <div className="ab-head">
+            <p className="ab-eyebrow"><SparkIcon />Neu im Magazin</p>
+            <h2 id="abg-latest-title">Aktuelle Beiträge zu Dating, Profil und Sicherheit</h2>
+            <p>Finde praktische Antworten auf deine Dating-Fragen.</p>
+          </div>
+          <div className="abg-grid">
+            {rest.map((post) => <PostCard key={post.slug} post={post} categories={categories} />)}
+          </div>
+        </section>
+
+        <section className="ab-wrap ab-section abg-safety" aria-label="Sicherheit">
+          <div>
+            <p className="ab-eyebrow"><ShieldIcon />Gut zu wissen</p>
+            <h2>Sicher beim Online-Dating ab 50</h2>
+            <p>Wie du sichere Entscheidungen triffst, Fake-Profile erkennst und Warnsignale wie Geldforderungen früh durchschaust.</p>
+          </div>
+          <a className="ab-btn ab-btn-primary" href="/magazin/kategorie/sicherheit-vertrauen/">Zu den Sicherheitstipps <ArrowIcon /></a>
+        </section>
+
+        {visiblePages.length ? (
+          <section className="ab-wrap ab-section" aria-labelledby="abg-pages-title">
+            <div className="ab-head">
+              <p className="ab-eyebrow"><BookIcon />Ausführlich erklärt</p>
+              <h2 id="abg-pages-title">Spezialseiten und Guides</h2>
+            </div>
+            <ul className="abg-pages">
+              {visiblePages.map((page) => {
+                const kind = pageKind(page.slug);
+                return (
+                  <li key={page.slug}>
+                    <a href={pagePath(page.slug)}>
+                      {kind.icon}
+                      <span><small>{kind.label}</small><strong>{stripHtml(page.title)}</strong></span>
+                      <ArrowIcon />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ) : null}
+
+        <CtaBand
+          eyebrow="Nächster Schritt"
+          title="Wenn du nicht nur lesen, sondern neue Kontakte aufbauen möchtest"
+          text="Starte kostenlos auf ab50.de und triff echte Menschen, die ebenfalls bereit sind für echte Verbindungen."
+          primary={{ label: "Kostenlos starten", href: siteConfig.links.registrationCommon }}
+          secondary={{ label: "Singles in deiner Stadt", href: partnersuche.publicUrl, previewHref: partnersuche.previewPath }}
+        />
       </article>
     </>
   );

@@ -5,6 +5,7 @@ export const POST_CARD_FIELDS = [
   "modified",
   "title",
   "excerpt",
+  "categories",
   "featured_media",
   "_links",
   "_embedded",

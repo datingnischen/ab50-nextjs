@@ -33,6 +33,8 @@ export type WpPostCard = {
   content?: string | null;
   featuredImage?: WpImage | null;
   categories?: WpCategory[];
+  /** Kategorie-IDs (auch ohne eingebettete Terme verfügbar) */
+  categoryIds?: number[];
   author?: WpAuthor | null;
 };
 
@@ -272,6 +274,7 @@ function normalizePost(raw: any): WpPostCard {
     content: raw?.content?.rendered || null,
     featuredImage: normalizeImage(media),
     categories: normalizeTerms(raw),
+    categoryIds: Array.isArray(raw?.categories) ? raw.categories : [],
     author: normalizeAuthor(raw),
   };
 }
