@@ -13,6 +13,15 @@ export function StickyCTAButton() {
   const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
   const [ctaText, setCtaText] = useState("Kostenlos registrieren");
   const [ctaUrl, setCtaUrl] = useState(registrationUrl(market, aidFromPathname(pathname)));
+  const [visible, setVisible] = useState(false);
+
+  // Erst nach 520px Scrollweg einblenden (nur mobil sichtbar, siehe CSS)
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 520);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const aid = aidFromPathname(pathname);
@@ -53,7 +62,7 @@ export function StickyCTAButton() {
   }, [market, pathname]);
 
   return (
-    <a href={ctaUrl} className="sticky-cta-button" aria-label={ctaText}>
+    <a href={ctaUrl} className={`sticky-cta-button${visible ? " sticky-cta-visible" : ""}`} aria-label={ctaText} aria-hidden={!visible} tabIndex={visible ? 0 : -1}>
       <span className="sticky-cta-text">{ctaText}</span>
       <span className="sticky-cta-icon" aria-hidden="true">→</span>
     </a>

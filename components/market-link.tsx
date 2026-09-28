@@ -25,12 +25,14 @@ export function MarketLink({
   className,
   children,
   ariaLabel,
+  ariaCurrent,
 }: {
   href: string;
   previewHref: string;
   className?: string;
   children: ReactNode;
   ariaLabel?: string;
+  ariaCurrent?: "page";
 }) {
   const router = useRouter();
 
@@ -39,6 +41,7 @@ export function MarketLink({
       href={href}
       className={className}
       aria-label={ariaLabel}
+      aria-current={ariaCurrent}
       onClick={(event) => {
         if (!shouldUsePreviewRoute(event)) return;
         event.preventDefault();

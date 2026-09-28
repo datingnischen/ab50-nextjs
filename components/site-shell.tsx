@@ -1,45 +1,143 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ArrowIcon, CheckIcon, CloseIcon, HeartIcon, MenuIcon, SearchIcon, ShieldIcon } from "@/components/ab-icons";
 import { MarketLink } from "@/components/market-link";
 import { SiteSearchForm } from "@/components/site-search-form";
 import { markets, marketFromLocation, marketPartnersuchePath, marketPreviewPath, registrationUrl, type MarketCode } from "@/lib/markets";
+import { staticAsset } from "@/lib/static-asset";
 
-function BrandLogo({ market, footer = false }: { market: MarketCode; footer?: boolean }) {
+type NavLink = { label: string; href: string; previewHref?: string; external?: boolean; match?: RegExp };
+type FooterColumn = { title: string; links: NavLink[] };
+
+const LOGO: Record<MarketCode, { dark: string; light: string; width: number; height: number }> = {
+  de: { dark: "/brand/ab50-de-logo.svg", light: "/brand/ab50-de-logo-light.svg", width: 556, height: 231 },
+  ch: { dark: "/ab50-ch-logo.svg", light: "/brand/ab50-ch-logo-light.svg", width: 1486, height: 619 },
+};
+
+function useMarket() {
+  const pathname = usePathname() || "/";
+  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
+  return { pathname, market };
+}
+
+function aidFor(pathname: string) {
+  return pathname.includes("/partnersuche") ? "location" as const : "magazin" as const;
+}
+
+function navigation(market: MarketCode): NavLink[] {
+  const partnersuche = marketPartnersuchePath(market);
+  if (market === "de") {
+    return [
+      { label: "Magazin", href: "/magazin/", match: /^\/magazin\/?$/ },
+      { label: "Online-Dating ab 50", href: "/magazin/kategorie/online-dating-ab-50/", match: /online-dating-ab-50/ },
+      { label: "Beziehung & Nähe", href: "/magazin/kategorie/beziehung-naehe/", match: /beziehung-naehe/ },
+      { label: "Partnersuche", href: partnersuche.publicUrl, previewHref: partnersuche.previewPath, match: /partnersuche/ },
+      { label: "Über uns", href: "/ueber-uns/", match: /^\/ueber-uns/ },
+    ];
+  }
+  return [
+    { label: "Partnersuche", href: partnersuche.publicUrl, previewHref: partnersuche.previewPath, match: /partnersuche/ },
+    { label: "Dating-Tipps", href: "https://ab50.ch/dating-tipps/", external: true },
+    { label: "Erfolgsgeschichten", href: "https://ab50.ch/unsere-erfolgsgeschichten.html", external: true },
+    { label: "FAQ", href: "https://ab50.ch/faq/", external: true },
+  ];
+}
+
+function trustLinks(market: MarketCode): NavLink[] {
+  const home = markets[market].homeUrl;
+  return [
+    { label: "Sicherheit & Datenschutz", href: `${home}sicherheit-und-datenschutz.html`, external: true },
+    { label: "Redaktionelle Kontrolle", href: `${home}redaktionelle-kontrolle.html`, external: true },
+    { label: "Kostenlose Basis-Mitgliedschaft", href: `${home}kostenlose-basis-mitgliedschaft.html`, external: true },
+  ];
+}
+
+function NavAnchor({ link, className, current }: { link: NavLink; className?: string; current?: boolean }) {
+  if (link.previewHref) {
+    return <MarketLink className={className} href={link.href} previewHref={link.previewHref} ariaCurrent={current ? "page" : undefined}>{link.label}</MarketLink>;
+  }
+  return <a className={className} href={link.href} aria-current={current ? "page" : undefined}>{link.label}</a>;
+}
+
+function BrandLogo({ market, light = false }: { market: MarketCode; light?: boolean }) {
   const config = markets[market];
+  const logo = LOGO[market];
   return (
-    <a className={`brand-lockup${footer ? " footer-brand-lockup" : ""}`} href={config.homeUrl} aria-label={`${config.siteName} Startseite`}>
-      <Image
-        src={config.logoSrc}
-        alt={config.logoAlt}
-        width={market === "ch" ? 180 : 180}
-        height={market === "ch" ? 75 : 60}
-        className="brand-logo-image"
-        priority
-      />
+    <a className="ab-brand" href={config.homeUrl} aria-label={`${config.siteName} Startseite`}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG-Logo, keine Optimierung nötig */}
+      <img src={staticAsset(light ? logo.light : logo.dark)} alt={config.logoAlt} width={logo.width} height={logo.height} />
     </a>
   );
 }
 
-function externalAttrs(external?: boolean) {
-  return external ? { target: "_blank", rel: "noopener" } : undefined;
+export function SiteHeader() {
+  const { pathname, market } = useMarket();
+  const config = markets[market];
+  const menu = useRef<HTMLDetailsElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const items = navigation(market);
+  const register = registrationUrl(market, aidFor(pathname));
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (menu.current) menu.current.open = false;
+  }, [pathname]);
+
+  const isCurrent = (link: NavLink) => Boolean(link.match && link.match.test(pathname));
+
+  return (
+    <header className="ab-header">
+      <div className="ab-strip">
+        <div className="ab-strip-inner">
+          <span className="ab-strip-claim"><HeartIcon />{market === "de" ? "Das 50plus Magazin und die Partnersuche für Singles ab 50" : "Die Partnersuche ab 50 für die Schweiz"}</span>
+          <span className="ab-strip-links">
+            {trustLinks(market).map((link) => <a key={link.label} href={link.href}>{link.label}</a>)}
+          </span>
+        </div>
+      </div>
+      <div className={`ab-bar${scrolled ? " ab-bar-scrolled" : ""}`}>
+        <div className="ab-bar-inner">
+          <BrandLogo market={market} />
+          <nav className="ab-nav" aria-label={`${config.siteName} Navigation`}>
+            {items.map((link) => <NavAnchor key={link.label} link={link} className={isCurrent(link) ? "ab-nav-active" : undefined} current={isCurrent(link)} />)}
+          </nav>
+          <div className="ab-bar-actions">
+            {market === "de" ? (
+              <a className="ab-icon-link" href="/ueber-uns/suche/"><SearchIcon /><span className="ab-sr">Magazin und Städte durchsuchen</span></a>
+            ) : null}
+            <a className="ab-login" href={`${config.homeUrl}login/`}>Login</a>
+            <a className="ab-btn ab-btn-primary ab-btn-small ab-register" href={register}>Kostenlos starten</a>
+            <details className="ab-menu" ref={menu}>
+              <summary aria-label="Menü öffnen">
+                <MenuIcon className="ab-menu-open" />
+                <CloseIcon className="ab-menu-close" />
+              </summary>
+              <div className="ab-menu-panel">
+                {market === "de" ? <SiteSearchForm compact label="Magazin & Städte durchsuchen" /> : null}
+                <nav aria-label="Menü">
+                  {items.map((link) => <NavAnchor key={link.label} link={link} className={isCurrent(link) ? "ab-nav-active" : undefined} current={isCurrent(link)} />)}
+                  <a href={`${config.homeUrl}login/`}>Login</a>
+                  <a href={config.homeUrl}>Zur {config.siteName} Startseite</a>
+                </nav>
+                <a className="ab-btn ab-btn-primary" href={register}>Kostenlos starten <ArrowIcon /></a>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 }
 
-type FooterLink = { label: string; href: string; external?: boolean };
-type FooterColumn = { title: string; links: FooterLink[] };
-
 const deFooterColumns: FooterColumn[] = [
-  {
-    title: "Über uns",
-    links: [
-      { label: "Über ab50.de", href: "/ueber-uns/" },
-      { label: "Geschichte", href: "/ueber-uns/geschichte/" },
-      { label: "Social Media", href: "/ueber-uns/social-media/" },
-      { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen/" },
-      { label: "Suche", href: "/ueber-uns/suche/" },
-    ],
-  },
   {
     title: "Magazin",
     links: [
@@ -47,11 +145,6 @@ const deFooterColumns: FooterColumn[] = [
       { label: "Online-Dating ab 50", href: "/magazin/kategorie/online-dating-ab-50/" },
       { label: "Beziehung & Nähe", href: "/magazin/kategorie/beziehung-naehe/" },
       { label: "Sicherheit & Vertrauen", href: "/magazin/kategorie/sicherheit-vertrauen/" },
-    ],
-  },
-  {
-    title: "Themen",
-    links: [
       { label: "Leben & Neuanfang ab 50", href: "/magazin/kategorie/leben/" },
       { label: "Profil & Kommunikation", href: "/magazin/kategorie/profil-kommunikation/" },
       { label: "Singlebörsen & Vergleiche", href: "/magazin/kategorie/singleboersen-vergleiche/" },
@@ -59,12 +152,24 @@ const deFooterColumns: FooterColumn[] = [
     ],
   },
   {
-    title: "Service",
+    title: "Über uns",
     links: [
-      { label: "Regionale Partnersuche", href: "https://ab50.de/partnersuche/" },
-      { label: "Impressum", href: "https://ab50.de/impressum.html", external: true },
-      { label: "Datenschutz", href: "https://ab50.de/datenschutz.html", external: true },
-      { label: "AGB", href: "https://ab50.de/agb.html", external: true },
+      { label: "Über ab50.de", href: "/ueber-uns/" },
+      { label: "Geschichte", href: "/ueber-uns/geschichte/" },
+      { label: "Social Media", href: "/ueber-uns/social-media/" },
+      { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen/" },
+      { label: "Christian M. Haas", href: "/magazin/christian-m-haas/" },
+      { label: "Suche", href: "/ueber-uns/suche/" },
+    ],
+  },
+  {
+    title: "Partnersuche & Service",
+    links: [
+      { label: "Regionale Partnersuche", href: "https://ab50.de/partnersuche/", previewHref: "/de/partnersuche/" },
+      { label: "Fragenflirt", href: "https://ab50.de/fragenflirt.html", external: true },
+      { label: "Erfolgsgeschichten", href: "https://ab50.de/unsere-erfolgsgeschichten.html", external: true },
+      { label: "Premiumvorteile", href: "https://ab50.de/premium-mitgliedschaft.html", external: true },
+      { label: "Hilfe & Support", href: "https://ab50.de/hilfe/", external: true },
     ],
   },
 ];
@@ -97,121 +202,72 @@ const chFooterColumns: FooterColumn[] = [
       { label: "FAQ", href: "https://ab50.ch/faq/", external: true },
     ],
   },
-  {
-    title: "Service",
-    links: [
-      { label: "Login", href: "https://ab50.ch/login/", external: true },
-      { label: "Impressum", href: "https://ab50.ch/impressum.html", external: true },
-      { label: "Datenschutz", href: "https://ab50.ch/datenschutz.html", external: true },
-      { label: "AGB", href: "https://ab50.ch/agb.html", external: true },
-    ],
-  },
 ];
 
-export function SiteHeader() {
-  const pathname = usePathname();
-  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
+function FooterAnchor({ market, link }: { market: MarketCode; link: NavLink }) {
   const config = markets[market];
-  const partnersuche = marketPartnersuchePath(market);
-
-  return (
-    <header className="site-header-shell">
-      <div className="site-header-bar compact-header-bar">
-        <BrandLogo market={market} />
-        <div className="header-actions compact-header-actions" aria-label="Navigation und Aktionen">
-          <a className="header-register header-register-primary" href={registrationUrl(market, pathname.includes("/partnersuche") ? "location" : "magazin")}>Kostenlos starten</a>
-          <details className="header-menu">
-            <summary aria-label="Menü öffnen">
-              <span className="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-              <span className="header-menu-label">Menü</span>
-            </summary>
-            <div className="header-menu-panel">
-              {market === "de" ? <SiteSearchForm compact label="Magazin & Städte durchsuchen" /> : null}
-              <nav className="main-nav compact-menu-nav" aria-label={`${config.siteName} Navigation`}>
-                {market === "de" ? (
-                  <>
-                    <a href="/magazin/">Magazin-Start</a>
-                    <a href="/magazin/kategorie/online-dating-ab-50/">Online-Dating ab 50</a>
-                    <a href="/magazin/kategorie/beziehung-naehe/">Beziehung & Nähe</a>
-                    <a href="/magazin/kategorie/sicherheit-vertrauen/">Sicherheit & Vertrauen</a>
-                  </>
-                ) : (
-                  <>
-                    <MarketLink href={partnersuche.publicUrl} previewHref={partnersuche.previewPath}>Regionale Partnersuche</MarketLink>
-                    <a href="https://ab50.ch/dating-tipps/">Dating-Tipps</a>
-                    <a href="https://ab50.ch/unsere-erfolgsgeschichten.html">Erfolgsgeschichten</a>
-                  </>
-                )}
-                <a className="header-menu-supplement" href={config.homeUrl}>Zur {config.siteName} Startseite</a>
-              </nav>
-            </div>
-          </details>
-        </div>
-      </div>
-    </header>
-  );
+  if (link.previewHref) return <MarketLink href={link.href} previewHref={link.previewHref}>{link.label}</MarketLink>;
+  if (link.href.startsWith(`https://${config.domain}/partnersuche`)) {
+    return <MarketLink href={link.href} previewHref={marketPreviewPath(market, new URL(link.href).pathname)}>{link.label}</MarketLink>;
+  }
+  return <a href={link.href}>{link.label}</a>;
 }
 
 export function SiteFooter() {
-  const pathname = usePathname();
-  const market = marketFromLocation(pathname, typeof window === "undefined" ? undefined : window.location.hostname);
+  const { pathname, market } = useMarket();
   const config = markets[market];
-  const footerColumns = market === "ch" ? chFooterColumns : deFooterColumns;
-  const countryCopy = market === "ch" ? "in der Schweiz" : "in Deutschland";
+  const columns = market === "ch" ? chFooterColumns : deFooterColumns;
+  const register = registrationUrl(market, aidFor(pathname));
+  const legal = [
+    { label: "Impressum", href: `${config.homeUrl}impressum.html` },
+    { label: "Datenschutz", href: `${config.homeUrl}datenschutz.html` },
+    { label: "AGB", href: `${config.homeUrl}agb.html` },
+    { label: "Barrierefreiheit", href: `${config.homeUrl}barrierefreiheit.html` },
+  ];
 
   return (
-    <footer className="site-footer-shell">
-      <section className="footer-cta" aria-label="Registrierung">
-        <div>
-          <p className="eyebrow">Dating ab 50 — entspannt und sicher</p>
-          <h2>Treffe passende Singles {countryCopy} und starte neue Beziehungen.</h2>
-          <p>Profil kostenlos anlegen, seriöse Kontakte entdecken und in deinem eigenen Tempo neue Menschen kennenlernen.</p>
+    <footer className="ab-footer">
+      <div className="ab-footer-inner">
+        <section className="ab-footer-cta" aria-label="Registrierung">
+          <div>
+            <p className="ab-eyebrow">Dating ab 50 – entspannt und sicher</p>
+            <h2>Treffe passende Singles {market === "ch" ? "in der Schweiz" : "in Deutschland"} und starte neu.</h2>
+            <p>Profil kostenlos anlegen, seriöse Kontakte entdecken und in deinem eigenen Tempo neue Menschen kennenlernen.</p>
+          </div>
+          <a className="ab-btn ab-footer-cta-button" href={register}>Kostenlos starten <ArrowIcon /></a>
+        </section>
+
+        <div className="ab-footer-main">
+          <div className="ab-footer-brand">
+            <BrandLogo market={market} light />
+            <p>{market === "ch" ? "Die Partnersuche ab 50 für die Schweiz: regionale Seiten, sichere Kontakte und hilfreiche Dating-Tipps." : "Das 50plus Magazin: echte Tipps zu Dating ab 50, Sicherheit, Kommunikation und wie du neue Beziehungen aufbaust."}</p>
+            <ul className="ab-footer-trust">
+              <li><CheckIcon />Profil kostenlos – kein Abo nötig zum Stöbern</li>
+              <li><CheckIcon />Sichere Nachrichtenbox und geprüfte Profile</li>
+              <li><ShieldIcon />Regionale Einstiege für Singles ab 50</li>
+            </ul>
+          </div>
+          <nav className="ab-footer-nav" aria-label="Footer Navigation">
+            {columns.map((column) => (
+              <div key={column.title} className="ab-footer-column">
+                <h2>{column.title}</h2>
+                <ul>
+                  {column.links.map((link) => <li key={`${column.title}-${link.label}`}><FooterAnchor market={market} link={link} /></li>)}
+                </ul>
+              </div>
+            ))}
+          </nav>
         </div>
-        <a className="footer-cta-button" href={registrationUrl(market, pathname.includes("/partnersuche") ? "location" : "magazin")}>Kostenlos starten</a>
-      </section>
 
-      <div className="footer-main">
-        <div className="footer-brand-panel">
-          <BrandLogo market={market} footer />
-          <p>{market === "ch" ? "Die Partnersuche ab 50 für die Schweiz: regionale Seiten, sichere Kontakte und hilfreiche Dating-Tipps." : "Das 50plus Magazin: echte Tipps zu Dating ab 50, Sicherheit, Kommunikation und wie du neue Beziehungen aufbaust."}</p>
-          <ul className="footer-trust-list" aria-label="Vertrauensmerkmale">
-            <li>Profil kostenlos — kein Abo nötig zum Stöbern</li>
-            <li>Sichere Nachrichtenbox und geprüfte Profile</li>
-            <li>Regionale Einstiege für Singles ab 50</li>
-          </ul>
-        </div>
-
-        <nav className="footer-link-grid" aria-label="Footer Navigation">
-          {footerColumns.map((column) => (
-            <div className="footer-column" key={column.title}>
-              <h2>{column.title}</h2>
-              <ul>
-                {column.links.map((link) => {
-                  const isMarketPartnersuche = link.href.startsWith(`https://${config.domain}/partnersuche`);
-                  const previewHref = isMarketPartnersuche
-                    ? marketPreviewPath(market, new URL(link.href).pathname)
-                    : "";
-                  return (
-                    <li key={`${column.title}-${link.label}`}>
-                      {isMarketPartnersuche ? (
-                        <MarketLink href={link.href} previewHref={previewHref}>{link.label}</MarketLink>
-                      ) : (
-                        <a href={link.href} {...externalAttrs(link.external)}>{link.label}</a>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      <div className="sub-footer">
-        <div><span>© {new Date().getFullYear()} {config.siteName}</span></div>
-        <div className="sub-footer-links">
-          <a href={markets.de.homeUrl}>ab50.de</a>
-          <a href={markets.ch.homeUrl}>ab50.ch</a>
+        <div className="ab-footer-bottom">
+          <span>© {new Date().getFullYear()} {config.siteName} · Partnersuche ab 50</span>
+          <div className="ab-footer-legal">
+            {legal.map((link) => <a key={link.label} href={link.href}>{link.label}</a>)}
+            <span className="ab-footer-markets" aria-label="Land wählen">
+              <a href={markets.de.homeUrl} aria-current={market === "de" ? "true" : undefined}>ab50.de</a>
+              <a href={markets.ch.homeUrl} aria-current={market === "ch" ? "true" : undefined}>ab50.ch</a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
