@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { MarketLink } from "@/components/market-link";
 import { SiteSearchForm } from "@/components/site-search-form";
+import { AboutSubnav, LightHero } from "@/components/ab-info/info-parts";
+import { ArrowIcon, SearchIcon } from "@/components/ab-icons";
 import { swissPartnersuche, swissCityPath } from "@/lib/ch-partnersuche";
 import { cityCardCopy } from "@/lib/city-card-copy";
 import { marketPreviewPath, publicMarketUrl } from "@/lib/markets";
@@ -114,58 +116,66 @@ export default async function SiteSearchPage({ searchParams }: PageProps) {
   const results = query ? searchDocuments(await loadDocuments(), query, SITE_SEARCH_MAX_RESULTS) : [];
 
   return (
-    <section className="container section-block site-search-page">
-      <div className="category-hero-card site-search-hero">
-        <div className="category-hero-copy">
-          <p className="eyebrow">Über ab50.de · Suche</p>
-          <h1>{query ? `Suche nach „${query}“` : "Was suchst du?"}</h1>
-          <p className="lead">Durchsuche Magazin-Artikel, Themen und Stadtseiten für Singles ab 50.</p>
+    <article className="abi site-search-page">
+      <LightHero
+        crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns", href: "/ueber-uns/" }, { label: "Suche" }]}
+        eyebrow={<><SearchIcon />Über ab50.de · Suche</>}
+        title={query ? `Suche nach „${query}“` : "Was suchst du?"}
+        lead="Durchsuche Magazin-Artikel, Themen und Stadtseiten für Singles ab 50."
+      >
+        <div className="abi-search">
           <SiteSearchForm query={query} label="Suchbegriff" autoFocus={!query} />
         </div>
-      </div>
+      </LightHero>
 
-      {!query ? (
-        <div className="site-search-empty">
-          <p className="eyebrow">So funktioniert’s</p>
-          <h2>Gib einfach ein Stichwort ein</h2>
-          <p>Zum Beispiel deine Stadt, ein Thema wie „Profil“ oder „Sicherheit“ oder eine Frage, die dich gerade beschäftigt. Umlaute kannst du schreiben, wie du magst – „Köln“ und „Koeln“ finden dasselbe.</p>
-        </div>
-      ) : results.length === 0 ? (
-        <div className="site-search-empty">
-          <p className="eyebrow">Keine Treffer</p>
-          <h2>Dazu haben wir leider nichts gefunden</h2>
-          <p>Versuch es mit einem kürzeren oder anderen Begriff. Oder stöbere direkt weiter:</p>
-          <div className="hero-actions">
-            <a className="button-primary" href="/magazin/">Zum 50plus Magazin</a>
-            <a className="button-secondary" href="/partnersuche/">Stadtseiten ansehen</a>
+      <AboutSubnav current={SITE_SEARCH_PATH} />
+
+      <section className="ab-wrap ab-section">
+        {!query ? (
+          <div className="abi-empty">
+            <p className="ab-eyebrow">So funktioniert’s</p>
+            <h2>Gib einfach ein Stichwort ein</h2>
+            <p>Zum Beispiel deine Stadt, ein Thema wie „Profil“ oder „Sicherheit“ oder eine Frage, die dich gerade beschäftigt. Umlaute kannst du schreiben, wie du magst – „Köln“ und „Koeln“ finden dasselbe.</p>
           </div>
-        </div>
-      ) : (
-        <>
-          <p className="site-search-count" aria-live="polite">
-            {results.length === 1 ? "1 Treffer" : `${results.length}${results.length >= SITE_SEARCH_MAX_RESULTS ? "+" : ""} Treffer`}
-          </p>
-          <ol className="site-search-results">
-            {results.map((result) => (
-              <li key={result.href}>
-                {result.previewHref ? (
-                  <MarketLink className="site-search-card" href={result.href} previewHref={result.previewHref}>
-                    <span className="site-search-area">{result.area}</span>
+        ) : results.length === 0 ? (
+          <div className="abi-empty">
+            <p className="ab-eyebrow">Keine Treffer</p>
+            <h2>Dazu haben wir leider nichts gefunden</h2>
+            <p>Versuch es mit einem kürzeren oder anderen Begriff. Oder stöbere direkt weiter:</p>
+            <div className="abi-hero-actions">
+              <a className="ab-btn ab-btn-primary" href="/magazin/">Zum 50plus Magazin</a>
+              <a className="ab-btn ab-btn-outline" href="/partnersuche/">Stadtseiten ansehen</a>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p className="abi-count" aria-live="polite">
+              {results.length === 1 ? "1 Treffer" : `${results.length}${results.length >= SITE_SEARCH_MAX_RESULTS ? "+" : ""} Treffer`}
+            </p>
+            <ol className="abi-results">
+              {results.map((result) => {
+                const inner = (
+                  <>
+                    <span className="abi-area">{result.area}</span>
                     <strong>{result.title}</strong>
-                    {result.excerpt ? <span className="site-search-excerpt">{result.excerpt}</span> : null}
-                  </MarketLink>
-                ) : (
-                  <a className="site-search-card" href={result.href}>
-                    <span className="site-search-area">{result.area}</span>
-                    <strong>{result.title}</strong>
-                    {result.excerpt ? <span className="site-search-excerpt">{result.excerpt}</span> : null}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ol>
-        </>
-      )}
-    </section>
+                    {result.excerpt ? <span className="abi-result-excerpt">{result.excerpt}</span> : null}
+                    <em>Öffnen <ArrowIcon /></em>
+                  </>
+                );
+                return (
+                  <li key={result.href}>
+                    {result.previewHref ? (
+                      <MarketLink className="abi-result" href={result.href} previewHref={result.previewHref}>{inner}</MarketLink>
+                    ) : (
+                      <a className="abi-result" href={result.href}>{inner}</a>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </>
+        )}
+      </section>
+    </article>
   );
 }

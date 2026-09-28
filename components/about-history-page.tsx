@@ -7,6 +7,10 @@ import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 import { ABOUT_HISTORY_PATH } from "@/lib/about-pages";
 import { ab50HistorySnapshots } from "@/data/about-history";
+import { marketPartnersuchePath } from "@/lib/markets";
+import { AboutSubnav, LightHero } from "@/components/ab-info/info-parts";
+import { CtaBand } from "@/components/ab-city/city-parts";
+import { ArrowIcon, CalendarIcon } from "@/components/ab-icons";
 
 const snapshotImages: Record<string, StaticImageData> = {
   "2001": shot2001,
@@ -15,6 +19,7 @@ const snapshotImages: Record<string, StaticImageData> = {
 };
 
 export function AboutHistoryPage() {
+  const partnersuche = marketPartnersuchePath("de");
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -33,53 +38,33 @@ export function AboutHistoryPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
-      <article className="standard-page standard-page-history">
-        <header className="standard-hero ab50-standard-hero history-story-hero">
-          <div className="container">
-            <p className="eyebrow">Unsere Reise</p>
-            <h1>Unsere Geschichte</h1>
-            <p className="lead">Anhand ausgewählter Wayback-Snapshots wird sichtbar, wie sich ab50.de über die Jahre verändert hat – von sehr frühen Web-Spuren bis zu einer klaren 50plus-Plattform mit Magazin, Vertrauen und modernen Einstiegen.</p>
-            <div className="trust-chip-row" aria-label="Geschichtliche Einordnung">
-              <span>frühe Web-Spuren</span>
-              <span>Zwischenphasen sichtbar</span>
-              <span>Transformation zur 50plus-Plattform</span>
-              <span>Snapshots aus dem Webarchiv</span>
-            </div>
-            <div className="hero-actions">
-              <a className="button-primary" href="#jahr-2001">Zur Timeline</a>
-              <a className="button-secondary" href="/ueber-uns/">Zur Über-uns-Seite</a>
-            </div>
-          </div>
-        </header>
+      <article className="abi">
+        <LightHero
+          crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns", href: "/ueber-uns/" }, { label: "Geschichte" }]}
+          eyebrow={<><CalendarIcon />Unsere Reise</>}
+          title="Unsere Geschichte"
+          lead="Anhand ausgewählter Wayback-Snapshots wird sichtbar, wie sich ab50.de über die Jahre verändert hat – von sehr frühen Web-Spuren bis zu einer klaren 50plus-Plattform mit Magazin, Vertrauen und modernen Einstiegen."
+        >
+          <nav className="abi-years" aria-label="Jahresnavigation">
+            {ab50HistorySnapshots.map((item) => <a key={item.year} href={`#jahr-${item.year}`}>{item.year}</a>)}
+          </nav>
+        </LightHero>
 
-        <section className="container section-block history-story-nav-wrap">
-          <div className="section-heading compact-heading">
-            <p className="eyebrow">Zeitsprünge</p>
-            <h2>Direkt in eine Phase springen</h2>
-          </div>
-          <div className="history-story-nav" aria-label="Jahresnavigation">
-            {ab50HistorySnapshots.map((item) => (
-              <a key={item.year} href={`#jahr-${item.year}`} className="history-year-pill">{item.year}</a>
-            ))}
-          </div>
-        </section>
+        <AboutSubnav current={ABOUT_HISTORY_PATH} />
 
-        <section className="container section-block history-story-grid">
-          {ab50HistorySnapshots.map((item) => (
-            <article key={item.year} id={`jahr-${item.year}`} className="history-story-card">
-              <div className="history-story-card-copy">
-                <p className="eyebrow">{item.year}</p>
+        <section className="ab-wrap ab-section abi-timeline">
+          {ab50HistorySnapshots.map((item, index) => (
+            <article key={item.year} id={`jahr-${item.year}`} className={`abi-step${index % 2 ? " abi-step-flip" : ""}`}>
+              <span className="abi-step-year">{item.year}</span>
+              <div className="abi-step-copy">
                 <h2>{item.title}</h2>
                 <p>{item.description}</p>
-                <div className="article-final-actions">
-                  <a className="button-secondary" href={item.sourceUrl} target="_blank" rel="noopener noreferrer">{item.sourceLabel}</a>
-                </div>
+                <a className="abi-step-link" href={item.sourceUrl} target="_blank" rel="noopener noreferrer">{item.sourceLabel} <ArrowIcon /></a>
               </div>
-              <div className="history-story-image-wrap">
+              <div className="abi-step-shot">
                 <Image
                   src={snapshotImages[item.year]}
                   alt={item.imageAlt}
-                  className="history-story-image"
                   sizes="(max-width: 980px) 100vw, 54vw"
                   unoptimized
                 />
@@ -88,17 +73,13 @@ export function AboutHistoryPage() {
           ))}
         </section>
 
-        <section className="container section-block standard-final-cta">
-          <div className="city-cta-box">
-            <p className="eyebrow">Heute</p>
-            <h2>Die Entwicklung geht weiter</h2>
-            <p>Aus frühen, teils sehr schlichten Web-Spuren ist über viele Stationen eine Plattform entstanden, die Singles ab 50 Orientierung, Magazin-Inhalte und direkte Einstiege in die Partnersuche bietet.</p>
-            <div className="city-cta-actions">
-              <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
-              <a className="button-secondary" href="/partnersuche/">Partnersuche nach Städten</a>
-            </div>
-          </div>
-        </section>
+        <CtaBand
+          eyebrow="Heute"
+          title="Die Entwicklung geht weiter"
+          text="Aus frühen, teils sehr schlichten Web-Spuren ist eine Plattform entstanden, die Singles ab 50 Orientierung, Magazin-Inhalte und direkte Einstiege in die Partnersuche bietet."
+          primary={{ label: "Jetzt kostenlos registrieren", href: siteConfig.links.registrationCommon }}
+          secondary={{ label: "Partnersuche nach Städten", href: partnersuche.publicUrl, previewHref: partnersuche.previewPath }}
+        />
       </article>
     </>
   );

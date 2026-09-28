@@ -3,6 +3,11 @@ import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 import { SiteSearchForm } from "@/components/site-search-form";
 import { ABOUT_HISTORY_PATH, ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
+import { getStandardPage } from "@/data/standard-pages";
+import { marketPartnersuchePath } from "@/lib/markets";
+import { AboutSubnav, LightHero } from "@/components/ab-info/info-parts";
+import { CtaBand } from "@/components/ab-city/city-parts";
+import { ArrowIcon, BookIcon, CalendarIcon, EyeIcon, HeartIcon, ShieldIcon, StarIcon, TagIcon, UserIcon, UsersIcon } from "@/components/ab-icons";
 
 export const metadata: Metadata = {
   title: "Über ab50.de",
@@ -17,89 +22,42 @@ export const metadata: Metadata = {
   },
 };
 
-const aboutCards = [
-  {
-    eyebrow: "ab50.de & ICONY",
-    title: "Verlässliche Betreuung im Hintergrund",
-    text: "Im Hintergrund wird ab50.de von ICONY begleitet. ICONY ist der Betreiber und rechtliche Ansprechpartner der Plattform und kümmert sich um Support, technische Betreuung und die laufende Weiterentwicklung – damit du dich auf das konzentrieren kannst, was wirklich zählt: passende Kontakte und gute Gespräche.",
-    href: "https://www.icony.com/",
-    label: "Mehr über ICONY erfahren",
-  },
-  {
-    eyebrow: "Christian M. Haas",
-    title: "Autor mit Dating-Erfahrung",
-    text: "Christian M. Haas steht im ab50.de Magazin für klare Worte, langjährige Erfahrung und Inhalte, die Singles wirklich weiterhelfen. Auf seiner Autorenseite erfährst du mehr darüber, wie sein Blick auf Online-Dating, Beziehungen und echte Begegnungen entstanden ist.",
-    href: "/magazin/christian-m-haas/",
-    label: "Zur Autorenseite",
-  },
-  {
-    eyebrow: "Unsere Geschichte",
-    title: "So hat sich ab50.de entwickelt",
-    text: "Gegründet 2011. Von den frühen Anfängen bis zur heutigen Plattform mit Millionen von Nutzern: Web-Snapshots zeigen die Entwicklung.",
-    href: ABOUT_HISTORY_PATH,
-    label: "Zur Geschichte",
-  },
-  {
-    eyebrow: "Social Media",
-    title: "Facebook, Community und YouTube",
-    text: "Videos zu Dating, Tipps, Erfolgsgeschichten und Diskussionen — direkt auf Facebook, YouTube und in der Community.",
-    href: ABOUT_SOCIAL_PATH,
-    label: "Zur Social-Media-Seite",
-  },
-  {
-    eyebrow: "Bewertungen & Erfahrungen",
-    title: "Was Singles über ab50.de sagen",
-    text: "Trustpilot-Bewertungen, Feedback, Vergleiche und Erfahrungsberichte — von echten Nutzern.",
-    href: ABOUT_REVIEWS_PATH,
-    label: "Zu Bewertungen & Erfahrungen",
-  },
-  {
-    eyebrow: "50plus Magazin",
-    title: "Tipps zu Dating, Sicherheit und Profil",
-    text: "Wie du ein starkes Profil schreibst, Fakes erkennst, sicher bleibst und neue Menschen kennenlernst.",
-    href: "/magazin/",
-    label: "Zum Magazin",
-  },
+const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
+
+const VALUES = [
+  { icon: TagIcon, title: "Kostenlos starten", text: "Profil anlegen, durchstöbern und Nachrichten schreiben – ohne versteckte Kosten und ohne Abo, um dich umzusehen." },
+  { icon: EyeIcon, title: "Echte, geprüfte Profile", text: "Verifizierte Profile und eine sichere Nachrichtenbox: damit du echten Menschen mit Lebenserfahrung begegnest." },
+  { icon: HeartIcon, title: "In deinem Tempo", text: "Ruhige Bedienung, klare Sprache und Tipps aus dem Magazin – für Singles ab 50, die es ernst meinen." },
 ];
 
-const aboutIntroCards = [
-  {
-    eyebrow: "Hinter den Kulissen",
-    title: "Wer ist ab50.de?",
-    text: "Gegründet 2011. Wie ab50.de gewachsen ist, was andere Singles sagen, und wo du die Community findest.",
-    variant: "guide",
-  },
-  {
-    eyebrow: "Echte Bewertungen",
-    title: "Das sagen Nutzer über ab50.de",
-    text: "Trustpilot, externe Vergleiche und echte Nutzerfeedback. Keine gekauften Bewertungen — nur echte Erfahrungen.",
-    variant: "trust",
-  },
-  {
-    eyebrow: "Nächster Schritt",
-    title: "Jetzt direkt durchstarten",
-    text: "Geschichte lesen, Bewertungen checken, Social Media folgen oder gleich kostenlos registrieren — alles auf dieser Seite.",
-    variant: "featured",
-  },
-] as const;
-
-const aboutQuickLinks = [
-  { href: "/magazin/christian-m-haas/", label: "Christian M. Haas kennenlernen" },
-  { href: ABOUT_HISTORY_PATH, label: "Unsere Geschichte lesen" },
-  { href: ABOUT_SOCIAL_PATH, label: "Social Media entdecken" },
-  { href: ABOUT_REVIEWS_PATH, label: "Bewertungen & Erfahrungen ansehen" },
-  { href: "/magazin/", label: "Zum 50plus Magazin" },
+const MORE = [
+  { href: ABOUT_HISTORY_PATH, icon: CalendarIcon, title: "Unsere Geschichte", text: "Gegründet 2011. Von frühen Web-Spuren bis zur heutigen 50plus-Plattform – mit Snapshots aus dem Webarchiv.", cta: "Zur Geschichte" },
+  { href: ABOUT_REVIEWS_PATH, icon: StarIcon, title: "Bewertungen & Erfahrungen", text: "Trustpilot, Vergleichsportale und echtes Nutzerfeedback – keine gekauften Bewertungen.", cta: "Bewertungen lesen" },
+  { href: ABOUT_SOCIAL_PATH, icon: UsersIcon, title: "Social Media", text: "Facebook-Seite, Community-Gruppe und YouTube: Tipps, Videos und Austausch rund um Dating ab 50.", cta: "Kanäle ansehen" },
+  { href: "/magazin/christian-m-haas/", icon: UserIcon, title: "Christian M. Haas", text: "Autor und Dating-Experte: seit 2008 entwickelt und betreibt er seriöse Singlebörsen mit Fokus auf klare Bedienung.", cta: "Zum Autorenprofil" },
+  { href: "/magazin/", icon: BookIcon, title: "50plus Magazin", text: "Wie du ein starkes Profil schreibst, Fakes erkennst, sicher bleibst und neue Menschen kennenlernst.", cta: "Zum Magazin" },
+  { href: "https://ab50.de/sicherheit-und-datenschutz.html", icon: ShieldIcon, title: "Sicherheit & Datenschutz", text: "Wie ab50.de deine Daten schützt und woran du unseriöse Kontakte erkennst.", cta: "Weiterlesen" },
 ];
 
 export default function UeberUnsPage() {
+  const reviews = getStandardPage("bewertungen-und-erfahrungen");
+  const social = getStandardPage("social-media");
+  const partnersuche = marketPartnersuchePath("de");
   const schema = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
+    "@type": "AboutPage",
     name: "Über ab50.de",
     headline: "Über ab50.de",
     description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
     url: absoluteUrl(ABOUT_ROOT_PATH),
     inLanguage: "de-DE",
+    about: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.links.home,
+      foundingDate: "2011",
+      sameAs: [...(social.socialLinks?.map((link) => link.href) ?? []), "https://www.trustpilot.com/review/ab50.de"],
+    },
     isPartOf: {
       "@type": "WebSite",
       name: siteConfig.name,
@@ -110,106 +68,110 @@ export default function UeberUnsPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
-      <article className="standard-page standard-page-about">
-        <header className="standard-hero ab50-standard-hero">
-          <div className="container standard-hero-grid">
-            <div>
-              <p className="eyebrow">Hinter den Kulissen</p>
-              <h1>Über ab50.de</h1>
-              <p className="lead">ab50.de: Kostenlos Singles 50+ kennenlernen, Nachrichten schreiben, erste Dates planen. Ohne versteckte Kosten, mit echten, verifizierten Profilen.</p>
-              <div className="trust-chip-row" aria-label="Wichtige Infos zu ab50.de">
-                <span>Unsere Geschichte</span>
-                <span>Social Media & Community</span>
-                <span>Bewertungen & Erfahrungen</span>
-                <span>Dating Tipps & Sicherheit</span>
-              </div>
-              <div className="hero-actions">
-                <a className="button-primary" href={ABOUT_HISTORY_PATH}>Unsere Geschichte ansehen</a>
-                <a className="button-secondary" href={ABOUT_SOCIAL_PATH}>Social Media entdecken</a>
-              </div>
-            </div>
-            <aside className="standard-hero-card ab50-standard-hero-card" aria-label="Was ab50.de ausmacht">
-              <strong>{siteConfig.name}</strong>
-              <span>Kostenlos Profile anlegen, durchstöbern und Nachrichten schreiben</span>
-              <span>Verifizierte Profile und sichere Nachrichtenbox</span>
-              <span>Erfolgsgeschichten und Tipps von echten Nutzern</span>
-            </aside>
+      <article className="abi">
+        <LightHero
+          crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns" }]}
+          eyebrow={<><HeartIcon />Hinter den Kulissen</>}
+          title="Über ab50.de"
+          lead="ab50.de: Kostenlos Singles 50+ kennenlernen, Nachrichten schreiben, erste Dates planen. Ohne versteckte Kosten, mit echten, verifizierten Profilen."
+          aside={
+            <figure className="abi-frame">
+              {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
+              <img src={AUTHOR_IMAGE} alt="Christian M. Haas, Autor und Dating-Experte bei ab50.de" width={243} height={300} />
+              <figcaption><strong>Christian M. Haas</strong><span>Autor &amp; Dating-Experte</span></figcaption>
+            </figure>
+          }
+        >
+          <ul className="abi-chips">
+            <li><strong>2011</strong> gegründet</li>
+            <li><strong>4,6</strong> / 5 auf Trustpilot</li>
+            <li><strong>0 €</strong> Registrierung</li>
+          </ul>
+          <div className="abi-search">
+            <SiteSearchForm label="Magazin-Artikel und Stadtseiten durchsuchen" />
           </div>
-        </header>
+        </LightHero>
 
-        <section className="container section-block about-search-block" aria-label="Seitensuche">
-          <p className="eyebrow">Suche</p>
-          <h2>Du suchst etwas Bestimmtes?</h2>
-          <SiteSearchForm label="Magazin-Artikel und Stadtseiten durchsuchen" />
-        </section>
+        <AboutSubnav current={ABOUT_ROOT_PATH} />
 
-        <section className="container section-block overview-intent-grid" aria-label="Schnelleinstieg Über ab50.de">
-          {aboutIntroCards.map((card) => (
-            <article className={`overview-intent-card overview-intent-card-${card.variant}`} key={card.title}>
-              <span>{card.eyebrow}</span>
-              <strong>{card.title}</strong>
-              <p>{card.text}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="container article-body-grid about-page-grid">
-          <aside className="article-side-column about-page-sidebar">
-            <div className="city-sidebar-stack">
-              <section className="city-sidebar-card magazine-about-sidebar" aria-label="Schnelllinks">
-                <p className="eyebrow">Schnell zum Punkt</p>
-                <strong>Deine wichtigsten Fragen zu ab50.de</strong>
-                <p>Gibt es echte Profile? Wie starte ich? Was sagen andere Singles? Die Antworten auf dieser Seite.</p>
-                <ul className="city-key-points about-quick-links">
-                  {aboutQuickLinks.map((link) => (
-                    <li key={link.href}><a href={link.href}>{link.label}</a></li>
-                  ))}
-                </ul>
-                <div className="article-final-actions">
-                  <a className="button-primary" href={ABOUT_HISTORY_PATH}>Unsere Geschichte lesen</a>
-                  <a className="button-secondary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos starten</a>
-                </div>
-              </section>
-            </div>
-          </aside>
-
-          <div className="article-main-column">
-            <section className="section-block about-main-intro-card">
-              <div className="section-heading">
-                <p className="eyebrow">Wer steht dahinter?</p>
-                <h2>Christian M. Haas, ICONY und unsere Gemeinschaft</h2>
-                <p>ab50.de wird von klaren Köpfen geprägt: Christian M. Haas mit langjähriger Dating-Erfahrung im Magazin, ICONY als Betreiber und technischer Partner – und vor allem von dir und der Community. Hier erfährst du, wer wirklich dahintersteckt.</p>
-              </div>
-              <div className="card-grid standard-card-grid">
-                {aboutCards.map((card) => (
-                  <a className="card standard-card" href={card.href} key={card.href}>
-                    <span className="standard-card-kicker">{card.eyebrow}</span>
-                    <strong>{card.title}</strong>
-                    <span>{card.text}</span>
-                    <em>{card.label}</em>
-                  </a>
-                ))}
-              </div>
-            </section>
-
-            <section className="two-column standard-split-section about-bottom-split">
-              <div className="stats-panel standard-info-panel">
-                <p className="eyebrow">Warum diese Seite wichtig ist</p>
-                <h2>Bevor du startest: Wer ist ab50.de wirklich?</h2>
-                <p>Gegründet 2011. Millionen von Nutzern. Bewertungen von echten Singles. Erfolgsgeschichten. Sicherheit & Verifizierung. Alles, um zu sehen, ob ab50.de zu dir passt.</p>
-              </div>
-              <div className="city-cta-box city-cta-box-compact">
-                <p className="eyebrow">Direkter Einstieg</p>
-                <h2>Wenn du nicht nur lesen, sondern direkt loslegen möchtest</h2>
-                <p>Du kannst jederzeit kostenlos starten, Profile ansehen und selbst entscheiden, ob ab50.de zu deinem Tempo und deiner Art der Partnersuche passt.</p>
-                <div className="city-cta-actions">
-                  <a className="button-primary" href={siteConfig.links.registrationCommon}>Jetzt kostenlos registrieren</a>
-                  <a className="button-secondary" href="/partnersuche/">Stadtseiten ansehen</a>
-                </div>
-              </div>
-            </section>
+        <section className="ab-wrap ab-section" aria-labelledby="abi-values-title">
+          <div className="ab-head">
+            <p className="ab-eyebrow"><HeartIcon />Wofür wir stehen</p>
+            <h2 id="abi-values-title">Partnersuche mit Lebenserfahrung</h2>
+          </div>
+          <div className="abi-values">
+            {VALUES.map(({ icon: Icon, title, text }) => (
+              <article key={title}><Icon /><strong>{title}</strong><p>{text}</p></article>
+            ))}
           </div>
         </section>
+
+        <section className="ab-wrap ab-section">
+          <figure className="abi-quote">
+            <span className="abi-quote-mark" aria-hidden="true">“</span>
+            <blockquote>
+              Mein Schwerpunkt liegt darauf, Online-Dating nicht nur technisch zuverlässig, sondern auch alltagstauglich und verständlich zu gestalten.
+            </blockquote>
+            <figcaption>
+              {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
+              <img src={AUTHOR_IMAGE} alt="" width={56} height={69} loading="lazy" />
+              <span><strong>Christian M. Haas</strong><small>Autor &amp; Dating-Experte bei ab50.de</small></span>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section className="ab-section abi-ratings" aria-labelledby="abi-ratings-title">
+          <div className="ab-wrap">
+            <div className="abi-ratings-head">
+              <div className="ab-head">
+                <p className="ab-eyebrow"><StarIcon />Bewertungen &amp; Erfahrungen</p>
+                <h2 id="abi-ratings-title">Was andere über ab50.de sagen</h2>
+              </div>
+              <a className="ab-btn ab-btn-primary" href={ABOUT_REVIEWS_PATH}>Alle Bewertungen <ArrowIcon /></a>
+            </div>
+            <div className="abi-ratings-grid">
+              <div className="abi-rating">
+                <small>Trustpilot</small>
+                <strong>4,6<span> / 5</span></strong>
+                <span className="ab-stars" style={{ ["--rating" as string]: 4.6 }} role="img" aria-label="4,6 von 5 Sternen" />
+              </div>
+              <div className="abi-rating">
+                <small>Singlebörsen-Überblick</small>
+                <strong>4,5<span> / 5</span></strong>
+                <span className="ab-stars" style={{ ["--rating" as string]: 4.5 }} role="img" aria-label="4,5 von 5 Sternen" />
+              </div>
+              <div className="abi-rating abi-rating-text">
+                <small>Seit 2011</small>
+                <strong>Singles 50+</strong>
+                <span>{reviews.cards?.[0]?.title}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="ab-wrap ab-section" aria-labelledby="abi-more-title">
+          <div className="ab-head">
+            <p className="ab-eyebrow"><BookIcon />Mehr erfahren</p>
+            <h2 id="abi-more-title">Wer hinter ab50.de steht</h2>
+            <p>ab50.de wird von klaren Köpfen geprägt: Christian M. Haas mit langjähriger Dating-Erfahrung im Magazin, ICONY als Betreiber und technischer Partner – und vor allem von dir und der Community.</p>
+          </div>
+          <div className="abi-tiles">
+            {MORE.map(({ href, icon: Icon, title, text, cta }) => (
+              <a key={href} className="abi-tile" href={href}>
+                <Icon /><strong>{title}</strong><span>{text}</span><em>{cta} <ArrowIcon /></em>
+              </a>
+            ))}
+          </div>
+          <p className="abi-note">Im Hintergrund wird ab50.de von <a href="https://www.icony.com/">ICONY</a> begleitet. ICONY ist der Betreiber und rechtliche Ansprechpartner der Plattform und kümmert sich um Support, technische Betreuung und die laufende Weiterentwicklung.</p>
+        </section>
+
+        <CtaBand
+          eyebrow="Direkter Einstieg"
+          title="Wenn du nicht nur lesen, sondern direkt loslegen möchtest"
+          text="Du kannst jederzeit kostenlos starten, Profile ansehen und selbst entscheiden, ob ab50.de zu deinem Tempo passt."
+          primary={{ label: "Jetzt kostenlos registrieren", href: siteConfig.links.registrationCommon }}
+          secondary={{ label: "Stadtseiten ansehen", href: partnersuche.publicUrl, previewHref: partnersuche.previewPath }}
+        />
       </article>
     </>
   );

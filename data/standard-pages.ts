@@ -78,7 +78,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     title: "Bewertungen und Erfahrungen zu ab50.de",
     description: "Authentische Nutzermeinungen, Trustpilot-Bewertungen und Empfehlungen von Vergleichsportalen zu ab50.de.",
     lead:
-      "Wer eine Singlebörse ab 50 ausprobiert, möchte wissen, wie andere sie erleben. Hier findest du die wichtigsten Nutzerstimmen, externe Bewertungen und Vergleichsseiten auf einen Blick — nah an den Originalinhalten der bestehenden ab50.de-Seite.",
+      "Wer eine Singlebörse ab 50 ausprobiert, möchte wissen, wie andere sie erleben. Hier findest du die wichtigsten Nutzerstimmen, externe Bewertungen und Vergleichsseiten auf einen Blick.",
     heroImageSrc:
       "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
     heroImageAlt: "Frau mit Daumen hoch als Motiv für Bewertungen und Erfahrungen",
@@ -164,7 +164,6 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         title: "Teste ab50.de selbst",
         paragraphs: [
           "Am Ende zählt immer dein eigener Eindruck. Schau dir Funktionen, Tonalität und potenzielle Kontakte in Ruhe an und entscheide selbst, ob ab50.de zu deiner Art von Partnersuche passt.",
-          "So wurde auch die bisherige Seite abgeschlossen: mit einer klaren Einladung, die Plattform unverbindlich selbst kennenzulernen.",
         ],
         link: {
           label: "Zur kostenlosen Registrierung",
