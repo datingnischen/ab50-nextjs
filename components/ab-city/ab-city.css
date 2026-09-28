@@ -1,0 +1,975 @@
+/* Stadtseiten DE und CH: Stadtporträt mit Flirt-Faktor */
+
+.abc {
+  display: block;
+  padding-bottom: 24px;
+  background:
+    radial-gradient(circle at 6% 40%, rgba(28, 78, 149, 0.06), transparent 28%),
+    radial-gradient(circle at 94% 64%, rgba(173, 29, 29, 0.05), transparent 30%),
+    var(--ab-cream);
+}
+
+/* ---------- Hero ---------- */
+
+.abc-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: center;
+  gap: 52px;
+}
+
+.abc-hero h1 {
+  max-width: 16ch;
+}
+
+/* Schweiz: Stadtillustration statt Foto */
+.abc-hero-art-layer {
+  position: absolute;
+  inset: auto 0 0 auto;
+  z-index: 0;
+  width: min(62%, 820px);
+  height: 100%;
+  opacity: 0.55;
+}
+
+.abc-hero-art-layer > * {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: right bottom;
+}
+
+.abc-hero-art::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(7, 23, 47, 0.96) 0%, rgba(11, 33, 70, 0.85) 46%, rgba(11, 33, 70, 0.25) 100%);
+}
+
+/* Flirt-Faktor-Karte */
+.abc-dial-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 26px 26px 28px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 164, 65, 0.18), transparent 60%),
+    #fff;
+  color: var(--ab-ink);
+  text-align: center;
+  box-shadow: 0 34px 70px rgba(7, 23, 47, 0.45);
+  transform: rotate(1.5deg);
+}
+
+.abc-dial-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ab-red);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.abc-dial-kicker svg {
+  width: 18px;
+  height: 18px;
+}
+
+.abc-dial {
+  position: relative;
+  width: 220px;
+  margin-top: 4px;
+}
+
+.abc-dial svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.abc-dial-track,
+.abc-dial-value {
+  fill: none;
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.abc-dial-track {
+  stroke: var(--ab-sand);
+}
+
+.abc-dial strong {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  color: var(--ab-ink);
+  font-family: var(--ab-display), serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.abc-dial strong small {
+  color: var(--ab-muted);
+  font-family: var(--ab-body), sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.abc-dial-city {
+  margin-top: 8px;
+  font-family: var(--ab-display), serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.abc-dial-headline {
+  margin: 0;
+  color: var(--ab-blue);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.abc-dial-text {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--ab-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+/* ---------- Profil-Widget ---------- */
+
+.abc-widget .icony-iframe-section {
+  width: min(1200px, calc(100% - 32px));
+  margin: 32px auto 0;
+  padding: 30px 32px 28px;
+  border: 0;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(173, 29, 29, 0.08), transparent 34%),
+    radial-gradient(circle at 0% 100%, rgba(28, 78, 149, 0.08), transparent 36%),
+    #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-widget .icony-iframe-copy .eyebrow {
+  color: var(--ab-red);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.abc-widget .icony-iframe-copy h2 {
+  margin: 6px 0 8px;
+  color: var(--ab-ink);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: 600;
+}
+
+.abc-widget .icony-iframe-tabs label {
+  min-height: 46px;
+  padding: 10px 20px;
+  border: 1.5px solid var(--ab-line);
+  color: var(--ab-ink);
+  font-weight: 700;
+}
+
+.abc-widget .icony-iframe-tabs input:checked + label {
+  border-color: var(--ab-blue);
+  background: var(--ab-blue);
+  color: #fff;
+}
+
+.abc-widget .icony-iframe-panel {
+  border: 0;
+  background: transparent;
+  padding: 8px 0 0;
+}
+
+.abc-widget .icony-iframe-panel iframe {
+  min-height: 260px;
+}
+
+.abc-widget .icony-iframe-actions .button-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2560b3, var(--ab-blue));
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 14px 30px rgba(28, 78, 149, 0.28);
+}
+
+/* ---------- Flirt-Faktor-Erklärung ---------- */
+
+.abc-score-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 34px;
+  padding: 34px 40px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(217, 164, 65, 0.22), transparent 40%),
+    linear-gradient(135deg, #fff, var(--ab-gold-soft));
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px rgba(217, 164, 65, 0.35);
+}
+
+.abc-score-number {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--ab-night);
+  color: #ffd27a;
+  font-family: var(--ab-display), serif;
+  font-size: 3.6rem;
+  font-weight: 700;
+  box-shadow: 0 18px 40px rgba(7, 23, 47, 0.3), inset 0 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+.abc-score-card h2 {
+  margin: 6px 0 10px;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.abc-score-card p:not(.ab-eyebrow) {
+  margin: 0;
+  color: #4b5566;
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+/* ---------- Kennzahlen ---------- */
+
+.abc-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.abc-stat {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 24px;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-stat span {
+  color: var(--ab-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.abc-stat strong {
+  color: var(--ab-blue);
+  font-family: var(--ab-display), serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.abc-stat p {
+  margin: 0;
+  color: var(--ab-muted);
+  line-height: 1.55;
+}
+
+.abc-note {
+  margin: 16px 0 0;
+  color: var(--ab-muted);
+  font-size: 0.94rem;
+}
+
+/* ---------- Stärken & Schwächen ---------- */
+
+.abc-signal {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.abc-signal-card {
+  --tone: var(--ab-green);
+  --tone-soft: var(--ab-green-soft);
+  padding: 28px 30px;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-signal-minus {
+  --tone: #b7791f;
+  --tone-soft: var(--ab-gold-soft);
+}
+
+.abc-signal-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--tone-soft);
+  color: var(--tone);
+  font-weight: 700;
+}
+
+.abc-signal-card ul {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abc-signal-card li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.abc-signal-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--tone);
+  color: #fff;
+  font-weight: 800;
+}
+
+.abc-signal-card strong {
+  display: block;
+  font-size: 1.08rem;
+}
+
+.abc-signal-card p {
+  margin: 4px 0 0;
+  color: var(--ab-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Date-Orte ---------- */
+
+.abc-places {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 18px;
+}
+
+.abc-place {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 24px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.abc-place:hover {
+  transform: none;
+  box-shadow: 0 22px 44px rgba(11, 33, 70, 0.14), inset 0 0 0 2px var(--ab-red);
+}
+
+.abc-place-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.abc-place-type,
+.abc-place-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.abc-place-type {
+  background: var(--ab-rose);
+  color: var(--ab-red);
+}
+
+.abc-place-type svg {
+  width: 15px;
+  height: 15px;
+}
+
+.abc-place-cat {
+  background: var(--ab-blue-soft);
+  color: var(--ab-blue);
+}
+
+.abc-place h3 {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.abc-place p {
+  margin: 0;
+  color: var(--ab-muted);
+  line-height: 1.6;
+}
+
+.abc-place dl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--ab-line);
+  font-size: 0.94rem;
+}
+
+.abc-place dt {
+  color: var(--ab-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.abc-place dd {
+  margin: 0;
+}
+
+.abc-place-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ab-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.abc-place-map svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Dating-Ideen ---------- */
+
+.abc-tips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.abc-tip {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 26px 24px;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-tip-no {
+  color: var(--ab-gold);
+  font-family: var(--ab-display), serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.abc-tip strong {
+  font-size: 1.12rem;
+}
+
+.abc-tip p {
+  margin: 0;
+  color: var(--ab-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Stadtporträt ---------- */
+
+.abc-guide {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: start;
+  gap: 36px;
+  scroll-margin-top: 100px;
+}
+
+.abc-guide-side {
+  position: sticky;
+  top: 100px;
+  display: grid;
+  gap: 18px;
+}
+
+.abc-toc {
+  display: grid;
+  gap: 12px;
+  padding: 26px 20px 20px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(37, 96, 179, 0.45), transparent 50%),
+    linear-gradient(170deg, var(--ab-night), var(--ab-night-2));
+  color: #fff;
+  box-shadow: 0 24px 50px rgba(7, 23, 47, 0.28);
+}
+
+.abc-toc-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffb4b0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.abc-toc-kicker svg {
+  width: 18px;
+  height: 18px;
+}
+
+.abc-toc > strong {
+  font-family: var(--ab-display), serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.abc-toc ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: toc;
+}
+
+.abc-toc li {
+  counter-increment: toc;
+}
+
+.abc-toc a {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.abc-toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  color: #ffd27a;
+  font-weight: 700;
+}
+
+.abc-toc a:hover,
+.abc-toc a:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.abc-side-card {
+  padding: 22px 20px;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-side-card ul {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abc-side-card li {
+  position: relative;
+  padding-left: 26px;
+  line-height: 1.5;
+}
+
+.abc-side-card li::before {
+  content: "";
+  position: absolute;
+  top: 0.35em;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--ab-red);
+  -webkit-mask: var(--ab-heart-mask) center / contain no-repeat;
+  mask: var(--ab-heart-mask) center / contain no-repeat;
+}
+
+.abc-side-banner {
+  display: grid;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #fff;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: var(--ab-shadow-lg);
+}
+
+.abc-side-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.abc-side-banner span {
+  padding: 14px;
+  background: linear-gradient(135deg, #c42a2a, var(--ab-red));
+  font-weight: 700;
+  text-align: center;
+}
+
+.abc-guide-main {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.abc-content {
+  padding: 36px 40px;
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-content h2 {
+  position: relative;
+  padding-left: 18px;
+  scroll-margin-top: 100px;
+}
+
+.abc-content h2::before {
+  content: "";
+  position: absolute;
+  top: 0.15em;
+  bottom: 0.15em;
+  left: 0;
+  width: 5px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--ab-red), var(--ab-blue));
+}
+
+/* Inline-CTA aus dem WordPress-Text */
+.abc-content .article-inline-cta,
+.abc-content .article-inline-cta.article-inline-cta {
+  margin: 1.6rem 0;
+  padding: 26px 28px;
+  border: 0;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(37, 96, 179, 0.4), transparent 50%),
+    linear-gradient(135deg, var(--ab-night), #163a73);
+  color: #fff;
+}
+
+.abc-content .article-inline-cta h2 {
+  margin: 6px 0 8px;
+  padding: 0;
+  color: #fff;
+  font-size: 1.45rem;
+}
+
+.abc-content .article-inline-cta h2::before {
+  display: none;
+}
+
+.abc-content .article-inline-cta .eyebrow {
+  margin: 0;
+  color: #ffb4b0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.abc-content .article-inline-cta p {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.abc-content .article-inline-cta .button-primary {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c42a2a, var(--ab-red));
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Quellen */
+.abc-sources {
+  padding: 24px 28px;
+  border-radius: 26px;
+  background: var(--ab-blue-soft);
+  font-size: 0.96rem;
+}
+
+.abc-sources p {
+  margin: 8px 0 0;
+  color: #3f4b5e;
+}
+
+.abc-sources-note {
+  font-weight: 600;
+}
+
+.abc-sources ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.abc-sources li span,
+.abc-sources li em {
+  display: block;
+  color: var(--ab-muted);
+  font-size: 0.88rem;
+}
+
+/* Autor */
+.abc-author {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  padding: 26px 28px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc-author img {
+  width: 96px;
+  height: 118px;
+  border-radius: 22px;
+  object-fit: cover;
+  background: var(--ab-blue-soft);
+}
+
+.abc-author strong {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--ab-display), serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.abc-author p:not(.ab-eyebrow) {
+  margin: 8px 0 0;
+  color: var(--ab-muted);
+  line-height: 1.6;
+}
+
+.abc-author-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.abc-author-tags span {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--ab-sand);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.abc-author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  color: var(--ab-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.abc-author-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Weitere Städte (bestehende Komponente) */
+.abc .city-further {
+  margin: 0;
+  padding: clamp(24px, 3vw, 38px);
+  border: 0;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(173, 29, 29, 0.08), transparent 22rem),
+    #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abc .city-further .eyebrow {
+  margin: 0;
+  color: var(--ab-red);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.abc .city-further-head h2 {
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.abc .city-further-all:hover {
+  background: var(--ab-night);
+  border-color: var(--ab-night);
+}
+
+.abc .city-further-tile {
+  border-radius: 24px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1020px) {
+  .abc-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .abc-dial-card {
+    width: min(380px, 100%);
+    transform: rotate(1deg);
+  }
+
+  .abc-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .abc-guide-side {
+    position: static;
+  }
+
+  .abc-side-banner {
+    display: none;
+  }
+
+  .abc-signal {
+    grid-template-columns: 1fr;
+  }
+
+  .abc-hero-art-layer {
+    width: 100%;
+    opacity: 0.3;
+  }
+}
+
+@media (max-width: 700px) {
+  .abc-dial-card {
+    margin-inline: auto;
+    transform: none;
+  }
+
+  .abc-widget .icony-iframe-section {
+    padding: 24px 18px 20px;
+  }
+
+  .abc-score-card {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 18px;
+    padding: 26px 22px;
+  }
+
+  .abc-score-number {
+    width: 110px;
+    height: 110px;
+    font-size: 2.6rem;
+  }
+
+  .abc-place {
+    transform: none;
+  }
+
+  .abc-content {
+    padding: 26px 20px;
+  }
+
+  .abc-author {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Schweiz: Statistik-Grafik in der Seitenleiste */
+.abc-stat-figure {
+  margin: 0;
+}
+
+.abc-stat-figure .city-stat-image,
+.abc-stat-figure img {
+  width: 100%;
+  height: auto;
+  margin-top: 12px;
+  border-radius: 16px;
+}
+
+.abc-stat-figure button {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+/* Überschriften, die im Import nur ein Bild enthalten */
+.abc-content h2:has(img) {
+  padding-left: 0;
+}
+
+.abc-content h2:has(img)::before {
+  display: none;
+}

@@ -11,6 +11,8 @@ import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
 import { staticAsset } from "@/lib/static-asset";
+import { marketPartnersuchePath } from "@/lib/markets";
+import { AuthorBox, CityHero, CtaBand, FactStrip, FlirtDial, GuideSection, PlacesSection, SignalSection, StatCardsSection, TipsSection } from "@/components/ab-city/city-parts";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -40,6 +42,9 @@ const placeTypeLabels: Record<string, string> = {
   bar: "Bar",
   park: "Park",
   library: "Bibliothek",
+  museum: "Museum",
+  zoo: "Zoo",
+  theater: "Theater",
   university: "Universität",
   other: "Ort",
 };
@@ -124,8 +129,18 @@ function injectInlineCta(html: string, cityName: string) {
   });
 }
 
-function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], cityName = "deiner Stadt") {
-  const cleaned = (html || "")
+/** Das Titelbild steht schon im Hero: gleiches Bild am Textanfang entfernen. */
+function stripLeadImage(html: string, imageUrl?: string | null) {
+  if (!imageUrl) return html;
+  const file = imageUrl.split("/").pop()?.replace(/-\d+x\d+(?=\.[a-z]+$)/i, "").replace(/\.[a-z]+$/i, "");
+  if (!file) return html;
+  const escaped = file.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`^\\s*(?:<p>\\s*)?(?:<figure[^>]*>\\s*)?(?:<a[^>]*>\\s*)?<img[^>]*${escaped}[^>]*>(?:\\s*</a>)?(?:\\s*<figcaption[\\s\\S]*?</figcaption>)?(?:\\s*</figure>)?(?:\\s*</p>)?`, "i");
+  return html.replace(pattern, "");
+}
+
+function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], cityName = "deiner Stadt", leadImageUrl?: string | null) {
+  const cleaned = stripLeadImage(html || "", leadImageUrl)
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/\sdata-srcset=/gi, " srcset=")
@@ -183,7 +198,8 @@ function splitCityTips(tips?: WpCityTip[] | null): SplitCityTips {
 
 function placeTypeLabel(type?: string | null) {
   const key = (type || "other").toLowerCase();
-  return placeTypeLabels[key] || type || "Ort";
+  const label = placeTypeLabels[key] || type || "Ort";
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 function normalizePlaces(places?: WpLocalPlace[] | null): ParsedPlace[] {
@@ -203,66 +219,6 @@ function normalizePlaces(places?: WpLocalPlace[] | null): ParsedPlace[] {
       } as ParsedPlace;
     })
     .filter((place): place is ParsedPlace => Boolean(place));
-}
-
-function PlaceCardsSection({
-  cityName,
-  eyebrow,
-  title,
-  intro,
-  places,
-}: {
-  cityName: string;
-  eyebrow?: string | null;
-  title?: string | null;
-  intro?: string | null;
-  places: ParsedPlace[];
-}) {
-  if (!places.length) return null;
-
-  return (
-    <section className="city-places-section" aria-label={`Date-Orte in ${cityName}`}>
-      <div className="section-heading compact-heading place-section-heading">
-        <p className="eyebrow">{eyebrow || `Date-Ideen in ${cityName}`}</p>
-        <h2>{title || `${places.length} konkrete Orte für Dates in ${cityName}`}</h2>
-        <p>{intro || `Hier findest du konkrete Treffpunkte, die sich für ein erstes Kennenlernen oder einen entspannten nächsten Schritt in ${cityName} eignen.`}</p>
-      </div>
-      <div className="place-card-grid">
-        {places.map((place, index) => {
-          const mapsUrl = place.mapsUrl || (place.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}` : null);
-          return (
-            <article className="place-card place-card-slim" key={`${place.name}-${index}`}>
-              <div className="place-card-topline">
-                <span className="place-type-badge">📍 {place.typeLabel}</span>
-                {place.category ? <span className="place-category-badge">{place.category}</span> : null}
-              </div>
-              <h3>{place.name}</h3>
-              {place.tip ? <p className="place-card-text">{place.tip}</p> : null}
-              <dl className="place-meta-list place-meta-list-slim">
-                {place.address ? (
-                  <div>
-                    <dt>Adresse</dt>
-                    <dd>{place.address}</dd>
-                  </div>
-                ) : null}
-                {place.openingHours ? (
-                  <div>
-                    <dt>Öffnungszeiten</dt>
-                    <dd>{place.openingHours}</dd>
-                  </div>
-                ) : null}
-              </dl>
-              {mapsUrl ? (
-                <div className="place-actions place-actions-slim">
-                  <a href={mapsUrl} rel="nofollow noopener noreferrer" target="_blank">Karte öffnen</a>
-                </div>
-              ) : null}
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
 }
 
 function normalizeStatCards(cards?: WpCityStatCard[] | null) {
@@ -336,21 +292,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function TableOfContents({ items }: { items: TocItem[] }) {
-  if (!items.length) return null;
-  return (
-    <nav className="article-toc city-sidebar-card" aria-label="Inhaltsverzeichnis">
-      <p className="eyebrow">Auf dieser Seite</p>
-      <strong>Deine Schnellnavigation</strong>
-      <ol>
-        {items.map((item: TocItem) => (
-          <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>
-        ))}
-      </ol>
-    </nav>
-  );
-}
-
 function SourceBox({
   sources,
   intro,
@@ -367,16 +308,12 @@ function SourceBox({
   if (displayMode === "hidden" || (!sources.length && !reviewNote)) return null;
 
   return (
-    <section className={`city-source-box city-source-box-${displayMode || "auto"}`} aria-label="Quellen und Aktualität">
-      <p className="eyebrow">Quellen, Bilder & Aktualität</p>
-      {intro ? <p>{intro}</p> : <p>Die Daten und Fakten unten stammen aus öffentlichen Quellen und zeigen die echte Situation in {cityName} für Singles ab 50.</p>}
-      {reviewNote ? (
-        <div className="city-source-review-note">
-          <span>{reviewNote}</span>
-        </div>
-      ) : null}
+    <section className="abc-sources" aria-label="Quellen und Aktualität">
+      <p className="ab-eyebrow">Quellen, Bilder &amp; Aktualität</p>
+      {intro ? <p>{intro}</p> : <p>Die Daten und Fakten stammen aus öffentlichen Quellen und zeigen die Situation in {cityName} für Singles ab 50.</p>}
+      {reviewNote ? <p className="abc-sources-note">{reviewNote}</p> : null}
       {sources.length ? (
-        <ul className="city-source-list">
+        <ul>
           {sources.map((source, index) => (
             <li key={`${source.title || source.url || "source"}-${index}`}>
               {source.url ? <a href={source.url} rel="nofollow noopener noreferrer" target="_blank">{source.title || source.url}</a> : <strong>{source.title || source.publisher || "Quelle"}</strong>}
@@ -386,156 +323,6 @@ function SourceBox({
           ))}
         </ul>
       ) : null}
-    </section>
-  );
-}
-
-function FlirtFactorVisualCard({ cityName, score, text }: { cityName: string; score: number | null; text?: string | null }) {
-  if (score === null && !text) return null;
-  const safeScore = score === null ? null : Math.max(0, Math.min(100, score));
-  return (
-    <div className="flirt-factor-card" aria-label={`Flirt-Faktor ${cityName}`}>
-      <div>
-        <span className="flirt-factor-kicker">Flirt-Faktor</span>
-        <strong>{safeScore !== null ? `${formatScoreValue(safeScore)}/100` : `Dating ab 50 in ${cityName}`}</strong>
-        <p>{text || `So findest du neue Kontakte in ${cityName}: Die besten Orte, wie du sicher startest und wo echte Menschen wie du unterwegs sind.`}</p>
-      </div>
-      {safeScore !== null ? (
-        <div className="flirt-meter" aria-hidden="true">
-          <span style={{ width: `${safeScore}%` }} />
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function CityHeroVisual({
-  cityName,
-  title,
-  image,
-  profileEyebrow,
-  profileTitle,
-  profileText,
-  score,
-  scoreText,
-}: {
-  cityName: string;
-  title: string;
-  image?: { sourceUrl?: string | null; altText?: string | null; width?: number | null; height?: number | null } | null;
-  profileEyebrow?: string | null;
-  profileTitle?: string | null;
-  profileText?: string | null;
-  score: number | null;
-  scoreText?: string | null;
-}) {
-  return (
-    <div className="city-visual-wrap">
-      <div className="city-phone-card">
-        <div className="city-phone-topbar">
-          <span />
-          <strong>ab50.de</strong>
-          <em>{cityName}</em>
-        </div>
-        {image?.sourceUrl ? (
-          <Image
-            priority
-            sizes="(max-width: 980px) 100vw, 420px"
-            src={image.sourceUrl}
-            alt={image.altText || title}
-            width={image.width || 1200}
-            height={image.height || 800}
-            className="city-phone-image"
-          />
-        ) : (
-          <div className="city-phone-placeholder" />
-        )}
-        <div className="city-profile-card">
-          <span>{profileEyebrow || "Dein Einstieg"}</span>
-          <strong>{profileTitle || `Neue Kontakte in ${cityName}`}</strong>
-          <p>{profileText || `Wie du in ${cityName} echte Menschen triffst: Wo Kontakte entstehen, wie du dein Profil machst und worauf es wirklich ankommt.`}</p>
-        </div>
-      </div>
-      <FlirtFactorVisualCard cityName={cityName} score={score} text={scoreText} />
-    </div>
-  );
-}
-
-function CityStatsModule({
-  cityName,
-  statCards,
-  quickFacts,
-  score,
-  scoreText,
-}: {
-  cityName: string;
-  statCards: WpCityStatCard[];
-  quickFacts: Array<{ label: string; value: string }>;
-  score: number | null;
-  scoreText?: string | null;
-}) {
-  const cards = [
-    ...(score !== null
-      ? [{
-          label: "Flirt-Faktor",
-          value: `${formatScoreValue(score)}/100`,
-          description: scoreText || `Zeigt auf einen Blick, wie leicht du in ${cityName} neue Leute kennenlernen kannst.`,
-        }]
-      : []),
-    ...(statCards.length
-      ? statCards.map((card) => ({
-          label: card.label || "Signal",
-          value: card.value || cityName,
-          description: card.description || `Hilft dir, ${cityName} schneller für deine Partnersuche ab 50 einzuordnen.`,
-        }))
-      : quickFacts.slice(0, score !== null ? 2 : 3).map((fact) => ({
-          label: fact.label,
-          value: fact.value,
-          description: `Hilft dir einzuschätzen, wie gut ${cityName} für neue Kontakte und erste Dates passt.`,
-        }))),
-  ];
-
-  return (
-    <section className="city-stats-grid" aria-label={`Stadtfakten für ${cityName}`}>
-      {cards.map((card, index) => (
-        <article className="city-stat-card" key={`${card.label}-${index}`}>
-          <span>{card.label}</span>
-          <strong>{card.value}</strong>
-          <p>{card.description}</p>
-        </article>
-      ))}
-    </section>
-  );
-}
-
-function CityCtaBox({
-  eyebrow,
-  title,
-  text,
-  note,
-  primaryHref,
-  primaryLabel,
-  secondaryHref,
-  secondaryLabel,
-}: {
-  eyebrow: string;
-  title: string;
-  text: string;
-  note?: string | null;
-  primaryHref: string;
-  primaryLabel: string;
-  secondaryHref: string;
-  secondaryLabel: string;
-}) {
-  return (
-    <section className="city-cta-box city-cta-box-compact" aria-label="Nächster Schritt">
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>{title}</h2>
-      <p>{text}</p>
-      <div className="city-cta-actions">
-        <a className="button-primary" href={primaryHref}>{primaryLabel}</a>
-        <a className="button-secondary" href={secondaryHref}>{secondaryLabel}</a>
-      </div>
-      {note ? <small>{note}</small> : null}
     </section>
   );
 }
@@ -574,51 +361,38 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const furtherCities = pickFurtherCities(cityTiles, cityPath(publicSlugMap.get(city.slug) || city.slug));
   const readingMinutes = estimateReadingTime(city.content);
   const tocItems = extractTocItems(city.content);
-  const safeHtml = sanitizeContent(city.content, tocItems, cityName);
-  const sourceIntro = city.acf?.sources_intro || null;
-  const sourceDisplayMode = city.acf?.sources_display_mode || "auto";
+  const safeHtml = sanitizeContent(city.content, tocItems, cityName, city.featuredImage?.sourceUrl);
   const sources = normalizeSources(city.acf?.sources);
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
   const iconyLocation = getIconyWidgetLocationForRoute(slug, 49);
   const singlesSearchUrl = citySearchUrl("de", slug);
-  const singlesWidgetEyebrow = city.acf?.city_singles_widget_eyebrow || null;
-  const singlesWidgetTitle = city.acf?.city_singles_widget_title || null;
-  const singlesWidgetText = city.acf?.city_singles_widget_text || null;
-  const singlesWidgetCtaLabel = city.acf?.city_singles_widget_cta_label || null;
-  const singlesWidgetNote = city.acf?.city_singles_widget_note || null;
   const score = normalizeScore(city.acf?.flirt_factor_score);
   const statCards = normalizeStatCards(city.acf?.local_stat_cards);
-  const topStatCardLimit = score !== null ? 2 : 3;
-  const topStatCards = statCards.slice(0, topStatCardLimit);
-  const remainingStatCards = statCards.slice(topStatCardLimit);
   const splitTips = splitCityTips(city.acf?.local_tips);
   const places = normalizePlaces(city.acf?.local_places);
   const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
   const primaryCtaLabel = city.acf?.primary_cta_label || "Kostenlos starten";
-  const secondaryCtaHref = city.acf?.secondary_cta_url || "/partnersuche/";
-  const secondaryCtaLabel = city.acf?.secondary_cta_label || "Alle Städte";
   const sidebarCtaHref = city.acf?.city_sidebar_cta_url || primaryCtaHref;
   const sidebarCtaLabel = city.acf?.city_sidebar_cta_label || primaryCtaLabel;
+  const overview = marketPartnersuchePath("de");
   const finalCtaEyebrow = city.acf?.city_cta_eyebrow || "Nächster Schritt";
-  const finalCtaTitle = city.acf?.city_cta_title || `Wenn du magst, kannst du jetzt direkt kostenlos starten und neue Kontakte in ${cityName} entdecken.`;
-  const finalCtaText = city.acf?.city_cta_text || "Oder du schaust dir weitere Städte und Magazin-Themen in Ruhe an.";
-  const finalCtaNote = city.acf?.city_cta_note || null;
-  const takeawaySummary = city.acf?.city_dating_angle || city.acf?.city_highlight_text || `Hier siehst du schnell, wo du in ${cityName} leichter neue Kontakte knüpfst, welche Treffpunkte passen und wie dein nächster Schritt aussehen kann.`;
+  const finalCtaTitle = city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`;
+  const finalCtaText = city.acf?.city_cta_text || "Oder schau dir weitere Städte und Magazin-Themen in Ruhe an.";
   const citySignals = uniqueNonEmpty([
     city.acf?.city_hero_claim,
     ...trustPoints,
     ...(city.acf?.city_hero_claim || trustPoints.length ? [] : [city.acf?.city_dating_angle]),
   ]).slice(0, 4);
-  const scoreChip = score !== null ? `${formatScoreValue(score)} Flirt-Faktor` : null;
   const heroChipItems = uniqueNonEmpty([
-    scoreChip,
     ...heroChips.filter((chip) => !/flirt-faktor/i.test(chip)),
     ...(heroChips.length ? [] : ["Singles ab 50", `Treffpunkte in ${cityName}`, "Kostenlos starten"]),
-  ]).slice(0, 5);
-  const quickFacts = [
-    { label: "Fokus", value: `Partnersuche ab 50 in ${cityName}` },
-    { label: "Lesezeit", value: `${readingMinutes} Min.` },
+  ]).slice(0, 4);
+  const stripFacts = [
+    ...(score !== null ? [{ icon: "spark" as const, label: "Flirt-Faktor", value: `${formatScoreValue(score)} von 100` }] : []),
+    ...statCards.slice(0, 2).map((card, index) => ({ icon: index ? "pin" as const : "users" as const, label: card.label || "Kennzahl", value: String(card.value || cityName) })),
+    { icon: "clock" as const, label: "Lesezeit", value: `ca. ${readingMinutes} Minuten` },
+    { icon: "heart" as const, label: "Anmeldung", value: "kostenlos" },
   ];
   const schema = {
     "@context": "https://schema.org",
@@ -646,18 +420,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Partnersuche",
-        item: absoluteUrl("/partnersuche/"),
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: cityName,
-        item: absoluteUrl(cityPath(slug)),
-      },
+      { "@type": "ListItem", position: 1, name: "Partnersuche", item: absoluteUrl("/partnersuche/") },
+      { "@type": "ListItem", position: 2, name: cityName, item: absoluteUrl(cityPath(slug)) },
     ],
   };
 
@@ -665,268 +429,130 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
-      <article className="container article-page city-page city-page-premium">
-        <div className="category-hero-card city-overview-hero city-detail-hero city-premium-hero">
-          <div className="category-hero-copy">
-            <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-              <a href="/partnersuche/">Partnersuche</a>
-              <span aria-hidden="true">/</span>
-              <span>{cityName}</span>
-            </nav>
-            <p className="eyebrow">{cityHeroEyebrow(city.acf?.hero_eyebrow, cityName)}</p>
-            <h1>{title}</h1>
-            <p className="lead">{lead}</p>
-            <div className="trust-chip-row" aria-label="Stadtvorteile">
-              {heroChipItems.map((chip) => <span key={chip}>{chip}</span>)}
-            </div>
-            <div className="hero-actions">
-              <a className="button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
-              <a className="button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
-            </div>
-          </div>
-          <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${cityName} auf einen Blick`}>
-            <CityHeroVisual
+      <article className="abc">
+        <CityHero
+          crumbs={[{ label: "Partnersuche", href: overview.publicUrl, previewHref: overview.previewPath }, { label: cityName }]}
+          badge={`Stadtporträt · ${cityHeroEyebrow(city.acf?.hero_eyebrow, cityName)}`}
+          title={title}
+          lead={lead}
+          chips={heroChipItems}
+          primary={{ label: `Singles ab 50 in ${cityName} finden`, href: primaryCtaHref }}
+          secondary={{ label: "Zum Stadtporträt ↓", href: "#stadtportraet" }}
+          image={city.featuredImage?.sourceUrl ? { src: city.featuredImage.sourceUrl, alt: city.featuredImage.altText || title } : null}
+          aside={
+            <FlirtDial
               cityName={cityName}
-              title={title}
-              image={city.featuredImage}
-              profileEyebrow={city.acf?.city_profile_card_eyebrow}
-              profileTitle={city.acf?.city_profile_card_title}
-              profileText={city.acf?.city_profile_card_text}
               score={score}
-              scoreText={city.acf?.flirt_factor_text || city.acf?.city_dating_angle}
+              headline={score !== null ? scoreHeadline(score) : (city.acf?.city_profile_card_title || `Neue Kontakte in ${cityName}`)}
+              text={city.acf?.city_profile_card_text || city.acf?.flirt_factor_text || city.acf?.city_dating_angle}
             />
-          </aside>
-        </div>
-
-        {/* Conversion Banner */}
-        <section className="city-banner-conversion" aria-label="Call-to-Action Banner">
-          <Image
-            src={staticAsset("/ab50-banner-conversion-langformat.png")}
-            alt="Neue Menschen ab 50 in deiner Nähe kennenlernen"
-            width={1200}
-            height={800}
-            className="city-banner-image"
-            priority={false}
-          />
-        </section>
-
-        <IconyIframeSinglesWidget
-          city={cityName}
-          platformId={siteConfig.icony.projectKey}
-          location={iconyLocation}
-          searchUrl={singlesSearchUrl}
-          profileClickUrl={siteConfig.links.registrationLocation}
-          eyebrow={singlesWidgetEyebrow || undefined}
-          title={singlesWidgetTitle || undefined}
-          text={singlesWidgetText || undefined}
-          ctaLabel={singlesWidgetCtaLabel || undefined}
-          note={singlesWidgetNote || undefined}
+          }
         />
 
-        <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
-          <article className="overview-intent-card overview-intent-card-guide city-intro-card">
-            <span>{score !== null ? `Flirt-Faktor ${cityName}` : (city.acf?.city_highlight_eyebrow || "Dating in deiner Stadt")}</span>
-            <strong>{score !== null ? scoreHeadline(score) : (city.acf?.city_highlight_title || `Wo du in ${cityName} leichter neue Kontakte findest`)}</strong>
-            <p>{score !== null ? scoreSummary(cityName, score, city.acf?.flirt_factor_text) : (city.acf?.city_highlight_text || `Welche Orte sich in ${cityName} für erste Treffen eignen, worauf du achten kannst und wie du entspannt ins Kennenlernen startest.`)}</p>
-          </article>
-          <article className="overview-intent-card overview-intent-card-trust city-intro-card">
-            <span>Darum lohnt sich die Seite</span>
-            <strong>{tocItems.length ? `Wo du in ${cityName} leichter ins Gespräch kommst` : `Worauf es in ${cityName} beim Kennenlernen ankommt`}</strong>
-            <p>{`Du bekommst Date-Ideen, passende Treffpunkte und konkrete Tipps, damit du in ${cityName} entspannter neue Menschen kennenlernst.`}</p>
-          </article>
-          <article className="overview-intent-card overview-intent-card-featured city-intro-card">
-            <span>Nächster Schritt</span>
-            <strong>Danach kannst du direkt kostenlos weitermachen</strong>
-            <p>Wenn du nicht nur lesen, sondern wirklich neue Begegnungen in {cityName} entdecken möchtest, ist der Einstieg auf ab50.de sofort greifbar.</p>
-          </article>
-        </section>
+        <FactStrip facts={stripFacts} />
 
-        <div className="city-top-modules">
-          <CityStatsModule cityName={cityName} statCards={topStatCards} quickFacts={quickFacts} score={score} scoreText={city.acf?.flirt_factor_text} />
-          <CityCtaBox
-            eyebrow={city.acf?.city_sidebar_eyebrow || finalCtaEyebrow}
-            title={city.acf?.city_sidebar_title || city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`}
-            text={city.acf?.city_sidebar_text || city.acf?.city_cta_text || `Wenn du nach dem Lesen direkt weitermachen willst, kannst du dich ohne Umwege in deiner Region umschauen.`}
-            note={city.acf?.city_cta_note || finalCtaNote}
-            primaryHref={primaryCtaHref}
-            primaryLabel={primaryCtaLabel}
-            secondaryHref={secondaryCtaHref}
-            secondaryLabel={secondaryCtaLabel}
+        <div className="abc-widget">
+          <IconyIframeSinglesWidget
+            city={cityName}
+            platformId={siteConfig.icony.projectKey}
+            location={iconyLocation}
+            searchUrl={singlesSearchUrl}
+            profileClickUrl={siteConfig.links.registrationLocation}
+            eyebrow={city.acf?.city_singles_widget_eyebrow || undefined}
+            title={city.acf?.city_singles_widget_title || `Wer in ${cityName} gerade sucht`}
+            text={city.acf?.city_singles_widget_text || undefined}
+            ctaLabel={city.acf?.city_singles_widget_cta_label || undefined}
+            note={city.acf?.city_singles_widget_note || undefined}
           />
         </div>
 
-        <section className="article-body-grid city-body-grid">
-          <aside className="article-side-column city-side-column">
-            <div className="city-sidebar-stack">
-              <TableOfContents items={tocItems} />
-              <section className="city-sidebar-card city-sidebar-soft" aria-label="Kurz zusammengefasst">
-                <p className="eyebrow">{city.acf?.city_trust_eyebrow || "Kurz gesagt"}</p>
-                <strong>Darum lohnt sich die Seite für {cityName}</strong>
-                <ul className="city-key-points">
-                  {citySignals.map((point) => <li key={point}>{point}</li>)}
-                  <li>Direkte Wege zu weiteren regionalen Einstiegen und zum Magazin</li>
-                </ul>
-              </section>
-              <section className="city-sidebar-card city-sidebar-cta" aria-label="Kostenlos starten">
-                <p className="eyebrow">{city.acf?.city_sidebar_eyebrow || "Bereit für den nächsten Schritt?"}</p>
-                <strong>{city.acf?.city_sidebar_title || "Starte kostenlos und schau dich in deiner Region um."}</strong>
-                <p>{city.acf?.city_sidebar_text || `Schau kostenlos, wer in ${cityName} zu dir passen könnte, und starte in deinem eigenen Tempo.`}</p>
-                <a className="button-primary" href={sidebarCtaHref}>{sidebarCtaLabel}</a>
-              </section>
-            </div>
-          </aside>
-
-          <div className="article-main-column">
-            {remainingStatCards.length ? (
-              <section className="city-score-section" aria-label={`Dating-Signale für ${cityName}`}>
-                <div className="section-heading compact-heading">
-                  <p className="eyebrow">Signal-Check</p>
-                  <h2>Weitere Kennzahlen für {cityName}</h2>
-                  <p>Diese zusätzlichen Zahlen zeigen dir, wie gut {cityName} für neue Kontakte, entspannte erste Dates und passende Treffpunkte taugt.</p>
-                </div>
-                <div className="city-score-grid">
-                  {remainingStatCards.map((card, index) => (
-                    <article className="city-score-card" key={`${card.label || "card"}-${index}`}>
-                      <span>{card.label || "Signal"}</span>
-                      <strong>{card.value}</strong>
-                      {card.description ? <p>{card.description}</p> : null}
-                    </article>
-                  ))}
-                </div>
-                {city.acf?.content_review_note ? (
-                  <p className="city-data-note">{city.acf.content_review_note}</p>
-                ) : null}
-              </section>
-            ) : null}
-
-            <section className="article-takeaway-box city-takeaway-box" aria-label="Stadtprofil">
-              <p className="eyebrow">Stadtprofil</p>
-              <h2>Das Wichtigste für Dating ab 50 in {cityName}</h2>
-              <p>{takeawaySummary}</p>
-              <div className="city-meta-grid">
-                {quickFacts.map((fact) => (
-                  <div className="city-meta-card" key={fact.label}>
-                    <span>{fact.label}</span>
-                    <strong>{fact.value}</strong>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {(splitTips.strengths.length || splitTips.weaknesses.length) ? (
-              <section className="city-signal-section" aria-label={`Stärken und Schwächen für ${cityName}`}>
-                <div className="section-heading compact-heading">
-                  <p className="eyebrow">Stärken & Schwächen</p>
-                  <h2>Was in {cityName} für Dates spricht – und was du im Blick behalten solltest</h2>
-                </div>
-                <div className="city-signal-grid">
-                  {splitTips.strengths.length ? (
-                    <article className="city-signal-card city-signal-card-positive">
-                      <span>Stärken</span>
-                      <strong>Das hilft dir in {cityName}</strong>
-                      <ul>
-                        {splitTips.strengths.map((tip, index) => (
-                          <li key={`strength-${index}`}>
-                            <strong>{tip.title}</strong>
-                            {tip.text ? <p>{tip.text}</p> : null}
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  ) : null}
-                  {splitTips.weaknesses.length ? (
-                    <article className="city-signal-card city-signal-card-neutral">
-                      <span>Worauf du achten solltest</span>
-                      <strong>Diese Punkte sind in {cityName} wichtig</strong>
-                      <ul>
-                        {splitTips.weaknesses.map((tip, index) => (
-                          <li key={`weakness-${index}`}>
-                            <strong>{tip.title}</strong>
-                            {tip.text ? <p>{tip.text}</p> : null}
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  ) : null}
-                </div>
-              </section>
-            ) : null}
-
-            <PlaceCardsSection
-              cityName={cityName}
-              eyebrow={city.acf?.local_places_eyebrow}
-              title={city.acf?.local_places_title}
-              intro={city.acf?.local_places_intro}
-              places={places}
-            />
-
-            {splitTips.generalTips.length ? (
-              <section className="city-tip-section" aria-label={`Dating-Ideen für ${cityName}`}>
-                <div className="section-heading compact-heading">
-                  <p className="eyebrow">{city.acf?.local_tips_eyebrow || "Dating-Ideen"}</p>
-                  <h2>{city.acf?.local_tips_title || `Konkrete Dating-Ideen für ${cityName}`}</h2>
-                  {city.acf?.local_tips_intro ? <p>{city.acf.local_tips_intro}</p> : null}
-                </div>
-                <div className="city-tip-grid">
-                  {splitTips.generalTips.map((tip, index) => (
-                    <article className="city-tip-card" key={`tip-${index}`}>
-                      {tip.title ? <strong>{tip.title}</strong> : null}
-                      {tip.text ? <p>{tip.text}</p> : null}
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            <div className="article-content-card">
-              <div className="article-content" dangerouslySetInnerHTML={{ __html: safeHtml }} />
-            </div>
-
-            <SourceBox
-              sources={sources}
-              intro={sourceIntro}
-              reviewNote={city.acf?.content_review_note}
-              displayMode={sourceDisplayMode}
-              cityName={cityName}
-            />
-
-            <section className="magazine-author-box city-author-box" aria-label="Wer diese Inhalte schreibt">
-              <div className="magazine-author-avatar" aria-hidden="true">
-                <Image
-                  src={cityAuthor.imageSrc}
-                  alt={cityAuthor.imageAlt}
-                  width={96}
-                  height={96}
-                />
-              </div>
+        {score !== null ? (
+          <section className="ab-wrap ab-section abc-score" aria-label={`Flirt-Faktor ${cityName}`}>
+            <div className="abc-score-card">
+              <span className="abc-score-number">{formatScoreValue(score)}</span>
               <div>
-                <p className="eyebrow">Von {cityAuthor.name}</p>
-                <p className="magazine-author-role">Autor & Dating-Experte bei ab50.de</p>
-                <p>Hier findest du Ideen für erste Dates in {cityName}, typische Fragen rund ums Kennenlernen und einen einfachen Einstieg, wenn du neue Menschen ab 50 treffen möchtest.</p>
-                <div className="magazine-author-meta">
-                  <span>Treffpunkte in {cityName}</span>
-                  <span>Erste Dates ab 50</span>
-                </div>
-                <a className="button-secondary magazine-author-link" href={cityAuthor.href}>Mehr von Christian lesen</a>
+                <p className="ab-eyebrow">Flirt-Faktor {cityName}</p>
+                <h2>{scoreHeadline(score)}</h2>
+                <p>{scoreSummary(cityName, score, city.acf?.flirt_factor_text)}</p>
               </div>
-            </section>
-          </div>
-        </section>
+            </div>
+          </section>
+        ) : null}
 
-        <CityFurtherCities tiles={furtherCities} totalCities={allCities.length} overviewHref="/partnersuche/" />
+        <StatCardsSection
+          cityName={cityName}
+          cards={statCards.map((card) => ({ label: card.label || "Kennzahl", value: String(card.value || cityName), description: card.description }))}
+          note={city.acf?.content_review_note}
+        />
+        <SignalSection cityName={cityName} strengths={splitTips.strengths} weaknesses={splitTips.weaknesses} />
+        <PlacesSection
+          cityName={cityName}
+          eyebrow={city.acf?.local_places_eyebrow}
+          title={city.acf?.local_places_title}
+          intro={city.acf?.local_places_intro}
+          places={places}
+        />
+        <TipsSection
+          cityName={cityName}
+          tips={splitTips.generalTips}
+          eyebrow={city.acf?.local_tips_eyebrow}
+          title={city.acf?.local_tips_title}
+          intro={city.acf?.local_tips_intro}
+        />
 
-        <section className="overview-cta-strip category-final-cta" aria-label="Nächster Schritt">
-          <div>
-            <p className="eyebrow">{finalCtaEyebrow}</p>
-            <h2>{finalCtaTitle}</h2>
-            <p>{finalCtaText}</p>
-            {finalCtaNote ? <small className="city-cta-note">{finalCtaNote}</small> : null}
-          </div>
-          <div className="overview-cta-actions">
-            <a className="button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
-            <a className="button-secondary" href="/magazin/">Zum Magazin</a>
-          </div>
-        </section>
+        <GuideSection
+          cityName={cityName}
+          toc={tocItems}
+          sidebar={
+            <>
+              {citySignals.length ? (
+                <section className="abc-side-card" aria-label="Kurz zusammengefasst">
+                  <p className="ab-eyebrow">{city.acf?.city_trust_eyebrow || "Kurz gesagt"}</p>
+                  <ul>{citySignals.map((point) => <li key={point}>{point}</li>)}</ul>
+                </section>
+              ) : null}
+              <a className="abc-side-banner" href={sidebarCtaHref}>
+                <Image
+                  src={staticAsset("/ab50-banner-conversion-langformat.png")}
+                  alt="Neue Menschen ab 50 in deiner Nähe kennenlernen"
+                  width={1200}
+                  height={800}
+                  sizes="300px"
+                />
+                <span>{sidebarCtaLabel}</span>
+              </a>
+            </>
+          }
+        >
+          <div className="abc-content ab-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
+          <SourceBox
+            sources={sources}
+            intro={city.acf?.sources_intro || null}
+            reviewNote={city.acf?.content_review_note}
+            displayMode={city.acf?.sources_display_mode || "auto"}
+            cityName={cityName}
+          />
+          <AuthorBox
+            name={cityAuthor.name}
+            role={cityAuthor.role}
+            imageSrc={cityAuthor.imageSrc}
+            href={cityAuthor.href}
+            text={`Christian M. Haas schreibt über Dating ab 50 – hier mit Ideen für erste Treffen in ${cityName}, typischen Fragen rund ums Kennenlernen und einem einfachen Einstieg in die Partnersuche.`}
+            tags={[`Treffpunkte in ${cityName}`, "Erste Dates ab 50", "Sicher kennenlernen"]}
+          />
+        </GuideSection>
+
+        <div className="ab-wrap ab-section">
+          <CityFurtherCities tiles={furtherCities} totalCities={allCities.length} overviewHref={overview.publicUrl} overviewPreviewHref={overview.previewPath} />
+        </div>
+
+        <CtaBand
+          eyebrow={finalCtaEyebrow}
+          title={finalCtaTitle}
+          text={finalCtaText}
+          primary={{ label: primaryCtaLabel, href: primaryCtaHref }}
+          secondary={{ label: "Zum Magazin", href: "/magazin/" }}
+        />
       </article>
     </>
   );

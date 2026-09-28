@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { AuthorBox, CityHero, CtaBand, FactStrip, FlirtDial, GuideSection, PlacesSection } from "@/components/ab-city/city-parts";
 import { CityCharacterArt } from "@/components/city-character-art";
-import {
-  ChCityAuthorBox,
-  ChCityStats,
-  ChFlirtFactorCard,
-  ChFlirtFactorNote,
-  ChPlaceCards,
-  flirtFactorHeadline,
-} from "@/components/ch-city-modules";
+import { ChFlirtFactorNote, chCityAuthor, flirtFactorHeadline } from "@/components/ch-city-modules";
 import { CityFurtherCities } from "@/components/city-further-cities";
 import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
-import { MarketLink } from "@/components/market-link";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { getChCityFacts } from "@/data/ch-city-facts";
 import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
@@ -50,6 +43,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+/** Stadtporträt-Überschriften für das Inhaltsverzeichnis (ohne IDs im Import: werden hier ergänzt). */
+function withHeadingIds(html: string) {
+  const toc: { id: string; label: string }[] = [];
+  const out = html.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi, (match, attrs: string, inner: string) => {
+    const label = inner.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+    if (!label || toc.length >= 8) return match;
+    const id = `abschnitt-${toc.length + 1}`;
+    toc.push({ id, label });
+    return /\sid=/.test(attrs) ? match : `<h2${attrs} id="${id}">${inner}</h2>`;
+  });
+  return { html: out, toc };
+}
+
 export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   const { slug } = await params;
   const city = getSwissCity(slug);
@@ -81,6 +87,8 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   );
   const registration = registrationUrl("ch", "location");
   const search = citySearchUrl("ch", city.slug);
+  const guide = withHeadingIds(city.contentHtml);
+  const readingMinutes = Math.max(1, Math.ceil(city.contentHtml.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length / 220));
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -101,139 +109,93 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
       { "@type": "ListItem", position: 2, name: city.name, item: route.publicUrl },
     ],
   };
+  const chips = facts?.heroChips.filter((chip) => !/flirt-faktor/i.test(chip)) ?? ["Singles ab 50", `${city.name} & Umgebung`, "Kostenlos starten"];
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }} />
-      <article className="container article-page city-page city-page-premium market-city-page">
-        <div className="category-hero-card city-overview-hero city-detail-hero city-premium-hero">
-          <div className="category-hero-copy">
-            <nav className="article-breadcrumbs" aria-label="Breadcrumb">
-              <MarketLink href={overviewRoute.publicUrl} previewHref={overviewRoute.previewPath}>Partnersuche Schweiz</MarketLink>
-              <span aria-hidden="true">/</span>
-              <span>{city.name}</span>
-            </nav>
-            <p className="eyebrow">Partnersuche ab 50 · Schweiz</p>
-            <h1>{city.title}</h1>
-            <p className="lead">{city.description}</p>
-            <div className="trust-chip-row" aria-label="Stadtvorteile">
-              {(facts?.heroChips ?? [`Singles ab 50`, `${city.name} & Umgebung`, "Kostenlos starten"]).map((chip) => (
-                <span key={chip}>{chip}</span>
-              ))}
-            </div>
-            <div className="hero-actions">
-              <a className="button-primary" href={registration}>Kostenlos starten</a>
-              <MarketLink className="button-secondary" href={overviewRoute.publicUrl} previewHref={overviewRoute.previewPath}>Alle Schweizer Städte</MarketLink>
-            </div>
-          </div>
-          <aside className="category-hero-sidecard city-hero-sidecard city-hero-visual-shell" aria-label={`${city.name} auf einen Blick`}>
-            <div className="city-visual-wrap">
-              <CityCharacterArt
-                slug={city.slug}
-                name={city.name}
-                variant="hero"
-                className="city-phone-image city-art-image"
-              />
-              {facts ? (
-                <ChFlirtFactorCard cityName={city.name} score={facts.flirtFaktor} text={facts.flirtFaktorText} />
-              ) : null}
-            </div>
-          </aside>
-        </div>
-
-        <IconyIframeSinglesWidget
-          city={city.name}
-          platformId="ab50ch"
-          location={getIconyWidgetLocationForRoute(city.slug, 41)}
-          searchUrl={search}
-          profileClickUrl={registration}
-          eyebrow="Singles in der Schweiz entdecken"
-          title={`Neue Singles in ${city.name}`}
-          text={`Schau dir aktuelle Profile aus ${city.name} und Umgebung an oder erweitere den Suchradius direkt auf ab50.ch.`}
-          ctaLabel={`Ausführlicher in ${city.name} suchen`}
-          note="Kostenlos starten · Schweizer Umkreis wählen · diskret stöbern"
+      <article className="abc market-city-page">
+        <CityHero
+          crumbs={[{ label: "Partnersuche Schweiz", href: overviewRoute.publicUrl, previewHref: overviewRoute.previewPath }, { label: city.name }]}
+          badge="Stadtporträt · Partnersuche ab 50 · Schweiz"
+          title={city.title}
+          lead={city.description}
+          chips={chips}
+          primary={{ label: `Singles ab 50 in ${city.name} finden`, href: registration }}
+          secondary={{ label: "Zum Stadtporträt ↓", href: "#stadtportraet" }}
+          art={<CityCharacterArt slug={city.slug} name={city.name} variant="hero" className="city-art-image" />}
+          aside={
+            <FlirtDial
+              cityName={city.name}
+              score={facts?.flirtFaktor ?? null}
+              headline={facts ? flirtFactorHeadline(facts.flirtFaktor) : `Neue Kontakte in ${city.name}`}
+              text={facts?.flirtFaktorText}
+            />
+          }
         />
 
-        {facts ? (
-          <>
-            <section className="overview-intent-grid city-intro-grid" aria-label="Schnelleinstieg">
-              <article className="overview-intent-card overview-intent-card-guide city-intro-card">
-                <span>Flirt-Faktor {city.name}</span>
-                <strong>{flirtFactorHeadline(facts.flirtFaktor)}</strong>
-                <p>{city.name}: {facts.flirtFaktor} Punkte. {facts.flirtFaktorText}</p>
-              </article>
-              <article className="overview-intent-card overview-intent-card-trust city-intro-card">
-                <span>Darum lohnt sich die Seite</span>
-                <strong>Wo du in {city.name} leichter ins Gespräch kommst</strong>
-                <p>Du bekommst Date-Ideen, passende Treffpunkte und konkrete Tipps, damit du in {city.name} entspannter neue Menschen kennenlernst.</p>
-              </article>
-              <article className="overview-intent-card overview-intent-card-featured city-intro-card">
-                <span>Nächster Schritt</span>
-                <strong>Danach kannst du direkt kostenlos weitermachen</strong>
-                <p>Wenn du nicht nur lesen, sondern wirklich neue Begegnungen in {city.name} entdecken möchtest, ist der Einstieg auf ab50.ch sofort greifbar.</p>
-              </article>
-            </section>
+        <FactStrip
+          facts={[
+            ...(facts ? [
+              { icon: "spark" as const, label: "Flirt-Faktor", value: `${facts.flirtFaktor} von 100` },
+              { icon: "users" as const, label: "Einwohner", value: facts.einwohner },
+              { icon: "pin" as const, label: facts.dritteKachel.label, value: facts.dritteKachel.wert },
+            ] : []),
+            { icon: "clock" as const, label: "Lesezeit", value: `ca. ${readingMinutes} Minuten` },
+            { icon: "heart" as const, label: "Anmeldung", value: "kostenlos" },
+          ]}
+        />
 
-            <div className="city-top-modules">
-              <ChCityStats cityName={city.name} facts={facts} />
-              <section className="city-cta-box city-cta-box-compact" aria-label="Nächster Schritt">
-                <p className="eyebrow">Bereit für den nächsten Schritt?</p>
-                <h2>Starte kostenlos und entdecke Singles ab 50 in {city.name}.</h2>
-                <p>Du kannst dich in Ruhe umsehen und selbst entscheiden, wie du den ersten Kontakt gestaltest.</p>
-                <div className="city-cta-actions">
-                  <a className="button-primary" href={registration}>Kostenlos starten</a>
-                  <MarketLink className="button-secondary" href={overviewRoute.publicUrl} previewHref={overviewRoute.previewPath}>Alle Schweizer Städte</MarketLink>
-                </div>
-                <small>Kostenlos starten · Schweizer Umkreis wählen · diskret stöbern</small>
-              </section>
+        <div className="abc-widget">
+          <IconyIframeSinglesWidget
+            city={city.name}
+            platformId="ab50ch"
+            location={getIconyWidgetLocationForRoute(city.slug, 41)}
+            searchUrl={search}
+            profileClickUrl={registration}
+            eyebrow="Singles in der Schweiz entdecken"
+            title={`Wer in ${city.name} gerade sucht`}
+            text={`Schau dir aktuelle Profile aus ${city.name} und Umgebung an oder erweitere den Suchradius direkt auf ab50.ch.`}
+            ctaLabel={`Ausführlicher in ${city.name} suchen`}
+            note="Kostenlos starten · Schweizer Umkreis wählen · diskret stöbern"
+          />
+        </div>
+
+        {facts ? (
+          <section className="ab-wrap ab-section abc-score" aria-label={`Flirt-Faktor ${city.name}`}>
+            <div className="abc-score-card">
+              <span className="abc-score-number">{facts.flirtFaktor}</span>
+              <div>
+                <p className="ab-eyebrow">Flirt-Faktor {city.name}</p>
+                <h2>{flirtFactorHeadline(facts.flirtFaktor)}</h2>
+                <p>{city.name}: {facts.flirtFaktor} Punkte. {facts.flirtFaktorText}</p>
+              </div>
             </div>
-          </>
+          </section>
         ) : null}
 
-        <section className="article-body-grid city-body-grid">
-          <aside className="article-side-column city-side-column">
-            <div className="city-sidebar-stack">
-              <section className="city-sidebar-card city-sidebar-soft" aria-label="Kurz zusammengefasst">
-                <p className="eyebrow">Dein regionaler Einstieg</p>
-                <strong>{city.name} auf einen Blick</strong>
-                <ul className="city-key-points">
-                  {facts ? (
-                    <>
-                      <li><strong>Flirt-Faktor {facts.flirtFaktor}/100</strong> für {city.name}</li>
-                      <li><strong>{facts.einwohner} Einwohner</strong> · {facts.dritteKachel.wert} {facts.dritteKachel.label}</li>
-                      <li><strong>3 Date-Orte:</strong> {facts.treffpunkte.map((place) => place.name).join(", ")}</li>
-                    </>
-                  ) : (
-                    <>
-                      <li>Lokale Orte und Ideen für erste Treffen</li>
-                      <li>Regionale Singles auf ab50.ch entdecken</li>
-                    </>
-                  )}
-                  <li>Weitere Schweizer Städte direkt erreichbar</li>
-                </ul>
-              </section>
-              <section className="city-sidebar-card city-sidebar-cta" aria-label="Kostenlos starten">
-                <p className="eyebrow">Nächster Schritt</p>
-                <strong>Schau kostenlos, wer in deiner Region zu dir passen könnte.</strong>
-                <p>Du entscheidest selbst, wann und mit wem du Kontakt aufnehmen möchtest.</p>
-                <a className="button-primary" href={registration}>Kostenlos starten</a>
-              </section>
-            </div>
-          </aside>
+        {facts ? (
+          <PlacesSection
+            cityName={city.name}
+            intro="Diese Treffpunkte nennt auch das Stadtporträt weiter unten – sie eignen sich für ein erstes Kennenlernen oder einen entspannten nächsten Schritt."
+            places={facts.treffpunkte.map((place) => ({
+              name: place.name,
+              typeLabel: place.typ,
+              category: place.kategorie,
+              tip: place.tipp,
+              address: `${city.name}, Schweiz`,
+              mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${city.name}, Schweiz`)}`,
+            }))}
+          />
+        ) : null}
 
-          <div className="article-main-column">
-            <section className="article-takeaway-box city-takeaway-box" aria-label="Stadtprofil">
-              <p className="eyebrow">Stadtprofil Schweiz</p>
-              <h2>Dating ab 50 in {city.name}</h2>
-              <p>Diese Stadtseite bündelt lokale Anregungen, Treffpunkte und Wege, wie du in {city.name} entspannt neue Menschen kennenlernen kannst.</p>
-            </section>
-            <figure className="city-stat-figure" aria-label={`${city.name} in Zahlen`}>
-              <figcaption className="city-stat-figure-head">
-                <p className="eyebrow">{city.name} in Zahlen</p>
-                <strong>Die Stadt-Statistik für Singles ab 50</strong>
-                <p>Einwohner, Quartiere und beliebte Treffpunkte auf einen Blick – tippe auf die Grafik für die grosse Ansicht.</p>
-              </figcaption>
+        <GuideSection
+          cityName={city.name}
+          toc={guide.toc}
+          sidebar={
+            <figure className="abc-side-card abc-stat-figure" aria-label={`${city.name} in Zahlen`}>
+              <p className="ab-eyebrow">{city.name} in Zahlen</p>
               <CityImageDialog
                 city={city.name}
                 imageUrl={city.heroImage.url}
@@ -243,37 +205,38 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
                 hint="Grafik vergrössern"
               />
             </figure>
-
-            {facts ? <ChPlaceCards cityName={city.name} places={facts.treffpunkte} /> : null}
-
-            <div className="article-content-card">
-              <MarketHtml market="ch" html={city.contentHtml} />
-            </div>
-
-            {facts ? <ChFlirtFactorNote cityName={city.name} score={facts.flirtFaktor} /> : null}
-
-            <ChCityAuthorBox cityName={city.name} />
+          }
+        >
+          <div className="abc-content ab-rich">
+            <MarketHtml market="ch" html={guide.html} />
           </div>
-        </section>
+          {facts ? <ChFlirtFactorNote cityName={city.name} score={facts.flirtFaktor} /> : null}
+          <AuthorBox
+            name={chCityAuthor.name}
+            role={chCityAuthor.role}
+            imageSrc={chCityAuthor.imageSrc}
+            href={chCityAuthor.href}
+            text={`Hier findest du Ideen für erste Dates in ${city.name}, typische Fragen rund ums Kennenlernen und einen einfachen Einstieg, wenn du neue Menschen ab 50 treffen möchtest.`}
+            tags={[`Treffpunkte in ${city.name}`, "Erste Dates ab 50", "Schweiz"]}
+          />
+        </GuideSection>
 
-        <CityFurtherCities
-          tiles={furtherCities}
-          totalCities={swissPartnersuche.cities.length}
-          overviewHref={overviewRoute.publicUrl}
-          overviewPreviewHref={overviewRoute.previewPath}
+        <div className="ab-wrap ab-section">
+          <CityFurtherCities
+            tiles={furtherCities}
+            totalCities={swissPartnersuche.cities.length}
+            overviewHref={overviewRoute.publicUrl}
+            overviewPreviewHref={overviewRoute.previewPath}
+          />
+        </div>
+
+        <CtaBand
+          eyebrow={`Neue Kontakte in ${city.name}`}
+          title="Starte kostenlos und entdecke Singles ab 50 aus deiner Region."
+          text="Du kannst dich in Ruhe umsehen und selbst entscheiden, wie du den ersten Kontakt gestaltest."
+          primary={{ label: "Kostenlos starten", href: registration }}
+          secondary={{ label: "Alle Schweizer Städte", href: overviewRoute.publicUrl, previewHref: overviewRoute.previewPath }}
         />
-
-        <section className="overview-cta-strip category-final-cta" aria-label="Kostenlos starten">
-          <div>
-            <p className="eyebrow">Neue Kontakte in {city.name}</p>
-            <h2>Starte kostenlos und entdecke Singles ab 50 aus deiner Region.</h2>
-            <p>Du kannst dich in Ruhe umsehen und selbst entscheiden, wie du den ersten Kontakt gestaltest.</p>
-          </div>
-          <div className="overview-cta-actions">
-            <a className="button-primary" href={registration}>Kostenlos starten</a>
-            <MarketLink className="button-secondary" href={overviewRoute.publicUrl} previewHref={overviewRoute.previewPath}>Alle Städte</MarketLink>
-          </div>
-        </section>
       </article>
     </>
   );
