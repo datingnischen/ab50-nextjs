@@ -17,6 +17,16 @@ export function proxy(request: NextRequest) {
       headers: { "content-type": "text/plain; charset=utf-8" },
     });
   }
+  // WordPress-kompatibler REST-Endpunkt für ICONY: ohne Schrägstrich erreichbar, ICONY folgt keiner Weiterleitung.
+  const { pathname, searchParams } = request.nextUrl;
+  if (pathname === "/magazin/wp-json" || pathname.startsWith("/magazin/wp-json/") || pathname === "/magazin/index.php") {
+    return NextResponse.next();
+  }
+  if ((pathname === "/magazin" || pathname === "/magazin/") && searchParams.has("rest_route")) {
+    const destination = new URL(request.nextUrl.href);
+    destination.pathname = "/magazin/index.php";
+    return NextResponse.rewrite(destination);
+  }
   const isMarketResource = /^(?:\/[^/]+)?\/(?:sitemap\.xml|robots\.txt)$/.test(request.nextUrl.pathname);
   const resolution = isMarketResource
     ? resolveMarketResourceRequest(requestHost, request.nextUrl.pathname)

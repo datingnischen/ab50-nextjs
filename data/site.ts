@@ -2,9 +2,6 @@ export const siteConfig = {
   name: "ab50.de",
   magazineName: "50plus Magazin",
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://ab50.de",
-  wordpressUrl: "https://ab50.de/magazin",
-  wordpressRestEndpoint:
-    process.env.WORDPRESS_REST_ENDPOINT || "https://ab50.de/magazin/wp-json/wp/v2",
   magazinePath: "/magazin/",
   colors: {
     primary: "#1A4C95",

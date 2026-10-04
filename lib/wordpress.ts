@@ -1,6 +1,9 @@
 import { cache } from "react";
 import { siteConfig } from "@/data/site";
-import { postCardQuery } from "@/lib/wordpress-query";
+import postsData from "@/data/wp/posts.json";
+import pagesData from "@/data/wp/pages.json";
+import categoriesData from "@/data/wp/categories.json";
+import citiesData from "@/data/wp/stadt.json";
 
 export type WpImage = {
   sourceUrl: string;
@@ -145,8 +148,6 @@ export type WpCity = {
   acf?: WpCityAcf | null;
 };
 
-type RestHeaders = Headers;
-type RestListResult<T> = { data: T[]; headers: RestHeaders };
 
 export function decodeHtmlEntities(value?: string | null) {
   return (value || "")
@@ -305,56 +306,37 @@ function normalizeCity(raw: any): WpCity {
   };
 }
 
-async function wpRest<T>(path: string, params: Record<string, string | number | boolean> = {}): Promise<RestListResult<T>> {
-  const query = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => query.set(key, String(value)));
-  const url = `${siteConfig.wordpressRestEndpoint}${path}${query.toString() ? `?${query.toString()}` : ""}`;
-  const response = await fetch(url, {
-    headers: { "User-Agent": "Amigo ab50 Next.js/Vercel Magazin" },
-    next: { revalidate: 300 },
-  });
-  if (!response.ok) {
-    throw new Error(`WP REST request failed: ${response.status} ${response.statusText} for ${url}`);
-  }
-  const data = await response.json() as T[];
-  return { data, headers: response.headers };
+// Inhalte stammen aus data/wp/*.json (einmaliger Snapshot der früheren WordPress-Installation, scripts/snapshot-wordpress.mjs).
+const rawPosts = (postsData as any[]).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const rawPages = pagesData as any[];
+const rawCategories = categoriesData as any[];
+const rawCities = (citiesData as any[]).slice().sort((a, b) => String(a.title?.rendered).localeCompare(String(b.title?.rendered), "de"));
+
+function toCategory(category: any): WpCategory {
+  return {
+    id: category.id,
+    name: decodeHtmlEntities(category.name),
+    slug: category.slug,
+    description: stripHtml(category.description || "") || null,
+    count: category.count ?? null,
+  };
 }
 
-async function collectPaged<T>(path: string, params: Record<string, string | number | boolean> = {}) {
-  const first = await wpRest<T>(path, { ...params, page: 1, per_page: 100 });
-  const totalPages = Number(first.headers.get("x-wp-totalpages") || 1);
-  const combined = [...first.data];
-  for (let page = 2; page <= totalPages; page += 1) {
-    const next = await wpRest<T>(path, { ...params, page, per_page: 100 });
-    combined.push(...next.data);
-  }
-  return combined;
-}
-
-export const getLatestPosts = cache(async (first = 24) => {
-  const { data } = await wpRest<any>("/posts", postCardQuery(first));
-  return data.map(normalizePost);
-});
+export const getLatestPosts = cache(async (first = 24) => rawPosts.slice(0, first).map(normalizePost));
 
 export const getPostBySlug = cache(async (slug: string) => {
-  const { data } = await wpRest<any>("/posts", { slug, _embed: 1, per_page: 1 });
-  return data[0] ? normalizePost(data[0]) : null;
+  const post = rawPosts.find((entry) => entry.slug === slug);
+  return post ? normalizePost(post) : null;
 });
 
 export const getPageBySlug = cache(async (slug: string) => {
-  const { data } = await wpRest<any>("/pages", { slug, per_page: 1 });
-  return data[0] ? normalizePage(data[0]) : null;
+  const page = rawPages.find((entry) => entry.slug === slug);
+  return page ? normalizePage(page) : null;
 });
 
-export const getAllPostSlugs = cache(async () => {
-  const posts = await collectPaged<any>("/posts", { _fields: "slug" });
-  return posts.map((post) => post.slug).filter(Boolean);
-});
+export const getAllPostSlugs = cache(async () => rawPosts.map((post) => post.slug).filter(Boolean) as string[]);
 
-export const getAllPageSlugs = cache(async () => {
-  const pages = await collectPaged<any>("/pages", { _fields: "slug" });
-  return pages.map((page) => page.slug).filter(Boolean);
-});
+export const getAllPageSlugs = cache(async () => rawPages.map((page) => page.slug).filter(Boolean) as string[]);
 
 export type WpSearchEntry = { slug: string; title: string; excerpt: string };
 
@@ -366,77 +348,40 @@ function normalizeSearchEntry(raw: any): WpSearchEntry {
   };
 }
 
-/** Schlanke Liste aller Artikel für die Seitensuche (nur Slug, Titel, Auszug; Fetch-Cache wie überall 300 s). */
-export const getSearchablePosts = cache(async () => {
-  const posts = await collectPaged<any>("/posts", { _fields: "slug,title,excerpt" });
-  return posts.filter((post) => post?.slug).map(normalizeSearchEntry);
-});
+/** Schlanke Liste aller Artikel für die Seitensuche (nur Slug, Titel, Auszug). */
+export const getSearchablePosts = cache(async () => rawPosts.filter((post) => post?.slug).map(normalizeSearchEntry));
 
-/** Wie getSearchablePosts, für WordPress-Seiten unter /magazin/<slug>/. */
-export const getSearchablePages = cache(async () => {
-  const pages = await collectPaged<any>("/pages", { _fields: "slug,title,excerpt" });
-  return pages.filter((page) => page?.slug).map(normalizeSearchEntry);
-});
+/** Wie getSearchablePosts, für Seiten unter /magazin/<slug>/. */
+export const getSearchablePages = cache(async () => rawPages.filter((page) => page?.slug).map(normalizeSearchEntry));
 
-export const getAllPages = cache(async () => {
-  const pages = await collectPaged<any>("/pages");
-  return pages.map(normalizePage);
-});
+export const getAllPages = cache(async () => rawPages.map(normalizePage));
 
-export const getCategories = cache(async (first = 24) => {
-  const { data } = await wpRest<any>("/categories", {
-    per_page: first,
-    page: 1,
-    hide_empty: true,
-    orderby: "count",
-    order: "desc",
-  });
-  return data.map((category) => ({
-    id: category.id,
-    name: decodeHtmlEntities(category.name),
-    slug: category.slug,
-    description: stripHtml(category.description || "") || null,
-    count: category.count ?? null,
-  })) as WpCategory[];
-});
+export const getCategories = cache(async (first = 24) =>
+  rawCategories
+    .filter((category) => (category.count ?? 0) > 0)
+    .sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
+    .slice(0, first)
+    .map(toCategory),
+);
 
 export const getPostsByCategory = cache(async (slug: string, first = 18) => {
-  const { data: categoryData } = await wpRest<any>("/categories", { slug, per_page: 1, hide_empty: true });
-  const category = categoryData[0];
+  const category = rawCategories.find((entry) => entry.slug === slug && (entry.count ?? 0) > 0);
   if (!category) return null;
-  const { data: postData } = await wpRest<any>("/posts", {
-    ...postCardQuery(first),
-    categories: category.id,
-  });
   return {
-    id: category.id,
-    name: decodeHtmlEntities(category.name),
-    slug: category.slug,
-    description: stripHtml(category.description || "") || null,
-    count: category.count ?? null,
-    posts: postData.map(normalizePost),
+    ...toCategory(category),
+    posts: rawPosts
+      .filter((post) => Array.isArray(post.categories) && post.categories.includes(category.id))
+      .slice(0, first)
+      .map(normalizePost),
   };
 });
 
-export const getAllCities = cache(async () => {
-  const cities = await collectPaged<any>("/stadt", {
-    _embed: 1,
-    status: "publish",
-    orderby: "title",
-    order: "asc",
-  });
-  return cities.map(normalizeCity);
-});
+export const getAllCities = cache(async () => rawCities.map(normalizeCity));
 
 export const getCityByPublicSlug = cache(async (publicSlug: string) => {
   const normalizedSlug = normalizeCitySlug(publicSlug);
-  const { data } = await wpRest<any>("/stadt", {
-    slug: normalizedSlug,
-    _embed: 1,
-    per_page: 1,
-    status: "publish",
-  });
-  return data[0] ? normalizeCity(data[0]) : null;
+  const city = rawCities.find((entry) => entry.slug === normalizedSlug);
+  return city ? normalizeCity(city) : null;
 });
 
 export const getAllPublicCitySlugs = cache(async () => {

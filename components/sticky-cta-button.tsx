@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import ctaTexts from "@/data/wp/cta-texts.json";
 import { marketFromLocation, registrationUrl } from "@/lib/markets";
 
 function aidFromPathname(pathname: string) {
@@ -31,34 +32,14 @@ export function StickyCTAButton() {
 
     if (market !== "de") return;
 
-    let endpoint = "";
-    let slug = "";
     const partnersucheMatch = pathname.match(/\/partnersuche\/([^/]+)/);
     const magazinMatch = pathname.match(/\/magazin\/([^/]+)/);
-    if (partnersucheMatch) {
-      endpoint = "stadt";
-      slug = partnersucheMatch[1];
-    } else if (magazinMatch) {
-      endpoint = "posts";
-      slug = magazinMatch[1];
-    }
-    if (!endpoint || !slug) return;
-
-    const controller = new AbortController();
-    fetch(`https://ab50.de/magazin/wp-json/wp/v2/${endpoint}?slug=${encodeURIComponent(slug)}&_fields=id,acf`, {
-      cache: "no-store",
-      signal: controller.signal,
-    })
-      .then((response) => response.ok ? response.json() : [])
-      .then((records) => {
-        const label = Array.isArray(records) ? records[0]?.acf?.footer_cta_button_text : null;
-        if (label) setCtaText(label);
-      })
-      .catch((error) => {
-        if (error?.name !== "AbortError") console.error("Error fetching CTA text:", error);
-      });
-
-    return () => controller.abort();
+    const label = partnersucheMatch
+      ? (ctaTexts.stadt as Record<string, string>)[partnersucheMatch[1]]
+      : magazinMatch
+        ? (ctaTexts.posts as Record<string, string>)[magazinMatch[1]]
+        : null;
+    if (label) setCtaText(label);
   }, [market, pathname]);
 
   return (
