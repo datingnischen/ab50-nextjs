@@ -27,6 +27,16 @@ export function proxy(request: NextRequest) {
     destination.pathname = "/magazin/index.php";
     return NextResponse.rewrite(destination);
   }
+  // Länderpfade des WordPress-kompatiblen Endpunkts (/ch/magazin/wp-json/...): ebenfalls ohne Schrägstrich-Umleitung.
+  if (/^\/(?:de|ch|at)\/magazin\/(?:wp-json(?:\/.*)?|index\.php)$/.test(pathname)) {
+    const rest = resolvePartnersucheRequest(requestHost, pathname);
+    if (rest.action === "rewrite") {
+      const destination = request.nextUrl.clone();
+      destination.pathname = rest.destination;
+      return NextResponse.rewrite(destination);
+    }
+    return new NextResponse("Not Found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+  }
   const isMarketResource = /^(?:\/[^/]+)?\/(?:sitemap\.xml|robots\.txt)$/.test(request.nextUrl.pathname);
   const resolution = isMarketResource
     ? resolveMarketResourceRequest(requestHost, request.nextUrl.pathname)

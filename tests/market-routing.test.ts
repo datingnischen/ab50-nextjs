@@ -14,6 +14,8 @@ test("marketFromPathname resolves explicit preview markets and defaults to DE", 
   assert.equal(marketFromPathname("/de/partnersuche"), "de");
   assert.equal(marketFromPathname("/ch/partnersuche/zuerich"), "ch");
   assert.equal(marketFromPathname("/partnersuche"), "de");
+  assert.equal(marketFromPathname("/ch/magazin/"), "de");
+  assert.equal(marketFromPathname("/at/ueber-uns/"), "de");
 });
 
 test("production host identity overrides a prefix-free visible pathname", () => {

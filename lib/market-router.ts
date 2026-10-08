@@ -1,6 +1,7 @@
 import { publicMarketUrl, withTrailingSlash } from "./markets.ts";
 
-export type RouteMarket = "de" | "ch";
+/** "at" hat noch keine eigene Domain: Pfadraum nur auf Vorschau-/Vercel-Hosts, später hinter nginx. */
+export type RouteMarket = "de" | "ch" | "at";
 
 export type PartnersucheResolution =
   | { action: "pass"; market?: RouteMarket }
@@ -8,7 +9,7 @@ export type PartnersucheResolution =
   | { action: "redirect"; destination: string }
   | { action: "not-found" };
 
-const countryHosts: Record<string, RouteMarket> = {
+const countryHosts: Record<string, "de" | "ch"> = {
   "ab50.de": "de",
   "www.ab50.de": "de",
   "ab50.ch": "ch",
@@ -56,7 +57,7 @@ function isCityArtAsset(pathname: string) {
 function prefixedMarket(pathname: string): RouteMarket | "unsupported" | null {
   const match = pathname.match(/^\/([^/]+)\/partnersuche(?:\/|$)/);
   if (!match) return null;
-  if (match[1] === "de" || match[1] === "ch") return match[1];
+  if (match[1] === "de" || match[1] === "ch" || match[1] === "at") return match[1];
   return "unsupported";
 }
 
@@ -101,7 +102,30 @@ export function resolveMarketResourceRequest(hostnameInput: string, pathname: st
   };
 }
 
+/**
+ * Länderpfade für Magazin und Über uns (/ch/magazin/..., /at/ueber-uns/...). Die Seiten sind für alle
+ * Länder dieselben deutschen Inhalte (Canonical zeigt auf ab50.de); der Marktpräfix hält nur die
+ * URL-Struktur je Land bereit, damit nginx später nichts nachbeantragen muss. Auf Vorschau-Hosts
+ * (nginx ruft Vercel mit vercel.app-Host) bestimmt allein der Pfad den Markt. Auf Landesdomains
+ * gilt wie bei partnersuche: eigenes Präfix springt auf die öffentliche URL, fremdes ist 404.
+ */
+const SECTION_PREFIX_PATTERN = /^\/(de|ch|at)(\/(?:magazin|ueber-uns)(?:\/.*)?)$/;
+
+export function resolveSectionRequest(hostnameInput: string, pathname: string): PartnersucheResolution | null {
+  const match = pathname.match(SECTION_PREFIX_PATTERN);
+  if (!match) return null;
+  const prefix = match[1] as RouteMarket;
+  const hostname = normalizeHostname(hostnameInput);
+  if (isPreviewHost(hostname)) return { action: "rewrite", destination: match[2], market: prefix };
+
+  const hostMarket = countryHosts[hostname];
+  if (!hostMarket || prefix !== hostMarket) return { action: "not-found" };
+  return { action: "redirect", destination: publicMarketUrl(hostMarket, match[2]) };
+}
+
 export function resolvePartnersucheRequest(hostnameInput: string, pathname: string): PartnersucheResolution {
+  const section = resolveSectionRequest(hostnameInput, pathname);
+  if (section) return section;
   const hostname = normalizeHostname(hostnameInput);
   const prefix = prefixedMarket(pathname);
   const isPartnersuche = isPrefixFreePartnersuche(pathname) || prefix !== null;
@@ -109,7 +133,7 @@ export function resolvePartnersucheRequest(hostnameInput: string, pathname: stri
 
   if (isPreviewHost(hostname)) {
     if (prefix === "unsupported") return { action: "not-found" };
-    if (prefix === "de" || prefix === "ch") return { action: "pass", market: prefix };
+    if (prefix === "de" || prefix === "ch" || prefix === "at") return { action: "pass", market: prefix };
     return { action: "pass", market: "de" };
   }
 
@@ -155,7 +179,7 @@ export function resolveTrailingSlashRedirect(hostnameInput: string, pathname: st
   const marketMatch = target.match(/^\/(de|ch)(\/.*)$/);
   if (!marketMatch) return { destination: target, absolute: false };
 
-  const market = marketMatch[1] as RouteMarket;
+  const market = marketMatch[1] as "de" | "ch";
   const hostMarket = countryHosts[normalizeHostname(hostnameInput)];
   // Fremdes Marktpräfix auf einer Landesdomain: kein Sprung auf die andere Domain, der Router antwortet 404.
   if (hostMarket && hostMarket !== market) return null;

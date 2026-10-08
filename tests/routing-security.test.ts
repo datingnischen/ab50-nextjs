@@ -17,7 +17,26 @@ test("ICONY srcDoc iframe never combines scripts with same-origin access", () =>
 test("preview hosts expose only explicit DE and CH market namespaces", () => {
   assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/de/partnersuche"), { action: "pass", market: "de" });
   assert.deepEqual(resolvePartnersucheRequest("localhost", "/ch/partnersuche/zuerich"), { action: "pass", market: "ch" });
-  assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/at/partnersuche"), { action: "not-found" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/at/partnersuche"), { action: "pass", market: "at" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/fr/partnersuche"), { action: "not-found" });
+});
+
+test("preview hosts serve magazin and ueber-uns under /de, /ch and /at by path prefix", () => {
+  for (const market of ["de", "ch", "at"] as const) {
+    assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", `/${market}/magazin/`), { action: "rewrite", destination: "/magazin/", market });
+    assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", `/${market}/ueber-uns/bewertungen/`), { action: "rewrite", destination: "/ueber-uns/bewertungen/", market });
+    assert.deepEqual(resolvePartnersucheRequest("localhost", `/${market}/magazin/wp-json/wp/v2/posts`), { action: "rewrite", destination: "/magazin/wp-json/wp/v2/posts", market });
+  }
+  assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/fr/magazin/"), { action: "pass" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/magazin/"), { action: "pass" });
+});
+
+test("country hosts keep prefix-free magazin and reject foreign section prefixes", () => {
+  assert.deepEqual(resolvePartnersucheRequest("ab50.de", "/magazin/"), { action: "pass" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50.de", "/de/magazin/"), { action: "redirect", destination: "https://ab50.de/magazin/" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50.de", "/ch/magazin/"), { action: "not-found" });
+  assert.deepEqual(resolvePartnersucheRequest("ab50.de", "/at/ueber-uns/"), { action: "not-found" });
+  assert.deepEqual(resolvePartnersucheRequest("evil.example", "/ch/magazin/"), { action: "not-found" });
 });
 
 test("country hosts own prefix-free partnersuche and reject cross-market prefixes", () => {

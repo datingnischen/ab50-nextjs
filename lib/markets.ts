@@ -41,7 +41,8 @@ export const markets: Record<MarketCode, MarketConfig> = {
 };
 
 export function marketFromPathname(pathname: string): MarketCode {
-  if (/^\/ch(?:\/|$)/.test(pathname)) return "ch";
+  // Nur die Partnersuche hat ein eigenes Schweizer Gesicht; /ch/magazin/ und /ch/ueber-uns/ zeigen die deutschen Inhalte im DE-Rahmen.
+  if (/^\/ch\/partnersuche(?:\/|$)/.test(pathname)) return "ch";
   return "de";
 }
 
