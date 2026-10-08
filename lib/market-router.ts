@@ -109,7 +109,7 @@ export function resolveMarketResourceRequest(hostnameInput: string, pathname: st
  * (nginx ruft Vercel mit vercel.app-Host) bestimmt allein der Pfad den Markt. Auf Landesdomains
  * gilt wie bei partnersuche: eigenes Präfix springt auf die öffentliche URL, fremdes ist 404.
  */
-const SECTION_PREFIX_PATTERN = /^\/(de|ch|at)(\/(?:magazin|ueber-uns)(?:\/.*)?)$/;
+const SECTION_PREFIX_PATTERN = /^\/(de|ch|at)(\/(?:magazin|ueber-uns|faq)(?:\/.*)?)$/;
 
 export function resolveSectionRequest(hostnameInput: string, pathname: string): PartnersucheResolution | null {
   const match = pathname.match(SECTION_PREFIX_PATTERN);

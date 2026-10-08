@@ -948,3 +948,26 @@ a.abi-review:hover {
   object-fit: cover;
   object-position: top;
 }
+
+/* FAQ */
+.abi-faq-tools { display: grid; gap: 12px; padding-top: 24px; }
+.abi-faq-search { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #d5dbe6; border-radius: 14px; padding: 12px 16px; }
+.abi-faq-search svg { width: 20px; height: 20px; flex: none; }
+.abi-faq-search input { flex: 1; border: 0; outline: 0; font: inherit; font-size: 1.05rem; background: transparent; min-width: 0; }
+.abi-faq-search:focus-within { outline: 3px solid #1a4c95; outline-offset: 2px; }
+.abi-faq-count { margin: 0; color: #4a5568; font-size: 0.95rem; }
+.abi-faq-topics { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 8px; }
+.abi-faq-topics a { white-space: nowrap; padding: 8px 14px; border-radius: 999px; border: 1px solid #d5dbe6; background: #fff; text-decoration: none; color: inherit; font-weight: 600; }
+.abi-faq-topics small { opacity: 0.7; margin-left: 4px; }
+.abi-faq-body { display: grid; gap: 20px; padding: 12px 16px 32px; }
+.abi-faq-card { background: #fff; border: 1px solid #e1e6ef; border-radius: 18px; padding: 24px; scroll-margin-top: 72px; }
+.abi-faq-card h2 { margin-top: 0; }
+.abi-faq-card-dark { background: #14284b; color: #fff; border-color: #14284b; }
+.abi-faq-card-dark a { color: #cfe0ff; }
+.abi-faq-card details { border-top: 1px solid rgba(128, 138, 160, 0.3); padding: 4px 0; }
+.abi-faq-card summary { cursor: pointer; font-weight: 700; padding: 12px 36px 12px 0; list-style: none; position: relative; }
+.abi-faq-card summary::-webkit-details-marker { display: none; }
+.abi-faq-card summary::after { content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; border-radius: 50%; background: rgba(128, 138, 160, 0.25); text-align: center; line-height: 26px; }
+.abi-faq-card details[open] > summary::after { content: "\00d7"; }
+.abi-faq-answer { padding: 0 0 12px; }
+.abi-faq-intro { margin: 0 0 8px; }

@@ -157,6 +157,7 @@ const deFooterColumns: FooterColumn[] = [
       { label: "Über ab50.de", href: "/ueber-uns/" },
       { label: "Geschichte", href: "/ueber-uns/geschichte/" },
       { label: "Social Media", href: "/ueber-uns/social-media/" },
+      { label: "Häufige Fragen (FAQ)", href: "/faq/" },
       { label: "Bewertungen & Erfahrungen", href: "/ueber-uns/bewertungen/" },
       { label: "Christian M. Haas", href: "/magazin/christian-m-haas/" },
       { label: "Suche", href: "/ueber-uns/suche/" },

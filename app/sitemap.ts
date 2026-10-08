@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteConfig.baseUrl}${ABOUT_ROOT_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_HISTORY_PATH}`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_SOCIAL_PATH}`, lastModified: now },
+    { url: `${siteConfig.baseUrl}/faq/`, lastModified: now },
     { url: `${siteConfig.baseUrl}${ABOUT_REVIEWS_PATH}`, lastModified: now },
     ...postSlugs.map((slug) => ({ url: `${siteConfig.baseUrl}${postPath(slug)}`, lastModified: now })),
     ...pageSlugs.map((slug) => ({ url: `${siteConfig.baseUrl}${pagePath(slug)}`, lastModified: now })),

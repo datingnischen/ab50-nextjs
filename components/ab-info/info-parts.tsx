@@ -9,6 +9,7 @@ const LINKS = [
   { href: ABOUT_HISTORY_PATH, label: "Geschichte" },
   { href: ABOUT_REVIEWS_PATH, label: "Bewertungen" },
   { href: ABOUT_SOCIAL_PATH, label: "Social Media" },
+  { href: "/faq/", label: "FAQ" },
   { href: "/magazin/christian-m-haas/", label: "Christian M. Haas" },
   { href: SITE_SEARCH_PATH, label: "Suche" },
 ];

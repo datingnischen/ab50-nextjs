@@ -25,6 +25,7 @@ test("preview hosts serve magazin and ueber-uns under /de, /ch and /at by path p
   for (const market of ["de", "ch", "at"] as const) {
     assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", `/${market}/magazin/`), { action: "rewrite", destination: "/magazin/", market });
     assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", `/${market}/ueber-uns/bewertungen/`), { action: "rewrite", destination: "/ueber-uns/bewertungen/", market });
+    assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", `/${market}/faq/`), { action: "rewrite", destination: "/faq/", market });
     assert.deepEqual(resolvePartnersucheRequest("localhost", `/${market}/magazin/wp-json/wp/v2/posts`), { action: "rewrite", destination: "/magazin/wp-json/wp/v2/posts", market });
   }
   assert.deepEqual(resolvePartnersucheRequest("ab50-nextjs.vercel.app", "/fr/magazin/"), { action: "pass" });
