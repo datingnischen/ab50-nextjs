@@ -7,7 +7,9 @@ import "./ab-shell.css";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { StickyCTAButton } from "@/components/sticky-cta-button";
 import { siteConfig } from "@/data/site";
-import { staticAsset } from "@/lib/static-asset";
+import { staticAsset, assetHost } from "@/lib/static-asset";
+import { Analytics } from "@vercel/analytics/next";
+import { vercelAnalyticsProps } from "@/lib/vercel-analytics";
 
 // Überschriften: Fraunces (warme Serifenschrift), Fließtext: Source Sans 3 – gut lesbar für Singles ab 50.
 const display = Fraunces({ variable: "--ab-display", subsets: ["latin"], weight: ["500", "600", "700"], style: ["normal", "italic"] });
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main>{children}</main>
         <SiteFooter />
         <StickyCTAButton />
+        <Analytics {...vercelAnalyticsProps(assetHost)} />
       </body>
     </html>
   );
