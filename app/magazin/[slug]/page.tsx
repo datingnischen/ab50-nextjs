@@ -11,6 +11,8 @@ import { staticAsset } from "@/lib/static-asset";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
+import { TopicBanner } from "@/components/ab-magazine/topic-banner";
+import { bannerForArticle } from "@/lib/magazine-banner";
 import "@/components/ab-magazine/ab-magazine.css";
 
 type PageProps = {
@@ -289,6 +291,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     ? stripHtml(post.author.description)
     : (authorProfile?.fallbackDescription || "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah.");
   const category = post.categories?.[0];
+  const banner = bannerForArticle(post.slug, (post.categories || []).map((item) => item.slug));
   const theme = themeFor(category?.slug);
   const initials = authorName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AB";
   const schema = {
@@ -354,6 +357,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
               </details>
             ) : null}
             <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
+            <TopicBanner banner={banner} placement="article" />
 
             <section className="abg-author" aria-label="Autor">
               <span className="abg-author-avatar" aria-hidden="true">
@@ -375,12 +379,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
                 <span><BookIcon />In diesem Beitrag</span>
                 <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
               </nav>
-              <a className="abg-side-cta" href={siteConfig.links.registrationCommon}>
-                <HeartIcon />
-                <strong>Singles ab 50 in deiner Nähe</strong>
-                <span>Kostenlos registrieren und in Ruhe schauen, wer zu dir passt.</span>
-                <em>Jetzt starten <ArrowIcon /></em>
-              </a>
+              <TopicBanner banner={banner} placement="sidebar" />
             </aside>
           ) : null}
         </div>
