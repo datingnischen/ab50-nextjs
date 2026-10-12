@@ -308,8 +308,8 @@ function SourceBox({
   if (displayMode === "hidden" || (!sources.length && !reviewNote)) return null;
 
   return (
-    <section className="abc-sources" aria-label="Quellen und Aktualität">
-      <p className="ab-eyebrow">Quellen, Bilder &amp; Aktualität</p>
+    <details className="abc-sources" aria-label="Quellen und Aktualität">
+      <summary>Quellen, Bilder &amp; Aktualität</summary>
       {intro ? <p>{intro}</p> : <p>Die Daten und Fakten stammen aus öffentlichen Quellen und zeigen die Situation in {cityName} für Singles ab 50.</p>}
       {reviewNote ? <p className="abc-sources-note">{reviewNote}</p> : null}
       {sources.length ? (
@@ -323,7 +323,7 @@ function SourceBox({
           ))}
         </ul>
       ) : null}
-    </section>
+    </details>
   );
 }
 

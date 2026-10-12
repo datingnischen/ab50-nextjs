@@ -3032,3 +3032,6 @@ main { min-height: 60vh; }
   color: var(--accent);
 }
 .site-search-excerpt { color: var(--muted); font-size: .95rem; }
+
+details.city-source-box { padding: 12px 16px; border-radius: 14px; box-shadow: none; font-size: .8125rem; }
+details.city-source-box summary { cursor: pointer; font-size: .8125rem; font-weight: 600; }
