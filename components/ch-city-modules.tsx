@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { staticAsset } from "@/lib/static-asset";
 import type { ChCityFacts, ChPlace } from "@/data/ch-city-facts";
 
 /**
@@ -12,7 +13,7 @@ import type { ChCityFacts, ChPlace } from "@/data/ch-city-facts";
 export const chCityAuthor = {
   name: "Christian M. Haas",
   role: "Autor & Dating-Experte bei ab50.ch",
-  imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
+  imageSrc: staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png"),
   imageAlt: "Christian M. Haas",
   // Das Magazin liegt auf ab50.de; auf dem Schweizer Host ist /magazin nicht erreichbar.
   href: "https://ab50.de/magazin/christian-m-haas/",

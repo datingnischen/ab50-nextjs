@@ -12,7 +12,7 @@ import { CtaBand } from "@/components/ab-city/city-parts";
 import { ArrowIcon, BookIcon, CalendarIcon, EyeIcon, HeartIcon, ShieldIcon, StarIcon, TagIcon, UserIcon, UsersIcon } from "@/components/ab-icons";
 
 export const metadata: Metadata = {
-  title: "Über ab50.de",
+  title: { absolute: "Über ab50.de – Singlebörse für Menschen ab 50" },
   description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
   alternates: { canonical: ABOUT_ROOT_PATH },
   openGraph: {
@@ -101,7 +101,7 @@ export default function UeberUnsPage() {
             </blockquote>
             <figcaption>
               {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
-              <img src={AUTHOR_IMAGE} alt="" width={56} height={69} loading="lazy" />
+              <img src={AUTHOR_IMAGE} alt="Christian M. Haas" width={56} height={69} loading="lazy" />
               <span><strong>Christian M. Haas</strong><small>Autor &amp; Dating-Experte bei ab50.de</small></span>
             </figcaption>
           </figure>

@@ -71,6 +71,8 @@ function stripMarketPrefix(pathname: string, market: RouteMarket) {
 }
 
 export function resolveMarketResourceRequest(hostnameInput: string, pathname: string): PartnersucheResolution {
+  // Magazin-Sitemap unter der alten WordPress-Adresse (ICONYs sitemap.php verweist darauf): kein Länderpräfix.
+  if (pathname === "/magazin/sitemap.xml") return { action: "pass", market: "de" };
   const hostname = normalizeHostname(hostnameInput);
   const rootResource = pathname === "/sitemap.xml" || pathname === "/robots.txt";
   const prefixed = pathname.match(/^\/(de|ch)\/(sitemap\.xml|robots\.txt)$/);

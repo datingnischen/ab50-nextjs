@@ -10,6 +10,8 @@ import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-sch
 import { buildMagazineArticleGraph } from "@/lib/site-entities";
 import { staticAsset } from "@/lib/static-asset";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
+import { seoTitle } from "@/lib/seo-title";
+import { clampMetaDescription } from "@/lib/meta-description";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
 import { TopicBanner } from "@/components/ab-magazine/topic-banner";
@@ -163,7 +165,7 @@ function RadarCta() {
         </div>
         <a className="abg-radar-card" href={siteConfig.links.registrationCommon} tabIndex={-1} aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element -- statische SVG-Grafik */}
-          <img src={staticAsset("/umkreissuche-radar.svg")} alt="" width={320} height={480} loading="lazy" decoding="async" />
+          <img src={staticAsset("/umkreissuche-radar.svg")} alt="Umkreissuche: Singles ab 50 in deiner Nähe" width={320} height={480} loading="lazy" decoding="async" />
         </a>
       </div>
     </section>
@@ -180,9 +182,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = await getPageBySlug(slug);
   if (page) {
     const title = stripHtml(page.title);
-    const description = stripHtml(page.content).slice(0, 160) || `${title} im 50plus Magazin von ab50.de.`;
+    const description = clampMetaDescription(stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`;
     return {
-      title,
+      title: seoTitle(title, page.slug),
       description,
       alternates: { canonical: pagePath(page.slug) },
       openGraph: {
@@ -199,9 +201,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug);
   if (!post) return {};
   const title = stripHtml(post.title);
-  const description = excerptText(post.excerpt || post.content, 160);
+  // Der WordPress-Auszug ist oft nur ein abgeschnittener Halbsatz; dann den Artikelanfang nehmen.
+  const excerpt = clampMetaDescription(excerptText(post.excerpt, 400), 400);
+  const description = clampMetaDescription(excerpt.length >= 120 ? excerpt : excerptText(post.content, 400));
   return {
-    title,
+    title: seoTitle(title, post.slug),
     description,
     alternates: { canonical: postPath(post.slug) },
     openGraph: {
@@ -340,7 +344,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
             <div className="abg-meta">
               <span className="abg-meta-author">
                 <span className="abg-avatar" aria-hidden="true">
-                  {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt="" width={48} height={48} /> : initials}
+                  {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt={authorName} width={48} height={48} /> : initials}
                 </span>
                 {authorHref ? <a href={authorHref}>{authorName}</a> : <strong>{authorName}</strong>}
               </span>
@@ -376,7 +380,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
 
             <section className="abg-author" aria-label="Autor">
               <span className="abg-author-avatar" aria-hidden="true">
-                {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt="" width={96} height={118} /> : initials}
+                {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt={authorName} width={96} height={118} /> : initials}
               </span>
               <div>
                 <p className="ab-eyebrow">Verfasst von</p>

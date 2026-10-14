@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { seoTitle } from "@/lib/seo-title";
 import { notFound } from "next/navigation";
 import { AboutHistoryPage } from "@/components/about-history-page";
 import { StandardContentPage } from "@/components/standard-content-page";
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const page = getStandardPage(standardSlug);
   return {
-    title: page.seo.title,
+    title: seoTitle(page.seo.title),
     description: page.seo.description,
     alternates: { canonical: aboutPath(slug as "social-media" | "bewertungen") },
   };

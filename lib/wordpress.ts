@@ -244,6 +244,26 @@ export function localizeUploadUrls<T extends string | null | undefined>(value: T
     .replace(/https?:\/\/(?:www\.)?ab50\.(?:de|ch)\/magazin\/media\//gi, staticAsset("/magazin/media/")) as T;
 }
 
+/**
+ * Korrekturen am WordPress-Snapshot beim Laden (Seobility 2026-10-14):
+ * - leere alt-Attribute im Text bekommen den Artikeltitel (Regel: kein <img> ohne Alt-Text),
+ * - Links auf http://ab50.de und den Tippfehler-Slug /magazin/entspannte-dating/ zeigen auf die echte Adresse,
+ * - Verweise auf Dateien, die es nicht mehr gibt, entfallen bzw. zeigen auf die vorhandene Bildvariante.
+ */
+const MISSING_AUDIO_BLOCK = /<h2>Artikel kurz anhören<\/h2>\s*<p>Die wichtigsten Punkte kurz und verständlich zusammengefasst\.<\/p>\s*<p><audio\b[^>]*><source src="[^"]*\/verifizierung-audio-zusammenfassung\.mp3"[\s\S]*?<\/audio>[\s\S]*?<\/p>\s*(?:<p><!-- audio-summary:end --><\/p>\s*)?/;
+
+export function fixContentHtml(html: string | null | undefined, title: string): string | null {
+  if (!html) return html ?? null;
+  const alt = title.replace(/"/g, "&quot;");
+  return html
+    .replace(MISSING_AUDIO_BLOCK, "")
+    .replace(/(<img\b[^>]*?\salt=)(""|'')/gi, `$1"${alt}"`)
+    .replace(/<img\b(?![^>]*\salt=)/gi, `<img alt="${alt}"`)
+    .replace(/href="http:\/\/(?:www\.)?ab50\.de\/?"/gi, 'href="https://ab50.de/"')
+    .replace(/\/magazin\/entspannte-dating\//g, "/magazin/entspanntes-dating/")
+    .replace(/\/magazin\/wp-content\/uploads\/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist\.png/g, "/magazin/wp-content/uploads/2026/03/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist-1024x683.jpg");
+}
+
 function normalizeImage(raw: any): WpImage | null {
   if (!raw?.source_url) return null;
   return {
@@ -287,7 +307,7 @@ function normalizePost(raw: any): WpPostCard {
     excerpt: localizeUploadUrls(raw?.excerpt?.rendered as string | undefined) || null,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: localizeUploadUrls(raw?.content?.rendered as string | undefined) || null,
+    content: localizeUploadUrls(fixContentHtml(raw?.content?.rendered as string | undefined, decodeHtmlEntities(raw?.title?.rendered || ""))) || null,
     featuredImage: normalizeImage(media),
     categories: normalizeTerms(raw),
     categoryIds: Array.isArray(raw?.categories) ? raw.categories : [],
@@ -302,7 +322,7 @@ function normalizePage(raw: any): WpPage {
     slug: raw.slug,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: localizeUploadUrls(raw?.content?.rendered as string | undefined) || null,
+    content: localizeUploadUrls(fixContentHtml(raw?.content?.rendered as string | undefined, decodeHtmlEntities(raw?.title?.rendered || ""))) || null,
   };
 }
 
@@ -315,7 +335,7 @@ function normalizeCity(raw: any): WpCity {
     slug: raw.slug,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: localizeUploadUrls((raw?.content?.rendered || raw?.content?.raw) as string | undefined) || null,
+    content: localizeUploadUrls(fixContentHtml((raw?.content?.rendered || raw?.content?.raw) as string | undefined, decodeHtmlEntities(raw?.title?.rendered || raw?.title?.raw || ""))) || null,
     featuredImage: normalizeImage(media),
     acf,
   };

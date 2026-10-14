@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { clampMetaDescription } from "@/lib/meta-description";
 import { staticAsset } from "@/lib/static-asset";
 import { notFound } from "next/navigation";
 import { absoluteUrl } from "@/lib/seo";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const category = await getPostsByCategory(slug, 1);
   if (!category) return {};
   const title = `${category.name} – 50plus Magazin`;
-  const description = category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`;
+  const description = clampMetaDescription(category.description) || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`;
 
   return {
     title,

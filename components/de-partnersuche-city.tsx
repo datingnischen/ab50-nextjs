@@ -11,6 +11,7 @@ import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
 import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
 import { staticAsset } from "@/lib/static-asset";
+import { clampMetaDescription } from "@/lib/meta-description";
 import { marketPartnersuchePath } from "@/lib/markets";
 import { AuthorBox, CityHero, CtaBand, FactStrip, FlirtDial, GuideSection, PlacesSection, SignalSection, StatCardsSection, TipsSection } from "@/components/ab-city/city-parts";
 
@@ -52,7 +53,7 @@ const placeTypeLabels: Record<string, string> = {
 const cityAuthor = {
   name: "Christian M. Haas",
   role: "Autor & Dating-Experte bei ab50.de",
-  imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
+  imageSrc: staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png"),
   imageAlt: "Christian M. Haas",
   href: "/magazin/christian-m-haas/",
 };
@@ -274,7 +275,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!city) return {};
   const cityName = city.acf?.city_name || sanitizeTitle(city.title);
   const title = city.acf?.hero_title || sanitizeTitle(city.title);
-  const description = cityLead(city) || `Partnersuche ab 50 in ${cityName}: echte Singles, erste Date-Ideen, Treffpunkte. Kostenlos Profile ansehen und Nachrichten schreiben.`;
+  const description = clampMetaDescription(cityLead(city)) || `Partnersuche ab 50 in ${cityName}: echte Singles, erste Date-Ideen, Treffpunkte. Kostenlos Profile ansehen und Nachrichten schreiben.`;
 
   return {
     title,
