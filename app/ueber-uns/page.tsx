@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
+import { SiteJsonLd } from "@/components/site-json-ld";
 import { SiteSearchForm } from "@/components/site-search-form";
 import { ABOUT_HISTORY_PATH, ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH, ABOUT_ROOT_PATH } from "@/lib/about-pages";
 import { getStandardPage } from "@/data/standard-pages";
@@ -41,33 +42,18 @@ const MORE = [
 
 export default function UeberUnsPage() {
   const reviews = getStandardPage("bewertungen-und-erfahrungen");
-  const social = getStandardPage("social-media");
   const partnersuche = marketPartnersuchePath("de");
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    name: "Über ab50.de",
-    headline: "Über ab50.de",
-    description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
-    url: absoluteUrl(ABOUT_ROOT_PATH),
-    inLanguage: "de-DE",
-    about: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: siteConfig.links.home,
-      foundingDate: "2011",
-      sameAs: [...(social.socialLinks?.map((link) => link.href) ?? []), "https://www.trustpilot.com/review/ab50.de"],
-    },
-    isPartOf: {
-      "@type": "WebSite",
-      name: siteConfig.name,
-      url: absoluteUrl("/"),
-    },
-  };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+      <SiteJsonLd
+        page={{
+          type: "AboutPage",
+          url: absoluteUrl(ABOUT_ROOT_PATH),
+          name: "Über ab50.de",
+          description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+        }}
+      />
       <article className="abi">
         <LightHero
           crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns" }]}

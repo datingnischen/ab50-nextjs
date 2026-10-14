@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPages, getCategories, getLatestPosts, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
+import { siteEntityIds } from "@/lib/site-entities";
+import { SiteJsonLd } from "@/components/site-json-ld";
 import { themeFor } from "@/lib/magazine-themes";
 import { marketPartnersuchePath } from "@/lib/markets";
 import { ArrowIcon, BookIcon, HeartIcon, ShieldIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
@@ -43,11 +45,16 @@ export default async function MagazinOverviewPage() {
   const visiblePages = pages.filter((page) => page.slug);
   const partnersuche = marketPartnersuchePath("de");
 
+  const entityIds = siteEntityIds(absoluteUrl("/"));
   const schema = {
     "@context": "https://schema.org",
     "@type": "Blog",
+    "@id": `${absoluteUrl("/magazin/")}#blog`,
     name: siteConfig.magazineName,
     url: absoluteUrl("/magazin/"),
+    inLanguage: "de-DE",
+    isPartOf: { "@id": entityIds.website },
+    publisher: { "@id": entityIds.operator },
     blogPost: posts.map((post) => ({
       "@type": "BlogPosting",
       headline: stripHtml(post.title),
@@ -66,6 +73,7 @@ export default async function MagazinOverviewPage() {
 
   return (
     <>
+      <SiteJsonLd />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <article className="abg">
         <header className="ab-hero abg-hero">

@@ -3,7 +3,8 @@ import type { StaticImageData } from "next/image";
 import shot2001 from "../public/history/ab50-20010217133117.png";
 import shot2013 from "../public/history/ab50-2013-wayback-raw.png";
 import shot2024 from "../public/history/ab50-20240414141455.png";
-import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
+import { SiteJsonLd } from "@/components/site-json-ld";
 import { siteConfig } from "@/data/site";
 import { ABOUT_HISTORY_PATH } from "@/lib/about-pages";
 import { ab50HistorySnapshots } from "@/data/about-history";
@@ -20,24 +21,17 @@ const snapshotImages: Record<string, StaticImageData> = {
 
 export function AboutHistoryPage() {
   const partnersuche = marketPartnersuchePath("de");
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Unsere Geschichte",
-    headline: "Unsere Geschichte",
-    description: "Wie sich ab50.de im Laufe der Jahre verändert hat – mit ausgewählten Wayback-Snapshots der Plattform.",
-    url: absoluteUrl(ABOUT_HISTORY_PATH),
-    inLanguage: "de-DE",
-    isPartOf: {
-      "@type": "WebSite",
-      name: siteConfig.name,
-      url: absoluteUrl("/"),
-    },
-  };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+      <SiteJsonLd
+        page={{
+          type: "AboutPage",
+          url: absoluteUrl(ABOUT_HISTORY_PATH),
+          name: "Unsere Geschichte",
+          description: "Wie sich ab50.de im Laufe der Jahre verändert hat – mit ausgewählten Wayback-Snapshots der Plattform.",
+        }}
+      />
       <article className="abi">
         <LightHero
           crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns", href: "/ueber-uns/" }, { label: "Geschichte" }]}

@@ -40,6 +40,8 @@ type SocialLink = Link & {
   platform: "facebook" | "youtube";
   kind: string;
   ctaLabel?: string;
+  /** Own profile of the ab50.de brand; goes into the brand's schema.org sameAs. Groups and review sites stay off. */
+  brandProfile?: true;
 };
 
 export type StandardPage = {
@@ -200,6 +202,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         kind: "Offizielle Seite",
         ctaLabel: "Seite ansehen",
         external: true,
+        brandProfile: true,
       },
       {
         label: "Facebook-Gruppe",
@@ -218,6 +221,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         kind: "Video-Kanal",
         ctaLabel: "Kanal ansehen",
         external: true,
+        brandProfile: true,
       },
     ],
     seo: {
@@ -226,6 +230,11 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     },
   },
 };
+
+/** The brand's own official profiles for schema.org sameAs. */
+export function brandSameAs() {
+  return (standardPages["social-media"].socialLinks ?? []).filter((link) => link.brandProfile).map((link) => link.href);
+}
 
 export function getStandardPage(slug: StandardPageSlug) {
   return standardPages[slug];

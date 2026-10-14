@@ -7,6 +7,7 @@ import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPage
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
+import { buildMagazineArticleGraph } from "@/lib/site-entities";
 import { staticAsset } from "@/lib/static-asset";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon } from "@/components/ab-icons";
@@ -234,10 +235,23 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       breadcrumbRootUrl: absoluteUrl("/magazin/"),
     });
     const isAuthor = slug === "christian-m-haas";
+    // Christians Profil hat mit profileGraph sein eigenes Markup.
+    const pageGraph = isAuthor
+      ? null
+      : buildMagazineArticleGraph({
+          kind: "page",
+          siteRoot: absoluteUrl("/"),
+          magazineName: siteConfig.magazineName,
+          magazineUrl: absoluteUrl("/magazin/"),
+          url: absoluteUrl(pagePath(page.slug)),
+          headline: title,
+          description: stripHtml(page.content).slice(0, 160) || `${title} im 50plus Magazin von ab50.de.`,
+        });
     const pageToc = extractTocItems(page.content);
     return (
       <>
         {profileGraph ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(profileGraph) }} /> : null}
+        {pageGraph ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(pageGraph) }} /> : null}
         <article className="abg abg-article">
           <header className="ab-light-hero abg-ahero">
             <div className="ab-wrap abg-ahero-inner">
@@ -294,23 +308,24 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const banner = bannerForArticle(post.slug, (post.categories || []).map((item) => item.slug));
   const theme = themeFor(category?.slug);
   const initials = authorName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AB";
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
+  const schema = buildMagazineArticleGraph({
+    siteRoot: absoluteUrl("/"),
+    magazineName: siteConfig.magazineName,
+    magazineUrl: absoluteUrl("/magazin/"),
+    url: absoluteUrl(postPath(post.slug)),
     headline: title,
     description: lead,
+    image: post.featuredImage?.sourceUrl || undefined,
     datePublished: post.date,
     dateModified: post.modified,
+    // Als Person nur bekannte Autoren mit Profilseite, sonst die Redaktion als Organisation.
     author: {
-      "@type": "Person",
       name: authorName,
-      url: authorHref ? absoluteUrl(authorHref) : undefined,
+      profileUrl: authorProfile && authorHref ? absoluteUrl(authorHref) : null,
       image: authorProfile?.imageSrc,
     },
-    articleSection: category?.name,
-    image: post.featuredImage?.sourceUrl,
-    mainEntityOfPage: absoluteUrl(postPath(post.slug)),
-  };
+    category: category ? { name: category.name, url: absoluteUrl(categoryPath(category.slug)) } : null,
+  });
 
   return (
     <>

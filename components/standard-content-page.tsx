@@ -1,4 +1,5 @@
-import { absoluteUrl, jsonLd } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
+import { SiteJsonLd } from "@/components/site-json-ld";
 import { siteConfig } from "@/data/site";
 import type { StandardPage } from "@/data/standard-pages";
 import { marketPartnersuchePath } from "@/lib/markets";
@@ -124,24 +125,10 @@ function SocialBody({ page }: { page: StandardPage }) {
 
 export function StandardContentPage({ page }: { page: StandardPage }) {
   const partnersuche = marketPartnersuchePath("de");
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: page.seo.title,
-    headline: page.title,
-    description: page.seo.description,
-    url: absoluteUrl(page.href),
-    inLanguage: "de-DE",
-    isPartOf: {
-      "@type": "WebSite",
-      name: siteConfig.name,
-      url: absoluteUrl("/"),
-    },
-  };
 
   return (
     <article className={`abi standard-page-${page.template}`}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+      <SiteJsonLd page={{ type: "AboutPage", url: absoluteUrl(page.href), name: page.seo.title, description: page.seo.description }} />
       <LightHero
         crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns", href: "/ueber-uns/" }, { label: page.navLabel }]}
         eyebrow={page.template === "trust" ? <><StarIcon />{page.eyebrow}</> : <><UsersIcon />{page.eyebrow}</>}
