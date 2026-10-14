@@ -13,6 +13,7 @@ import { siteConfig } from "@/data/site";
 import { staticAsset } from "@/lib/static-asset";
 import { clampMetaDescription } from "@/lib/meta-description";
 import { marketPartnersuchePath } from "@/lib/markets";
+import { getSingles50PlusEstimate, type Singles50PlusEstimate } from "@/lib/city-singles-50plus";
 import { AuthorBox, CityHero, CtaBand, FactStrip, FlirtDial, GuideSection, PlacesSection, SignalSection, StatCardsSection, TipsSection } from "@/components/ab-city/city-parts";
 
 type PageProps = {
@@ -226,6 +227,29 @@ function normalizeStatCards(cards?: WpCityStatCard[] | null) {
   return (cards || []).filter((card) => (card?.label || card?.value || card?.description));
 }
 
+/** Studierende sind fuer Singles ab 50 kein Signal: statt dessen die geschaetzten Singlehaushalte ab 50 zeigen. */
+function withSingles50PlusCard(cards: WpCityStatCard[], estimate: Singles50PlusEstimate | null): WpCityStatCard[] {
+  const filtered = cards.filter((card) => !/studier|student/i.test(card.label || ""));
+  if (!estimate) return filtered;
+  const estimateCard: WpCityStatCard = {
+    label: "Singlehaushalte ab 50 (geschätzt)",
+    value: `ca. ${estimate.estimate.toLocaleString("de-DE")}`,
+    description: estimate.description,
+  };
+  const singleIndex = filtered.findIndex((card) => /single|einpersonen/i.test(card.label || ""));
+  if (singleIndex === -1) return [estimateCard, ...filtered];
+  const singleCard = filtered[singleIndex];
+  const normalizedSingleCard: WpCityStatCard = estimate.derivedFrom
+    ? { ...singleCard, value: estimate.householdsLabel, description: `Einpersonenhaushalte: ${estimate.derivedFrom} laut Quelle, ${estimate.year}.` }
+    : singleCard;
+  return [...filtered.slice(0, singleIndex), normalizedSingleCard, estimateCard, ...filtered.slice(singleIndex + 1)];
+}
+
+function mergeSources(sources: WpSourceItem[], extra: WpSourceItem[]) {
+  const known = new Set(sources.map((source) => source.url).filter(Boolean));
+  return [...sources, ...extra.filter((source) => !source.url || !known.has(source.url))];
+}
+
 function normalizeScore(value?: string | number | null) {
   if (value === null || value === undefined || value === "") return null;
   const numeric = Number(String(value).replace(",", "."));
@@ -363,13 +387,14 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const readingMinutes = estimateReadingTime(city.content);
   const tocItems = extractTocItems(city.content);
   const safeHtml = sanitizeContent(city.content, tocItems, cityName, city.featuredImage?.sourceUrl);
-  const sources = normalizeSources(city.acf?.sources);
+  const singles50Plus = getSingles50PlusEstimate(city.slug);
+  const sources = mergeSources(normalizeSources(city.acf?.sources), singles50Plus?.sources || []);
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
   const iconyLocation = getIconyWidgetLocationForRoute(slug, 49);
   const singlesSearchUrl = citySearchUrl("de", slug);
   const score = normalizeScore(city.acf?.flirt_factor_score);
-  const statCards = normalizeStatCards(city.acf?.local_stat_cards);
+  const statCards = withSingles50PlusCard(normalizeStatCards(city.acf?.local_stat_cards), singles50Plus);
   const splitTips = splitCityTips(city.acf?.local_tips);
   const places = normalizePlaces(city.acf?.local_places);
   const primaryCtaHref = city.acf?.primary_cta_url || cityRegistrationLink();
@@ -391,7 +416,9 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   ]).slice(0, 4);
   const stripFacts = [
     ...(score !== null ? [{ icon: "spark" as const, label: "Flirt-Faktor", value: `${formatScoreValue(score)} von 100` }] : []),
-    ...statCards.slice(0, 2).map((card, index) => ({ icon: index ? "pin" as const : "users" as const, label: card.label || "Kennzahl", value: String(card.value || cityName) })),
+    ...(singles50Plus
+      ? [{ icon: "users" as const, label: "Singlehaushalte ab 50", value: `ca. ${singles50Plus.estimate.toLocaleString("de-DE")}` }]
+      : statCards.slice(0, 2).map((card, index) => ({ icon: index ? "pin" as const : "users" as const, label: card.label || "Kennzahl", value: String(card.value || cityName) }))),
     { icon: "clock" as const, label: "Lesezeit", value: `ca. ${readingMinutes} Minuten` },
     { icon: "heart" as const, label: "Anmeldung", value: "kostenlos" },
   ];
