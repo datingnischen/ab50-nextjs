@@ -257,6 +257,11 @@ export function fixContentHtml(html: string | null | undefined, title: string): 
   const alt = title.replace(/"/g, "&quot;");
   return html
     .replace(MISSING_AUDIO_BLOCK, "")
+    // Überschriften ohne Text: nur ein Bild → Absatz, ganz leer (&nbsp;, <br>) → weg (Seobility „leere Überschrift“).
+    .replace(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (heading, _level: string, inner: string) => {
+      if (inner.replace(/<[^>]+>/g, "").replace(/&nbsp;| /g, " ").trim()) return heading;
+      return /<img\b/i.test(inner) ? `<p>${inner}</p>` : "";
+    })
     .replace(/(<img\b[^>]*?\salt=)(""|'')/gi, `$1"${alt}"`)
     .replace(/<img\b(?![^>]*\salt=)/gi, `<img alt="${alt}"`)
     .replace(/href="http:\/\/(?:www\.)?ab50\.de\/?"/gi, 'href="https://ab50.de/"')

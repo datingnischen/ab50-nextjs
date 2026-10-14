@@ -225,7 +225,8 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
       },
     ],
     seo: {
-      title: "ab50.de auf Social Media",
+      // Eigener Titel: „ab50.de auf Social Media“ trägt auch die ICONY-Seite /social-media/ (doppelter Seitentitel).
+      title: "Social Media: Facebook & YouTube für Singles ab 50",
       description: "Die Social-Media-Kanäle von ab50.de: Facebook-Seite, Community-Gruppe und YouTube rund um Dating ab 50.",
     },
   },
