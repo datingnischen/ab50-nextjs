@@ -52,6 +52,55 @@ export const citySingleHouseholds: Record<string, CitySingleHouseholds> = {
   },
   "singles-dresden": { region: "ost", households: 166560, year: "2024" },
   "singles-duesseldorf": { region: "west", households: 201780, year: "2024" },
+  "singles-frankfurt-am-main": {
+    region: "west",
+    households: 227046,
+    year: "2024",
+    source: {
+      title: "Haushaltsstruktur (Open Data Frankfurt)",
+      url: "https://offenedaten.frankfurt.de/dcat/dataset/de-he-frankfurtam-haushaltsstruktur",
+      publisher: "Stadt Frankfurt am Main, Bürgeramt, Statistik und Wahlen",
+      date: "31.12.2024",
+      note: "227.046 Einpersonenhaushalte von 422.398 Haushalten, Summe der Stadtteile.",
+    },
+  },
+  "singles-freiburg": {
+    region: "west",
+    households: 74760,
+    year: "2024",
+    derivedFrom: "56,0 % aller Haushalte",
+    source: {
+      title: "Stadtbezirksatlas 2025",
+      url: "https://www.freiburg.de/pb/site/Freiburg/get/params_E1814489900/2463694/Stadtbezirksatlas%202025.pdf",
+      publisher: "Stadt Freiburg, Amt für Bürgerservice und Informationsmanagement",
+      date: "31.12.2024",
+      note: "Einpersonenhaushalte: 56,0 % aller Haushalte, Summe der Stadtbezirke rund 74.800.",
+    },
+  },
+  "rosenheim-singles": {
+    region: "west",
+    households: 15066,
+    year: "2022",
+    source: {
+      title: "Zensus 2022: Haushalte nach Größe des privaten Haushalts (Tabelle 5000H-1002)",
+      url: "https://ergebnisse.zensus2022.de/datenbank/online/statistic/5000H/table/5000H-1002",
+      publisher: "Statistische Ämter des Bundes und der Länder",
+      date: "15.05.2022",
+      note: "Rosenheim: 15.066 Einpersonenhaushalte von 32.241 Privathaushalten.",
+    },
+  },
+  "singles-suhl": {
+    region: "ost",
+    households: 8963,
+    year: "2022",
+    source: {
+      title: "Zensus 2022: Haushalte nach Größe des privaten Haushalts (Tabelle 5000H-1002)",
+      url: "https://ergebnisse.zensus2022.de/datenbank/online/statistic/5000H/table/5000H-1002",
+      publisher: "Statistische Ämter des Bundes und der Länder",
+      date: "15.05.2022",
+      note: "Suhl: 8.963 Einpersonenhaushalte von 18.968 Privathaushalten.",
+    },
+  },
   "singles-hamburg": { region: "west", households: 597953, year: "2025" },
   "singles-hannover": { region: "west", households: 170438, year: "2023" },
   "singles-jena": {
@@ -117,7 +166,7 @@ export function getSingles50PlusEstimate(slug: string): Singles50PlusEstimate | 
     year: entry.year,
     householdsLabel,
     derivedFrom: entry.derivedFrom,
-    description: `Schätzung: ${householdsLabel} Einpersonenhaushalte (${entry.year}) × ${formatPercent(share)} – so hoch ist laut Mikrozensus 2025 der Anteil der Alleinlebenden ab 50 in ${regionLabel}. In jungen Großstädten eher etwas weniger.`,
+    description: `Schätzung: ${householdsLabel} Einpersonenhaushalte (${entry.year}) × ${formatPercent(share)} – so hoch ist laut Mikrozensus 2025 der Anteil der Alleinlebenden ab 50 in ${regionLabel}.${entry.households >= 50000 ? " In jungen Großstädten eher etwas weniger." : ""}`,
     sources: [entry.source, mikrozensusSource].filter((source): source is WpSourceItem => Boolean(source)),
   };
 }

@@ -99,7 +99,23 @@
    "city_trust_points": "",
    "flirt_factor_score": "",
    "flirt_factor_text": "",
-   "local_stat_cards": null,
+   "local_stat_cards": [
+    {
+     "label": "Einwohner",
+     "value": "33.976",
+     "description": "Einwohner laut Quelle, 31.12.2025."
+    },
+    {
+     "label": "Single-Haushalte",
+     "value": "8.963",
+     "description": "Einpersonenhaushalte laut Zensus 2022 (15.05.2022)."
+    },
+    {
+     "label": "Frauenanteil",
+     "value": "51,4 %",
+     "description": "Anteil weibliche Bevölkerung laut Quelle, 31.12.2025."
+    }
+   ],
    "local_tips": null,
    "local_places": null,
    "good_for": [],
@@ -130,7 +146,15 @@
    "manual_related_lexicon_pages": null,
    "sources_intro": "",
    "sources_display_mode": "auto",
-   "sources": null,
+   "sources": [
+    {
+     "title": "Gemeinden in Deutschland nach Fläche, Bevölkerung und Postleitzahl am 31.12.2025",
+     "url": "https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugJ/31122025_Auszug_GV.xlsx?__blob=publicationFile",
+     "publisher": "Statistisches Bundesamt (Destatis), Gemeindeverzeichnis",
+     "date": "31.12.2025",
+     "note": "Einwohner und Frauenanteil (eigene Berechnung aus weiblicher Bevölkerung)."
+    }
+   ],
    "content_reviewed_at": null,
    "content_review_note": "",
    "schema_type": "auto",
@@ -9912,7 +9936,23 @@
    "city_trust_points": "",
    "flirt_factor_score": "",
    "flirt_factor_text": "",
-   "local_stat_cards": null,
+   "local_stat_cards": [
+    {
+     "label": "Einwohner",
+     "value": "238.299",
+     "description": "Einwohner laut Quelle, 31.12.2025."
+    },
+    {
+     "label": "Single-Haushalte",
+     "value": "ca. 74.800",
+     "description": "Einpersonenhaushalte: 56,0 % aller Haushalte laut Stadtbezirksatlas, 31.12.2024."
+    },
+    {
+     "label": "Frauenanteil",
+     "value": "52,4 %",
+     "description": "Anteil weibliche Bevölkerung laut Quelle, 31.12.2025."
+    }
+   ],
    "local_tips": null,
    "local_places": null,
    "good_for": [],
@@ -9943,7 +9983,15 @@
    "manual_related_lexicon_pages": null,
    "sources_intro": "",
    "sources_display_mode": "auto",
-   "sources": null,
+   "sources": [
+    {
+     "title": "Gemeinden in Deutschland nach Fläche, Bevölkerung und Postleitzahl am 31.12.2025",
+     "url": "https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugJ/31122025_Auszug_GV.xlsx?__blob=publicationFile",
+     "publisher": "Statistisches Bundesamt (Destatis), Gemeindeverzeichnis",
+     "date": "31.12.2025",
+     "note": "Einwohner und Frauenanteil (eigene Berechnung aus weiblicher Bevölkerung)."
+    }
+   ],
    "content_reviewed_at": null,
    "content_review_note": "",
    "schema_type": "auto",
@@ -10742,7 +10790,23 @@
    "city_trust_points": "",
    "flirt_factor_score": "",
    "flirt_factor_text": "",
-   "local_stat_cards": null,
+   "local_stat_cards": [
+    {
+     "label": "Einwohner",
+     "value": "760.656",
+     "description": "Einwohner laut Quelle, 31.12.2025."
+    },
+    {
+     "label": "Single-Haushalte",
+     "value": "227.046",
+     "description": "Einpersonenhaushalte laut Haushaltsstruktur der Stadt, 31.12.2024."
+    },
+    {
+     "label": "Frauenanteil",
+     "value": "50,8 %",
+     "description": "Anteil weibliche Bevölkerung laut Quelle, 31.12.2025."
+    }
+   ],
    "local_tips": null,
    "local_places": null,
    "good_for": [],
@@ -10773,7 +10837,15 @@
    "manual_related_lexicon_pages": null,
    "sources_intro": "",
    "sources_display_mode": "auto",
-   "sources": null,
+   "sources": [
+    {
+     "title": "Gemeinden in Deutschland nach Fläche, Bevölkerung und Postleitzahl am 31.12.2025",
+     "url": "https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugJ/31122025_Auszug_GV.xlsx?__blob=publicationFile",
+     "publisher": "Statistisches Bundesamt (Destatis), Gemeindeverzeichnis",
+     "date": "31.12.2025",
+     "note": "Einwohner und Frauenanteil (eigene Berechnung aus weiblicher Bevölkerung)."
+    }
+   ],
    "content_reviewed_at": null,
    "content_review_note": "",
    "schema_type": "auto",
@@ -16598,7 +16670,23 @@
    "city_trust_points": "",
    "flirt_factor_score": "",
    "flirt_factor_text": "",
-   "local_stat_cards": null,
+   "local_stat_cards": [
+    {
+     "label": "Einwohner",
+     "value": "65.808",
+     "description": "Einwohner laut Quelle, 31.12.2025."
+    },
+    {
+     "label": "Single-Haushalte",
+     "value": "15.066",
+     "description": "Einpersonenhaushalte laut Zensus 2022 (15.05.2022)."
+    },
+    {
+     "label": "Frauenanteil",
+     "value": "50,4 %",
+     "description": "Anteil weibliche Bevölkerung laut Quelle, 31.12.2025."
+    }
+   ],
    "local_tips": null,
    "local_places": null,
    "good_for": [],
@@ -16629,7 +16717,15 @@
    "manual_related_lexicon_pages": null,
    "sources_intro": "",
    "sources_display_mode": "auto",
-   "sources": null,
+   "sources": [
+    {
+     "title": "Gemeinden in Deutschland nach Fläche, Bevölkerung und Postleitzahl am 31.12.2025",
+     "url": "https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugJ/31122025_Auszug_GV.xlsx?__blob=publicationFile",
+     "publisher": "Statistisches Bundesamt (Destatis), Gemeindeverzeichnis",
+     "date": "31.12.2025",
+     "note": "Einwohner und Frauenanteil (eigene Berechnung aus weiblicher Bevölkerung)."
+    }
+   ],
    "content_reviewed_at": null,
    "content_review_note": "",
    "schema_type": "auto",
