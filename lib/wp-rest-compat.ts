@@ -43,11 +43,31 @@ function positiveInt(value: string | null, fallback: number, max = Number.MAX_SA
   return Number.isInteger(parsed) && parsed >= 1 ? Math.min(parsed, max) : fallback;
 }
 
+/**
+ * Beitragsbild wie bei WordPress: ICONY liest `_embedded["wp:featuredmedia"][0].media_details.sizes` (Heiko, 2026-10-14).
+ * Der Snapshot kennt nur source_url, Breite und Höhe – daraus entsteht eine Größenliste (medium/large/full zeigen auf
+ * dieselbe Datei). source_url bleibt auf der eigenen Domain (https://ab50.de/magazin/wp-content/uploads/…), weil die
+ * ICONY-Startseite Bilder nur von dort laden darf (CSP); nginx muss diesen Pfad an Vercel durchreichen.
+ */
+function withImageSizes(media: Json): Json {
+  const details = (media.media_details && typeof media.media_details === "object" ? media.media_details : {}) as Json;
+  const existing = details.sizes && typeof details.sizes === "object" && !Array.isArray(details.sizes) ? (details.sizes as Json) : {};
+  if (Object.keys(existing).length || typeof media.source_url !== "string") return media;
+  const file = media.source_url.split("/").pop() ?? "";
+  const mime = typeof media.mime_type === "string" && media.mime_type
+    ? media.mime_type
+    : /\.webp$/i.test(file) ? "image/webp" : /\.png$/i.test(file) ? "image/png" : "image/jpeg";
+  const size = { file, width: details.width ?? 0, height: details.height ?? 0, mime_type: mime, source_url: media.source_url };
+  return { ...media, mime_type: mime, media_type: media.media_type ?? "image", media_details: { ...details, file, sizes: { medium: size, large: size, full: size } } };
+}
+
 function postObject(post: Json, embed: boolean): Json {
   const { _embedded, _links, ...rest } = post;
   if (!embed) return rest;
   const { author: _author, ...embedded } = (_embedded || {}) as Json;
   const { author: _authorLink, ...links } = (_links || {}) as Json;
+  const featured = embedded["wp:featuredmedia"];
+  if (Array.isArray(featured)) embedded["wp:featuredmedia"] = featured.map((media) => withImageSizes(media as Json));
   return { ...rest, _links: links, _embedded: embedded };
 }
 

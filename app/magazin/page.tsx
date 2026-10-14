@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { staticAsset } from "@/lib/static-asset";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPages, getCategories, getLatestPosts, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   },
 };
 
-const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
+const AUTHOR_IMAGE = staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png");
 
 function pageKind(slug: string) {
   if (slug.includes("christian")) return { label: "Über den Autor", icon: <UserIcon /> };

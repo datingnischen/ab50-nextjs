@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { staticAsset } from "@/lib/static-asset";
 import { notFound } from "next/navigation";
 import { absoluteUrl } from "@/lib/seo";
 import { categoryPath, getCategories, getPostsByCategory, postPath, stripHtml } from "@/lib/wordpress";
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
+const AUTHOR_IMAGE = staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png");
 
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;

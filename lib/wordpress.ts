@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { staticAsset } from "./static-asset";
 import { siteConfig } from "@/data/site";
 import postsData from "@/data/wp/posts.json";
 import pagesData from "@/data/wp/pages.json";
@@ -229,10 +230,23 @@ export function normalizeCitySlug(slug: string) {
     .replace(/ß/g, "ss");
 }
 
+/**
+ * Bilder der früheren WordPress-Installation (https://ab50.de/magazin/wp-content/uploads/…) liegen im Repo unter
+ * public/magazin/wp-content/uploads. Der nginx vor ab50.de/ab50.ch reicht nur Seitenrouten an Vercel weiter, die
+ * alte Bildadresse antwortet dort mit 404 (Heiko, 2026-10-14) – darum kommen Beitragsbilder und Bilder im Text
+ * absolut vom Asset-Host (/app-assets/magazin/wp-content/uploads/…).
+ */
+const UPLOAD_URL_PATTERN = /https?:\/\/(?:www\.)?ab50\.(?:de|ch)\/(?:magazin\/)?wp-content\/uploads\//gi;
+
+export function localizeUploadUrls<T extends string | null | undefined>(value: T): T {
+  if (!value) return value;
+  return value.replace(UPLOAD_URL_PATTERN, staticAsset("/magazin/wp-content/uploads/")) as T;
+}
+
 function normalizeImage(raw: any): WpImage | null {
   if (!raw?.source_url) return null;
   return {
-    sourceUrl: raw.source_url,
+    sourceUrl: localizeUploadUrls(raw.source_url as string),
     altText: raw.alt_text || null,
     width: raw.media_details?.width || null,
     height: raw.media_details?.height || null,
@@ -269,10 +283,10 @@ function normalizePost(raw: any): WpPostCard {
     id: raw.id,
     title: decodeHtmlEntities(raw?.title?.rendered || ""),
     slug: raw.slug,
-    excerpt: raw?.excerpt?.rendered || null,
+    excerpt: localizeUploadUrls(raw?.excerpt?.rendered as string | undefined) || null,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: raw?.content?.rendered || null,
+    content: localizeUploadUrls(raw?.content?.rendered as string | undefined) || null,
     featuredImage: normalizeImage(media),
     categories: normalizeTerms(raw),
     categoryIds: Array.isArray(raw?.categories) ? raw.categories : [],
@@ -287,7 +301,7 @@ function normalizePage(raw: any): WpPage {
     slug: raw.slug,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: raw?.content?.rendered || null,
+    content: localizeUploadUrls(raw?.content?.rendered as string | undefined) || null,
   };
 }
 
@@ -300,7 +314,7 @@ function normalizeCity(raw: any): WpCity {
     slug: raw.slug,
     date: raw.date || null,
     modified: raw.modified || null,
-    content: raw?.content?.rendered || raw?.content?.raw || null,
+    content: localizeUploadUrls((raw?.content?.rendered || raw?.content?.raw) as string | undefined) || null,
     featuredImage: normalizeImage(media),
     acf,
   };

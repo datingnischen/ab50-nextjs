@@ -1,3 +1,4 @@
+import { assetBaseUrl } from "./static-asset.ts";
 export type StructuredDataNode = Record<string, unknown>;
 
 type ChristianBookProfileInput = {
@@ -36,9 +37,11 @@ function extractBoundedBookImage(content: string) {
 
   try {
     const imageUrl = new URL(imageSource.replace(/&amp;/gi, "&"));
-    return imageUrl.protocol === "https:"
-      && imageUrl.hostname === "ab50.de"
-      && imageUrl.pathname.startsWith("/magazin/wp-content/uploads/")
+    const assetUploads = new URL(`${assetBaseUrl}/magazin/wp-content/uploads/`);
+    const ownUpload = imageUrl.hostname === "ab50.de" && imageUrl.pathname.startsWith("/magazin/wp-content/uploads/");
+    // Seit 2026-10-14 liegen die Bilder absolut auf dem Asset-Host (lib/wordpress.ts, localizeUploadUrls)
+    const assetUpload = imageUrl.hostname === assetUploads.hostname && imageUrl.pathname.startsWith(assetUploads.pathname);
+    return imageUrl.protocol === "https:" && (ownUpload || assetUpload)
       ? imageUrl.toString()
       : null;
   } catch {

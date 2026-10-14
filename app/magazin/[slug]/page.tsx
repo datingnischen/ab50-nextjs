@@ -31,7 +31,7 @@ type KnownAuthorProfile = {
 
 const knownAuthorProfiles: Record<string, KnownAuthorProfile> = {
   "christian-m-haas": {
-    imageSrc: "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png",
+    imageSrc: staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png"),
     imageAlt: "Christian M. Haas",
     role: "Autor & Dating-Experte bei ab50.de",
     fallbackDescription:

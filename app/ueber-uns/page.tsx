@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { staticAsset } from "@/lib/static-asset";
 import { absoluteUrl } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 import { SiteJsonLd } from "@/components/site-json-ld";
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-const AUTHOR_IMAGE = "https://ab50.de/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png";
+const AUTHOR_IMAGE = staticAsset("/magazin/wp-content/uploads/2025/09/Christian-M-Haas-Middle-243x300.png");
 
 const VALUES = [
   { icon: TagIcon, title: "Kostenlos starten", text: "Profil anlegen, durchstöbern und Nachrichten schreiben – ohne versteckte Kosten und ohne Abo, um dich umzusehen." },
