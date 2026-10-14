@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { marketPartnersuchePath, withSlashedPageLinks } from "@/lib/markets";
-import { categoryPath, getAllPageSlugs, getAllPostSlugs, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml } from "@/lib/wordpress";
+import { categoryPath, cityPath, getAllCities, getAllPageSlugs, getAllPostSlugs, getCategories, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml, type WpCategory, type WpPostCard } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
@@ -12,11 +12,12 @@ import { staticAsset } from "@/lib/static-asset";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { seoTitle } from "@/lib/seo-title";
 import { clampMetaDescription } from "@/lib/meta-description";
-import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon } from "@/components/ab-icons";
+import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
 import { TopicBanner } from "@/components/ab-magazine/topic-banner";
 import { bannerForArticle } from "@/lib/magazine-banner";
 import "@/components/ab-magazine/ab-magazine.css";
+import "@/components/ab-magazine/author-profile.css";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -40,6 +41,60 @@ const knownAuthorProfiles: Record<string, KnownAuthorProfile> = {
       "Christian M. Haas schreibt über Online-Dating ab 50, Profilwirkung, Kommunikation, Sicherheit und neue Nähe in späteren Lebensphasen – ruhig, verständlich und praxisnah.",
   },
 };
+
+const CHRISTIAN_SLUG = "christian-m-haas";
+const CHRISTIAN_META_DESCRIPTION =
+  "Christian M. Haas betreibt seit 2008 Singlebörsen und schreibt im 50plus Magazin über Online-Dating ab 50, Profil, Sicherheit und Nähe.";
+// Profile aus dem Abschnitt „Kontakt & Profile“ der Seite; zugleich sameAs im Person-Markup.
+const CHRISTIAN_PROFILES = [
+  { label: "Autorenseite bei Amazon", href: "https://www.amazon.com/author/christian-m-haas" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/christian-m-haas-457323379" },
+  { label: "Profil auf Datingnischen.de", href: "https://datingnischen.de/christian/" },
+];
+const CHRISTIAN_KNOWS_ABOUT = ["Online-Dating ab 50", "Singlebörsen", "Dating-Profile und Anschreiben", "Scam-Prävention", "Sichere Dates"];
+const CHRISTIAN_HERO_CITIES = [
+  "singles-berlin",
+  "singles-hamburg",
+  "singles-muenchen",
+  "singles-koeln",
+  "singles-frankfurt-am-main",
+  "singles-stuttgart",
+  "singles-duesseldorf",
+  "singles-leipzig",
+  "singles-dresden",
+  "singles-hannover",
+  "singles-nuernberg",
+  "singles-bremen",
+];
+// Angaben wie im CMS-Abschnitt und in lib/christian-book-profile-schema.ts
+const CHRISTIAN_BOOK = {
+  title: "Dating ohne Bullshit",
+  subtitle: "Der ungeschönte Insiderblick ins Online-Dating-Business",
+  amazonUrl: "https://www.amazon.de/dp/3696371211/",
+  cover: staticAsset("/magazin/wp-content/uploads/2026/08/dating-ohne-bullshit-cover.jpg"),
+  coverAlt: "Buchcover Dating ohne Bullshit von Christian M. Haas",
+  text: "In seinem Buch berichtet Christian M. Haas offen über den Aufbau von Datingplattformen, unternehmerische Entscheidungen, Rückschläge und die Verantwortung hinter digitalen Begegnungen. Es ist kein klassischer Datingratgeber, sondern ein persönlicher Blick hinter die Kulissen des Online-Dating-Business.",
+  facts: [
+    { label: "Ausgabe", value: "Taschenbuch, 1. Auflage" },
+    { label: "Umfang", value: "136 Seiten" },
+    { label: "Erschienen", value: "21. August 2026" },
+    { label: "ISBN", value: "978-3-6963-7121-0" },
+  ],
+};
+
+/**
+ * Christians Profiltext ohne die Teile, die das Autorenprofil selbst gestaltet: Porträt (Hero), Profil-Links (Hero)
+ * und Buchblock (eigener Abschnitt). Im CMS-Buchblock lag der Button-Text in <strong>, das .ab-rich strong
+ * dunkel färbte – dunkle Schrift auf dunklem Button.
+ */
+function christianProfileContent(html?: string | null) {
+  return (html || "")
+    .replace(/<img\b[^>]*Christian-M-Haas[^>]*>/i, "")
+    .replace(/(?:<p>)?<!-- dating-ohne-bullshit-book:start -->(?:<\/p>)?[\s\S]*?<!-- dating-ohne-bullshit-book:end -->(?:<\/p>)?/, "")
+    .replace(/(?:<p>)?<!-- dating-ohne-bullshit-schema:start -->[\s\S]*?<!-- dating-ohne-bullshit-schema:end -->(?:<\/p>)?/, "")
+    .replace(/<section aria-label="Kontakt &amp; Profile">[\s\S]*?<\/section>/, "")
+    .replace(/<section\b[^>]*>\s*<\/section>/g, "");
+}
 
 function slugifyHeading(value: string) {
   return value
@@ -172,6 +227,165 @@ function RadarCta() {
   );
 }
 
+function AuthorPostCard({ post }: { post: WpPostCard }) {
+  const category = post.categories?.[0];
+  const theme = themeFor(category?.slug);
+  const title = stripHtml(post.title);
+  return (
+    <article className={`abp-post abg-tone-${theme.tone}`}>
+      <span className="abp-post-media">
+        {post.featuredImage?.sourceUrl ? (
+          <Image
+            src={post.featuredImage.sourceUrl}
+            alt={post.featuredImage.altText || title}
+            width={post.featuredImage.width || 900}
+            height={post.featuredImage.height || 600}
+            sizes="(max-width: 760px) 100vw, (max-width: 1080px) 50vw, 33vw"
+          />
+        ) : <span className="abg-card-ph"><HeartIcon /></span>}
+      </span>
+      <span className="abp-post-body">
+        {category ? <span className="abp-post-topic"><ThemeIconView icon={theme.icon} />{category.name}</span> : null}
+        <h3><a href={postPath(post.slug)}>{title}</a></h3>
+        <p>{excerptText(post.excerpt, 130)}</p>
+      </span>
+    </article>
+  );
+}
+
+async function AuthorProfilePage({ title, contentHtml, tocItems }: { title: string; contentHtml: string; tocItems: TocItem[] }) {
+  const profile = knownAuthorProfiles[CHRISTIAN_SLUG];
+  const [allPosts, categories, cities] = await Promise.all([getLatestPosts(500), getCategories(), getAllCities()]);
+  const ownPosts = allPosts.filter((post) => post.author?.slug === CHRISTIAN_SLUG);
+  const latest = ownPosts.slice(0, 6);
+  const topics = categories.filter((category: WpCategory) => (category.count ?? 0) > 0);
+  const cityLinks = CHRISTIAN_HERO_CITIES
+    .map((slug) => cities.find((city) => city.slug === slug))
+    .filter((city): city is NonNullable<typeof city> => Boolean(city))
+    .map((city) => ({ href: cityPath(city.slug), name: stripHtml(city.title).replace(/^Singles ab 50 aus\s+/i, "") }));
+  const sideToc: TocItem[] = [
+    ...tocItems,
+    ...(latest.length ? [{ id: "neueste-beitraege", label: "Neueste Beiträge" }] : []),
+    { id: "themen", label: "Themen und Städte" },
+    { id: "buch", label: CHRISTIAN_BOOK.title },
+  ];
+
+  return (
+    <article className="abg abg-article abp">
+      <header className="ab-light-hero abp-hero">
+        <div className="ab-wrap">
+          <Crumbs title={title} />
+          <div className="abp-hero-grid">
+            {profile.imageSrc ? (
+              <figure className="abp-portrait">
+                <Image src={profile.imageSrc} alt={profile.imageAlt || title} width={243} height={300} priority />
+              </figure>
+            ) : null}
+            <div className="abp-hero-copy">
+              <span className="abg-kind"><UserIcon />Autorenprofil</span>
+              <h1>{title}</h1>
+              {profile.role && !title.includes("Dating-Experte") ? <p className="abp-role">{profile.role}</p> : null}
+              <p className="abp-lead">{profile.fallbackDescription}</p>
+              <ul className="abp-facts" aria-label="Kurz zu Christian M. Haas">
+                <li><strong>seit 2008</strong><span>Aufbau und Betrieb seriöser Singlebörsen</span></li>
+                <li><strong>seit 2016</strong><span>Partnerschaft mit Icony für Technik und Datenschutz</span></li>
+                {ownPosts.length ? <li><strong>{ownPosts.length} Beiträge</strong><span>im 50plus Magazin von ab50.de</span></li> : null}
+                <li><strong>Buch</strong><span><a href="#buch">„{CHRISTIAN_BOOK.title}“</a></span></li>
+              </ul>
+              <ul className="abp-profiles" aria-label="Profile von Christian M. Haas">
+                {CHRISTIAN_PROFILES.map((item) => (
+                  <li key={item.href}><a href={item.href} target="_blank" rel="noopener">{item.label}<ArrowIcon /></a></li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="ab-wrap abg-layout">
+        <div className="abg-body">
+          <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        </div>
+        <aside className="abg-side">
+          <nav className="abg-toc" aria-label="Inhaltsverzeichnis">
+            <span><BookIcon />Auf dieser Seite</span>
+            <ol>{sideToc.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
+          </nav>
+        </aside>
+      </div>
+
+      {latest.length ? (
+        <section className="ab-wrap ab-section abp-section" id="neueste-beitraege" aria-labelledby="neueste-beitraege-titel">
+          <div className="abg-head-row">
+            <div className="ab-head">
+              <p className="ab-eyebrow"><SparkIcon />Aus dem Magazin</p>
+              <h2 id="neueste-beitraege-titel">Neueste Beiträge von Christian M. Haas</h2>
+            </div>
+            <a className="abg-author-link" href="/magazin/">Alle Beiträge im Magazin <ArrowIcon /></a>
+          </div>
+          <div className="abp-posts">
+            {latest.map((post) => <AuthorPostCard key={post.id} post={post} />)}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="ab-wrap ab-section abp-section" id="themen" aria-labelledby="themen-titel">
+        <div className="ab-head">
+          <p className="ab-eyebrow"><HeartIcon />Schwerpunkte</p>
+          <h2 id="themen-titel">Themen und Städte</h2>
+          <p>Die Beiträge von Christian M. Haas ordnen sich in die Themenwelten des 50plus Magazins ein. Dazu kommen Stadtseiten für die Partnersuche ab 50.</p>
+        </div>
+        <div className="abp-topics">
+          {topics.map((category) => {
+            const theme = themeFor(category.slug);
+            return (
+              <article className={`abp-topic abg-tone-${theme.tone}`} key={category.slug}>
+                <span className="abp-topic-icon" aria-hidden="true"><ThemeIconView icon={theme.icon} /></span>
+                <h3><a href={categoryPath(category.slug)}>{category.name}</a></h3>
+                {category.count ? <small>{category.count} {category.count === 1 ? "Beitrag" : "Beiträge"}</small> : null}
+              </article>
+            );
+          })}
+        </div>
+        {cityLinks.length ? (
+          <div className="abp-cities">
+            <h3><PinIcon />Partnersuche ab 50 in deiner Stadt</h3>
+            <ul>
+              {cityLinks.map((city) => <li key={city.href}><a href={city.href}>Singles ab 50 in {city.name}</a></li>)}
+            </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="ab-wrap ab-section abp-section" id="buch" aria-labelledby="buch-titel">
+        <div className="abp-book">
+          <figure className="abp-book-cover">
+            {/* eslint-disable-next-line @next/next/no-img-element -- Buchcover aus dem Upload-Bestand, Asset-Host */}
+            <img src={CHRISTIAN_BOOK.cover} alt={CHRISTIAN_BOOK.coverAlt} width={1058} height={1500} loading="lazy" decoding="async" />
+          </figure>
+          <div className="abp-book-copy">
+            <p className="ab-eyebrow"><BookIcon />Buch von Christian M. Haas</p>
+            <h2 id="buch-titel">{CHRISTIAN_BOOK.title}</h2>
+            <p className="abp-book-subtitle">{CHRISTIAN_BOOK.subtitle}</p>
+            <p>{CHRISTIAN_BOOK.text}</p>
+            <dl className="abp-book-facts">
+              {CHRISTIAN_BOOK.facts.map((fact) => (
+                <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>
+              ))}
+            </dl>
+            <div className="ab-actions">
+              <a className="ab-btn ab-btn-blue abp-book-button" href={CHRISTIAN_BOOK.amazonUrl} target="_blank" rel="nofollow noopener noreferrer">„{CHRISTIAN_BOOK.title}“ bei Amazon ansehen <ArrowIcon /></a>
+              <a className="ab-btn ab-btn-outline" href={CHRISTIAN_PROFILES[0].href} target="_blank" rel="noopener">Amazon-Autorenseite</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <RadarCta />
+    </article>
+  );
+}
+
 export async function generateStaticParams() {
   const [postSlugs, pageSlugs] = await Promise.all([getAllPostSlugs(), getAllPageSlugs()]);
   return Array.from(new Set([...postSlugs, ...pageSlugs])).map((slug) => ({ slug }));
@@ -182,7 +396,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = await getPageBySlug(slug);
   if (page) {
     const title = stripHtml(page.title);
-    const description = clampMetaDescription(stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`;
+    const description = page.slug === CHRISTIAN_SLUG
+      ? CHRISTIAN_META_DESCRIPTION
+      : clampMetaDescription(stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`;
     return {
       title: seoTitle(title, page.slug),
       description,
@@ -232,9 +448,11 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       content: page.content || "",
       canonicalUrl: absoluteUrl(pagePath(page.slug)),
       profileName: title,
-      profileDescription: stripHtml(page.content).slice(0, 160),
+      profileDescription: CHRISTIAN_META_DESCRIPTION,
       profileImage: knownAuthorProfiles["christian-m-haas"].imageSrc,
       jobTitle: knownAuthorProfiles["christian-m-haas"].role,
+      sameAs: CHRISTIAN_PROFILES.map((item) => item.href),
+      knowsAbout: CHRISTIAN_KNOWS_ABOUT,
       breadcrumbRootName: siteConfig.magazineName,
       breadcrumbRootUrl: absoluteUrl("/magazin/"),
     });
@@ -251,6 +469,16 @@ export default async function MagazinSlugPage({ params }: PageProps) {
           headline: title,
           description: stripHtml(page.content).slice(0, 160) || `${title} im 50plus Magazin von ab50.de.`,
         });
+    if (isAuthor) {
+      const authorContent = christianProfileContent(page.content);
+      const authorToc = extractTocItems(authorContent);
+      return (
+        <>
+          {profileGraph ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(profileGraph) }} /> : null}
+          <AuthorProfilePage title={title} contentHtml={sanitizeContent(authorContent, authorToc, false)} tocItems={authorToc} />
+        </>
+      );
+    }
     const pageToc = extractTocItems(page.content);
     return (
       <>

@@ -431,6 +431,12 @@ h1, h2, h3,
   color: var(--ab-ink);
 }
 
+/* Fett gesetzter Linktext (z. B. Buttons aus dem CMS) behält die Linkfarbe – sonst dunkle Schrift auf dunklem Grund. */
+.ab-rich a strong,
+.ab-rich a b {
+  color: inherit;
+}
+
 .ab-rich ul,
 .ab-rich ol {
   display: grid;

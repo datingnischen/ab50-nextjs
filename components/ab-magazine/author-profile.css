@@ -1,0 +1,469 @@
+/* ======================================================================
+   Autorenprofil (Christian M. Haas)
+   ====================================================================== */
+
+.abp-hero {
+  padding-bottom: 72px;
+}
+
+.abp-hero-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+  margin-top: 26px;
+}
+
+.abp-portrait {
+  margin: 0;
+}
+
+.abp-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: var(--ab-shadow-lg), 0 0 0 8px #fff;
+  transform: rotate(-2deg);
+}
+
+.abp-hero-copy {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.abp-hero-copy h1 {
+  margin: 4px 0 0;
+  font-size: clamp(2.2rem, 4.8vw, 3.6rem);
+}
+
+.abp-role {
+  margin: 0;
+  color: var(--ab-blue);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.abp-lead {
+  max-width: 62ch;
+  margin: 4px 0 0;
+  color: #3d4757;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+.abp-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abp-facts li {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+  line-height: 1.4;
+}
+
+.abp-facts strong {
+  color: var(--ab-red);
+  font-family: var(--ab-display), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.abp-facts span {
+  color: var(--ab-muted);
+  font-size: 0.95rem;
+}
+
+.abp-facts a {
+  color: var(--ab-blue);
+  font-weight: 700;
+}
+
+.abp-profiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abp-profiles a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--ab-line);
+  color: var(--ab-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.abp-profiles a:hover,
+.abp-profiles a:focus-visible {
+  box-shadow: inset 0 0 0 1.5px var(--ab-blue);
+  color: var(--ab-blue);
+}
+
+.abp-profiles svg {
+  width: 16px;
+  height: 16px;
+}
+
+.abp-section {
+  scroll-margin-top: 110px;
+}
+
+.abp-posts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.abp-post {
+  --tone: var(--ab-red);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.abp-post:hover,
+.abp-post:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 44px rgba(11, 33, 70, 0.14), inset 0 0 0 2px var(--tone);
+}
+
+.abp-post-media {
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--tone-soft, var(--ab-sand));
+}
+
+.abp-post-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.abp-post-body {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 18px 20px 22px;
+}
+
+.abp-post-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tone);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.abp-post-topic svg {
+  width: 16px;
+  height: 16px;
+}
+
+.abp-post h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.abp-post h3 a,
+.abp-topic h3 a {
+  color: var(--ab-ink);
+  text-decoration: none;
+}
+
+/* Nur der Titel ist verlinkt; die Flaeche per ::after macht die ganze Karte klickbar. */
+.abp-post h3 a::after,
+.abp-topic h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.abp-post h3 a:focus-visible,
+.abp-topic h3 a:focus-visible {
+  outline: none;
+}
+
+.abp-post:has(h3 a:focus-visible),
+.abp-topic:has(h3 a:focus-visible) {
+  outline: 3px solid var(--ab-gold);
+  outline-offset: 3px;
+}
+
+.abp-post p {
+  margin: 0;
+  color: var(--ab-muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.abp-topics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.abp-topic {
+  --tone: var(--ab-blue);
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 14px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+  transition: box-shadow 0.2s ease;
+}
+
+.abp-topic:hover {
+  box-shadow: var(--ab-shadow), inset 0 0 0 2px var(--tone);
+}
+
+.abp-topic-icon {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--tone-soft);
+  color: var(--tone);
+}
+
+.abp-topic-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.abp-topic h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.abp-topic small {
+  color: var(--ab-muted);
+  font-size: 0.9rem;
+}
+
+.abp-cities {
+  margin-top: 26px;
+  padding: 22px 24px;
+  border-radius: 24px;
+  background: var(--ab-blue-soft);
+}
+
+.abp-cities h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.abp-cities h3 svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ab-red);
+}
+
+.abp-cities ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.abp-cities a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ab-blue-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.abp-cities a:hover,
+.abp-cities a:focus-visible {
+  background: var(--ab-blue);
+  color: #fff;
+}
+
+.abp-book {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+  padding: 44px 48px;
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 164, 65, 0.22), transparent 45%),
+    linear-gradient(135deg, #fff, var(--ab-sand));
+  box-shadow: var(--ab-shadow), inset 0 0 0 1px var(--ab-line);
+}
+
+.abp-book-cover {
+  margin: 0;
+}
+
+.abp-book-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 24px 48px rgba(11, 33, 70, 0.25);
+  transform: rotate(-3deg);
+}
+
+.abp-book-copy h2 {
+  margin: 8px 0 4px;
+  color: var(--ab-ink);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.abp-book-subtitle {
+  margin: 0 0 14px;
+  color: var(--ab-blue);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.abp-book-copy > p:not(.ab-eyebrow):not(.abp-book-subtitle) {
+  max-width: 62ch;
+  margin: 0;
+  color: #3d4757;
+  line-height: 1.7;
+}
+
+.abp-book-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  justify-content: start;
+  gap: 10px 28px;
+  margin: 20px 0 0;
+}
+
+.abp-book-facts div {
+  display: grid;
+  gap: 2px;
+}
+
+.abp-book-facts dt {
+  color: var(--ab-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.abp-book-facts dd {
+  margin: 0;
+  color: var(--ab-ink);
+  font-weight: 600;
+}
+
+/* Weiss auf Logo-Blau (mind. 6,3 : 1, WCAG AA), auch bei Hover und Fokus */
+.abp-book-button,
+.abp-book-button:hover,
+.abp-book-button:focus-visible {
+  color: #fff;
+}
+
+.abp-book-button:hover,
+.abp-book-button:focus-visible {
+  background: var(--ab-blue-dark);
+}
+
+@media (max-width: 1080px) {
+  .abp-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .abp-posts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .abp-book-facts {
+    grid-template-columns: repeat(2, minmax(0, auto));
+  }
+}
+
+@media (max-width: 760px) {
+  .abp-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .abp-portrait {
+    width: 170px;
+  }
+
+  .abp-posts {
+    grid-template-columns: 1fr;
+  }
+
+  .abp-book {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 28px 22px;
+  }
+
+  .abp-book-cover {
+    width: 180px;
+  }
+
+  .abp-book .ab-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .abp-facts li {
+    padding: 12px 14px;
+  }
+}

@@ -46,6 +46,7 @@ export const SEO_TITLES: Record<string, string> = {
   "serioese-singleboerse": "Seriöse Singlebörse erkennen: Merkmale, die zählen",
   fliegen: "Fliegen ab 50: Neue Horizonte entdecken",
   "neuanfang-tod-des-partners-verkraften": "Tod des Partners verkraften: Neuanfang finden",
+  "christian-m-haas": "Christian M. Haas: Autor und Dating-Experte",
 };
 
 /** Liefert den Metadata-Titel: mit Vorlage, ohne Zusatz („absolute“) oder den kürzeren SEO-Titel. */
