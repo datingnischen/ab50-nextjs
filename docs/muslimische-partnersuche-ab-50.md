@@ -49,3 +49,5 @@ Auch die Vercel-Adresse, das lokale WebP-Asset, die Sitemap und der REST-Teaser 
 ## Nachtrag: Foto und kürzerer Slug am 14.10.2026
 
 Auf Christians Wunsch ist der öffentliche Slug jetzt `muslimische-partnersuche`. Die bisherige Adresse `/magazin/muslimische-partnersuche-ab-50/` erhält eine permanente 308-Weiterleitung; diese gilt auch für die internen Länderpfade. Das bereits hochgeladene, oben dokumentierte Café-Symbolbild bleibt als Titelbild eingebunden. Die öffentliche Magazinseite und der REST-Teaser werden inzwischen vom Next.js-Frontend ausgeliefert; geändert wurden dessen Artikeldaten und Weiterleitungen. Der ursprüngliche WordPress-GUID bleibt als Identität erhalten.
+
+Die anschließende Browserprüfung zeigte einen blockierten alten Upload-Pfad. Das vorhandene Bild wurde deshalb zusätzlich unter `public/magazin/media/muslimische-partnersuche.webp` bereitgestellt und die Bildadresse des Beitrags auf den erreichbaren Vercel-Asset-Host geändert.

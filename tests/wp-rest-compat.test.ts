@@ -15,12 +15,12 @@ test("posts-Endpunkt liefert Beiträge im WordPress-Format mit Gesamtzahl", () =
   for (const row of rows) {
     const media = row._embedded["wp:featuredmedia"]?.[0];
     assert.ok(media, `${row.slug}: Beitragsbild`);
-    assert.match(media.source_url, /^https:\/\/ab50\.de\/magazin\/wp-content\/uploads\//, "eigene Domain (CSP der ICONY-Startseite)");
+    assert.match(media.source_url, /^https:\/\/ab50\.de\/magazin\//, "eigene Domain (CSP der ICONY-Startseite)");
     // Snapshot-Größen bleiben, fehlende Listen bekommen medium/large/full aus source_url
     for (const name of ["full", "medium"]) {
       const size = media.media_details.sizes[name];
       assert.ok(size, `${row.slug}: Größe ${name}`);
-      assert.match(size.source_url, /^https:\/\/ab50\.de\/magazin\/wp-content\/uploads\//, `${row.slug}: ${name} auf eigener Domain`);
+      assert.match(size.source_url, /^https:\/\/ab50\.de\/magazin\//, `${row.slug}: ${name} auf eigener Domain`);
       assert.ok(size.width > 0, `${row.slug}: Breite ${name}`);
     }
     assert.match(media.mime_type, /^image\//);

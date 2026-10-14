@@ -240,7 +240,8 @@ const UPLOAD_URL_PATTERN = /https?:\/\/(?:www\.)?ab50\.(?:de|ch)\/(?:magazin\/)?
 
 export function localizeUploadUrls<T extends string | null | undefined>(value: T): T {
   if (!value) return value;
-  return value.replace(UPLOAD_URL_PATTERN, staticAsset("/magazin/wp-content/uploads/")) as T;
+  return value.replace(UPLOAD_URL_PATTERN, staticAsset("/magazin/wp-content/uploads/"))
+    .replace(/https?:\/\/(?:www\.)?ab50\.(?:de|ch)\/magazin\/media\//gi, staticAsset("/magazin/media/")) as T;
 }
 
 function normalizeImage(raw: any): WpImage | null {

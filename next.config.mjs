@@ -79,7 +79,7 @@ export default function nextConfig(phase) {
         },
         {
           source: "/:market(de|ch|at)/magazin/muslimische-partnersuche-ab-50/:path*",
-          destination: "/:market/magazin/muslimische-partnersuche/:path*",
+          destination: "/magazin/muslimische-partnersuche/:path*",
           permanent: true,
         },
       ];
