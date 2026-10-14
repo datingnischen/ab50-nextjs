@@ -1,6 +1,7 @@
 import categoriesData from "../data/wp/categories.json" with { type: "json" };
 import postsData from "../data/wp/posts.json" with { type: "json" };
 
+import { teaserImageUrl } from "./teaser-image.ts";
 /**
  * WordPress-kompatibler REST-Endpunkt für die Magazin-BEITRÄGE, erzeugt aus data/wp/posts.json.
  *
@@ -52,13 +53,19 @@ function positiveInt(value: string | null, fallback: number, max = Number.MAX_SA
 function withImageSizes(media: Json): Json {
   const details = (media.media_details && typeof media.media_details === "object" ? media.media_details : {}) as Json;
   const existing = details.sizes && typeof details.sizes === "object" && !Array.isArray(details.sizes) ? (details.sizes as Json) : {};
-  if (Object.keys(existing).length || typeof media.source_url !== "string") return media;
+  if (typeof media.source_url !== "string") return media;
+  const restRoot = "https://ab50.de/magazin/wp-json";
+  const sourceUrl = teaserImageUrl(restRoot, media.source_url);
+  if (Object.keys(existing).length) {
+    const sizes = Object.fromEntries(Object.entries(existing).map(([name, size]) => [name, { ...(size as Json), source_url: teaserImageUrl(restRoot, String((size as Json).source_url ?? media.source_url)) }]));
+    return { ...media, source_url: sourceUrl, media_details: { ...details, sizes } };
+  }
   const file = media.source_url.split("/").pop() ?? "";
   const mime = typeof media.mime_type === "string" && media.mime_type
     ? media.mime_type
     : /\.webp$/i.test(file) ? "image/webp" : /\.png$/i.test(file) ? "image/png" : "image/jpeg";
-  const size = { file, width: details.width ?? 0, height: details.height ?? 0, mime_type: mime, source_url: media.source_url };
-  return { ...media, mime_type: mime, media_type: media.media_type ?? "image", media_details: { ...details, file, sizes: { medium: size, large: size, full: size } } };
+  const size = { file, width: details.width ?? 0, height: details.height ?? 0, mime_type: mime, source_url: sourceUrl };
+  return { ...media, mime_type: mime, media_type: media.media_type ?? "image", source_url: sourceUrl, media_details: { ...details, file, sizes: Object.fromEntries(["thumbnail", "medium", "medium_large", "large", "full"].map((name) => [name, size])) } };
 }
 
 function postObject(post: Json, embed: boolean): Json {
