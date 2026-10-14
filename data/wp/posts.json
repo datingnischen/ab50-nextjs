@@ -1,10 +1,10 @@
 [
  {
-  "id": 1100,
-  "date": "2026-10-14T10:00:00",
-  "date_gmt": "2026-10-14T08:00:00",
-  "modified": "2026-10-14T10:00:00",
-  "modified_gmt": "2026-10-14T08:00:00",
+  "id": 1105,
+  "date": "2026-10-14T14:30:26",
+  "date_gmt": "2026-10-14T12:30:26",
+  "modified": "2026-10-14T14:31:32",
+  "modified_gmt": "2026-10-14T12:31:32",
   "guid": {
    "rendered": "https://ab50.de/magazin/muslimische-partnersuche-ab-50/"
   },
@@ -23,8 +23,8 @@
    "rendered": "<p>Muslimische Partnersuche ab 50: Wie du Glaube, Familie und neue Nähe verbindest – mit Gesprächshilfen und Tipps für ein sicheres Kennenlernen.</p>",
    "protected": false
   },
-  "author": 1,
-  "featured_media": 1101,
+  "author": 3,
+  "featured_media": 1104,
   "comment_status": "closed",
   "ping_status": "closed",
   "sticky": false,
@@ -37,16 +37,16 @@
   "_embedded": {
    "author": [
     {
-     "id": 1,
-     "name": "Redaktion",
-     "slug": "redaktion",
+     "id": 3,
+     "name": "Christian M. Haas",
+     "slug": "christian-m-haas",
      "description": ""
     }
    ],
    "wp:featuredmedia": [
     {
-     "id": 1101,
-     "source_url": "https://ab50-nextjs.vercel.app/app-assets/magazin/editorial/muslimische-partnersuche-ab-50.webp",
+     "id": 1104,
+     "source_url": "https://ab50.de/magazin/wp-content/uploads/2026/10/muslimische-partnersuche-ab-50.webp",
      "alt_text": "Symbolbild: Zwei Menschen um die 60 unterhalten sich bei Tee in einem Café; die Frau trägt ein blaues Kopftuch.",
      "media_details": {
       "width": 1536,

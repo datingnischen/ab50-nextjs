@@ -37,4 +37,10 @@ Finaler Prompt:
 - Browserkontrolle bei 390 und 1440 Pixeln: Titel, Canonical, Beschreibung und zugeklappte Quellen korrekt, kein horizontaler Überlauf. Screenshots visuell geprüft. Vor Deployment wurde das neue Titelbild für die lokale Browserkontrolle aus der Projektdatei geladen.
 - `npm run lint` ist im Bestand nicht ausführbar: Das Skript verwendet `next lint`, das diese Next.js-Version nicht mehr bereitstellt. Kein Lint-Erfolg behauptet.
 
-Veröffentlichung wird erst nach HTTP- und Bildprüfung des Vercel-Deployments als bestätigt dokumentiert.
+## Bestätigte Veröffentlichung
+
+Am 14.10.2026 wurde der Artikel auch über die WordPress-REST-API veröffentlicht, weil die öffentliche Hauptdomain weiterhin das WordPress-Magazin ausliefert. Der zentrale Google-Sheet-Eintrag wurde über den verbundenen Drive-Zugang gelesen; keine Zugangsdaten im Repo gespeichert. WordPress-Beitrag 1105, Bild 1104, Autor Christian M. Haas gemäß Projektverzeichnis. Vercel-Snapshot auf diese tatsächlichen IDs, Datumswerte, Autoren- und Bilddaten abgeglichen. Kein Routing- oder Infrastrukturumbau.
+
+Öffentliche Adresse und Titelbild liefern HTTP 200. Browserprüfung der Hauptdomain bei 390 und 1440 Pixeln: keine fehlenden Bilder, kein horizontaler Überlauf, Titel, Meta-Beschreibung und Canonical korrekt. AIOSEO-Metadaten per API gesetzt und zurückgelesen. Der Entwurf wurde vor Veröffentlichung inhaltlich zurückgelesen. Ein während des Entwurfsabgleichs entstandener Doppelbeitrag wurde in den Papierkorb verschoben; öffentlich existiert ein Beitrag unter dem vorgesehenen Slug. Ein zusätzlich hochgeladenes, ungenutztes Bild blieb im Medienbestand.
+
+Auch die Vercel-Adresse, das lokale WebP-Asset, die Sitemap und der REST-Teaser wurden öffentlich geprüft. Bildprompt und Projektdatei stehen oben.
