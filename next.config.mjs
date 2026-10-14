@@ -70,6 +70,20 @@ export default function nextConfig(phase) {
         },
       ],
     },
+    async redirects() {
+      return [
+        {
+          source: "/magazin/muslimische-partnersuche-ab-50/:path*",
+          destination: "/magazin/muslimische-partnersuche/:path*",
+          permanent: true,
+        },
+        {
+          source: "/:market(de|ch|at)/magazin/muslimische-partnersuche-ab-50/:path*",
+          destination: "/:market/magazin/muslimische-partnersuche/:path*",
+          permanent: true,
+        },
+      ];
+    },
     async rewrites() {
       return [
         {

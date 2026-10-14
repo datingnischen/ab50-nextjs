@@ -2,7 +2,7 @@
 
 Aufgabe: https://trello.com/c/UBErdJ6M/1064-texte-zu-muslime-online-stellen
 
-Neuer Beitrag: https://ab50.de/magazin/muslimische-partnersuche-ab-50/
+Neuer Beitrag: https://ab50.de/magazin/muslimische-partnersuche/
 
 Der Artikel ergänzt das bestehende dateibasierte Magazin. Schwerpunkt: konkrete Partnersuche in der Lebensphase ab 50, Glaubenspraxis ohne Pauschalisierungen, Verwitwung/Scheidung, Familie, Profilbeispiel, Gesprächsfragen und Schutz vor Liebesbetrug. Religiöse Bewertungen werden nicht vorgegeben. Redaktionelle Anregungen sind als solche eingeordnet. Die BAMF-Studie wird ausdrücklich nicht als Untersuchung zur Partnersuche ab 50 dargestellt.
 
@@ -44,3 +44,8 @@ Am 14.10.2026 wurde der Artikel auch über die WordPress-REST-API veröffentlich
 Öffentliche Adresse und Titelbild liefern HTTP 200. Browserprüfung der Hauptdomain bei 390 und 1440 Pixeln: keine fehlenden Bilder, kein horizontaler Überlauf, Titel, Meta-Beschreibung und Canonical korrekt. AIOSEO-Metadaten per API gesetzt und zurückgelesen. Der Entwurf wurde vor Veröffentlichung inhaltlich zurückgelesen. Ein während des Entwurfsabgleichs entstandener Doppelbeitrag wurde in den Papierkorb verschoben; öffentlich existiert ein Beitrag unter dem vorgesehenen Slug. Ein zusätzlich hochgeladenes, ungenutztes Bild blieb im Medienbestand.
 
 Auch die Vercel-Adresse, das lokale WebP-Asset, die Sitemap und der REST-Teaser wurden öffentlich geprüft. Bildprompt und Projektdatei stehen oben.
+
+
+## Nachtrag: Foto und kürzerer Slug am 14.10.2026
+
+Auf Christians Wunsch ist der öffentliche Slug jetzt `muslimische-partnersuche`. Die bisherige Adresse `/magazin/muslimische-partnersuche-ab-50/` erhält eine permanente 308-Weiterleitung; diese gilt auch für die internen Länderpfade. Das bereits hochgeladene, oben dokumentierte Café-Symbolbild bleibt als Titelbild eingebunden. Die öffentliche Magazinseite und der REST-Teaser werden inzwischen vom Next.js-Frontend ausgeliefert; geändert wurden dessen Artikeldaten und Weiterleitungen. Der ursprüngliche WordPress-GUID bleibt als Identität erhalten.
