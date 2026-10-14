@@ -128,7 +128,7 @@
 }
 
 .abg-theme:hover,
-.abg-theme:focus-visible {
+.abg-theme:focus-within {
   transform: translateY(-4px) rotate(-0.5deg);
   box-shadow: 0 22px 44px rgba(11, 33, 70, 0.14), inset 0 0 0 2px var(--tone);
 }
@@ -228,7 +228,7 @@
 }
 
 .abg-card:hover,
-.abg-card:focus-visible {
+.abg-card:focus-within {
   transform: translateY(-4px);
   box-shadow: 0 22px 44px rgba(11, 33, 70, 0.14), inset 0 0 0 2px var(--tone);
 }

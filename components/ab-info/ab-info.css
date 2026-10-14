@@ -379,7 +379,7 @@
 }
 
 .abi-tile:hover,
-.abi-tile:focus-visible {
+.abi-tile:focus-within {
   transform: translateY(-4px);
   box-shadow: 0 22px 44px rgba(11, 33, 70, 0.14), inset 0 0 0 2px var(--ab-red);
 }

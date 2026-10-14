@@ -19,7 +19,8 @@ test("Swiss partnersuche pages keep migration provenance out of the public page"
 });
 
 test("Swiss city cards present their destination as a button-style call to action", () => {
-  assert.match(overviewPageSource, /className="card-read-more city-card-button">Stadtseite ansehen/);
+  // aria-hidden: verlinkt ist nur der Kartentitel, die Schaltfläche ist rein optisch (ganze Karte klickbar).
+  assert.match(overviewPageSource, /className="card-read-more city-card-button"[^>]*>Stadtseite ansehen/);
   assert.match(globalCssSource, /\.city-card-button\s*\{/);
 });
 

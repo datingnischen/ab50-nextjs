@@ -100,9 +100,9 @@ export default function FaqPage() {
         <section className="ab-wrap ab-section" aria-label="Weitere Hilfe">
           <div className="abi-tiles">
             {SERVICE.map(({ href, icon: Icon, title, text }) => (
-              <a key={href} className="abi-tile" href={href}>
-                <Icon /><strong>{title}</strong><span>{text}</span><em>Weiterlesen <ArrowIcon /></em>
-              </a>
+              <div key={href} className="abi-tile">
+                <Icon /><strong><a className="card-link" href={href}>{title}</a></strong><span>{text}</span><em aria-hidden="true">Weiterlesen <ArrowIcon /></em>
+              </div>
             ))}
           </div>
         </section>

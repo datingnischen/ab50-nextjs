@@ -77,7 +77,7 @@ export default function SwissPartnersucheOverviewPage() {
                 const region = cityGeo("ch", city.slug)?.region || "";
                 return (
                   <div key={city.slug} data-city={city.name} data-region={region} className="abm-card-cell">
-                    <MarketLink className="post-card city-overview-card" href={route.publicUrl} previewHref={route.previewPath}>
+                    <div className="post-card city-overview-card">
                       <span className="abm-card-media">
                         {/* eslint-disable-next-line @next/next/no-img-element -- fertiges SVG, keine Optimierung noetig */}
                         <img
@@ -94,11 +94,11 @@ export default function SwissPartnersucheOverviewPage() {
                       </span>
                       <div className="post-card-body">
                         <span>Regionale Partnersuche · Schweiz</span>
-                        <strong>Singles ab 50 in {city.name}</strong>
+                        <strong><MarketLink className="card-link" href={route.publicUrl} previewHref={route.previewPath}>Singles ab 50 in {city.name}</MarketLink></strong>
                         <p>{cityCardCopy("ch", city.slug)}</p>
-                        <em className="card-read-more city-card-button">Stadtseite ansehen</em>
+                        <em className="card-read-more city-card-button" aria-hidden="true">Stadtseite ansehen</em>
                       </div>
-                    </MarketLink>
+                    </div>
                   </div>
                 );
               })}

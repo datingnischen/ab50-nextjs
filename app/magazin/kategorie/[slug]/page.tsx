@@ -123,12 +123,12 @@ export default async function CategoryPage({ params }: PageProps) {
             {relatedCategories.map((item) => {
               const itemTheme = themeFor(item.slug);
               return (
-                <a key={item.slug} className={`abg-theme abg-tone-${itemTheme.tone}`} href={categoryPath(item.slug)}>
+                <div key={item.slug} className={`abg-theme abg-tone-${itemTheme.tone}`}>
                   <ThemeIconView icon={itemTheme.icon} />
-                  <strong>{item.name}</strong>
+                  <strong><a className="card-link" href={categoryPath(item.slug)}>{item.name}</a></strong>
                   <span>{item.description || `Praktische Tipps zum Thema ${item.name.toLowerCase()}.`}</span>
-                  <em>Thema öffnen <ArrowIcon /></em>
-                </a>
+                  <em aria-hidden="true">Thema öffnen <ArrowIcon /></em>
+                </div>
               );
             })}
           </div>

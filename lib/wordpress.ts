@@ -261,6 +261,10 @@ export function fixContentHtml(html: string | null | undefined, title: string): 
     .replace(/<img\b(?![^>]*\salt=)/gi, `<img alt="${alt}"`)
     .replace(/href="http:\/\/(?:www\.)?ab50\.de\/?"/gi, 'href="https://ab50.de/"')
     .replace(/\/magazin\/entspannte-dating\//g, "/magazin/entspanntes-dating/")
+    // Eindeutige Linktexte (Seobility „identische Linktexte für unterschiedliche Seiten“): gleicher Text → gleiches Ziel.
+    .replace('<a href="https://ab50.de/magazin/serioese-singleboerse/">Online-Dating</a> nicht als letzten Ausweg', '<a href="https://ab50.de/magazin/online-dating/">Online-Dating</a> nicht als letzten Ausweg')
+    .replace('Gerade beim <a href="https://ab50.de/magazin/erste-dates/">Dating ab 50</a> hilft eine entspannte Haltung', 'Gerade beim <a href="https://ab50.de/magazin/entspanntes-dating/">Dating ab 50</a> hilft eine entspannte Haltung')
+    .replace(/beim <a href="https:\/\/ab50\.de\/magazin\/erwartungen-beim-dating\/">Dating ab 50<\/a>/g, '<a href="https://ab50.de/magazin/erwartungen-beim-dating/">beim Dating ab 50</a>')
     .replace(/\/magazin\/wp-content\/uploads\/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist\.png/g, "/magazin/wp-content/uploads/2026/03/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist-1024x683.jpg");
 }
 

@@ -211,7 +211,7 @@
 }
 
 .abm .city-overview-card:hover,
-.abm .city-overview-card:focus-visible {
+.abm .city-overview-card:focus-within {
   transform: translateY(-4px) rotate(-0.5deg);
   box-shadow: 0 22px 44px rgba(11, 33, 70, 0.16), inset 0 0 0 2px var(--ab-red);
 }

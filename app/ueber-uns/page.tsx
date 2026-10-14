@@ -144,9 +144,9 @@ export default function UeberUnsPage() {
           </div>
           <div className="abi-tiles">
             {MORE.map(({ href, icon: Icon, title, text, cta }) => (
-              <a key={href} className="abi-tile" href={href}>
-                <Icon /><strong>{title}</strong><span>{text}</span><em>{cta} <ArrowIcon /></em>
-              </a>
+              <div key={href} className="abi-tile">
+                <Icon /><strong><a className="card-link" href={href}>{title}</a></strong><span>{text}</span><em aria-hidden="true">{cta} <ArrowIcon /></em>
+              </div>
             ))}
           </div>
           <p className="abi-note">Im Hintergrund wird ab50.de von <a href="https://www.icony.com/">ICONY</a> begleitet. ICONY ist der Betreiber und rechtliche Ansprechpartner der Plattform und kümmert sich um Support, technische Betreuung und die laufende Weiterentwicklung.</p>

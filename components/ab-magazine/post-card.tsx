@@ -22,7 +22,8 @@ export function PostCard({ post, categories = [], large = false }: { post: WpPos
   const theme = themeFor(category?.slug);
   const title = stripHtml(post.title);
   return (
-    <a className={`abg-card abg-tone-${theme.tone}${large ? " abg-card-large" : ""}`} href={postPath(post.slug)}>
+    // Nur der Titel ist verlinkt (kurzer Linktext); die Karte bleibt über .card-link::after komplett klickbar.
+    <article className={`abg-card abg-tone-${theme.tone}${large ? " abg-card-large" : ""}`}>
       <span className="abg-card-media">
         {post.featuredImage?.sourceUrl ? (
           <Image
@@ -38,10 +39,10 @@ export function PostCard({ post, categories = [], large = false }: { post: WpPos
       </span>
       <span className="abg-card-body">
         <small>{formatUpdatedLabel(post)}</small>
-        <strong>{title}</strong>
+        <strong><a className="card-link" href={postPath(post.slug)}>{title}</a></strong>
         <span className="abg-card-excerpt">{excerptText(post.excerpt)}</span>
-        <em>Beitrag lesen <ArrowIcon /></em>
+        <em aria-hidden="true">Beitrag lesen <ArrowIcon /></em>
       </span>
-    </a>
+    </article>
   );
 }

@@ -397,7 +397,7 @@ main { min-height: 60vh; }
   transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
 .post-card:hover .city-card-button,
-.post-card:focus-visible .city-card-button {
+.post-card:focus-within .city-card-button {
   transform: translateY(-1px);
   background: var(--brand);
   box-shadow: 0 14px 28px rgba(24, 77, 145, .25);
@@ -3035,3 +3035,29 @@ main { min-height: 60vh; }
 
 details.city-source-box { padding: 12px 16px; border-radius: 14px; box-shadow: none; font-size: .8125rem; }
 details.city-source-box summary { cursor: pointer; font-size: .8125rem; font-weight: 600; }
+
+/* Karten: verlinkt ist nur der Titel (kurzer, eindeutiger Linktext), die gestreckte Fläche des Links
+   macht die ganze Karte klickbar. Hover/Fokus der Karten über :focus-within. */
+.abg-card,
+.abg-theme,
+.abi-tile,
+.city-overview-card {
+  position: relative;
+}
+
+.card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.card-link:focus-visible {
+  outline: none;
+}

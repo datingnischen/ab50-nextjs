@@ -117,12 +117,12 @@ export default async function MagazinOverviewPage() {
             {categories.map((category) => {
               const theme = themeFor(category.slug);
               return (
-                <a key={category.slug} className={`abg-theme abg-tone-${theme.tone}`} href={categoryPath(category.slug)}>
+                <div key={category.slug} className={`abg-theme abg-tone-${theme.tone}`}>
                   <ThemeIconView icon={theme.icon} />
-                  <strong>{category.name}</strong>
+                  <strong><a className="card-link" href={categoryPath(category.slug)}>{category.name}</a></strong>
                   <span>{category.description || `Beiträge zum Thema ${category.name}.`}</span>
-                  <em>{category.count ? `${category.count} Beiträge` : "Thema öffnen"} <ArrowIcon /></em>
-                </a>
+                  <em aria-hidden="true">{category.count ? `${category.count} Beiträge` : "Thema öffnen"} <ArrowIcon /></em>
+                </div>
               );
             })}
           </div>

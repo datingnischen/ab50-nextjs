@@ -90,7 +90,7 @@ export default async function PartnersucheOverviewPage() {
           <CityFilter regions={regions} regionLabel="Bundesland" total={entries.length}>
             <div className="post-grid abm-grid">
               {entries.map(({ city, publicSlug, name, geo, score: cityScore }) => (
-                <a className="post-card city-overview-card" href={cityPath(publicSlug)} key={city.slug} data-city={name} data-region={geo?.region || ""}>
+                <div className="post-card city-overview-card" key={city.slug} data-city={name} data-region={geo?.region || ""}>
                   <span className="abm-card-media">
                     {city.featuredImage?.sourceUrl ? (
                       <Image
@@ -109,11 +109,12 @@ export default async function PartnersucheOverviewPage() {
                   </span>
                   <div className="post-card-body">
                     <span>Regionale Partnersuche</span>
-                    <strong>{city.acf?.city_name ? `Singles ab 50 aus ${city.acf.city_name}` : stripHtml(city.title)}</strong>
+                    {/* Nur der Stadtname ist verlinkt; die Karte bleibt über .card-link::after komplett klickbar. */}
+                    <strong><a className="card-link" href={cityPath(publicSlug)}>{city.acf?.city_name ? `Singles ab 50 aus ${city.acf.city_name}` : stripHtml(city.title)}</a></strong>
                     <p>{cityCardCopy("de", city.slug)}</p>
-                    <em className="card-read-more city-card-button">Stadtseite ansehen</em>
+                    <em className="card-read-more city-card-button" aria-hidden="true">Stadtseite ansehen</em>
                   </div>
-                </a>
+                </div>
               ))}
             </div>
           </CityFilter>
