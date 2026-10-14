@@ -6,6 +6,13 @@ import {
   resolveTrailingSlashRedirect,
 } from "@/lib/market-router";
 
+// Vercel verwirft bei Rewrites Parameter ohne Wert; ICONY ruft "?_embed" ohne Wert auf (WordPress-Schreibweise).
+// Hinter nginx kommt der REST-Aufruf mit Upstream-Präfix an und wird umgeschrieben – ohne _embed=1 fehlten die Teaserbilder.
+function withEmbedValue(destination: URL) {
+  if (destination.searchParams.has("_embed") && destination.searchParams.get("_embed") === "") destination.searchParams.set("_embed", "1");
+  return destination;
+}
+
 export function proxy(request: NextRequest) {
   // Host is matched against the closed application allowlist before route-specific resolution.
   // X-Forwarded-Host is intentionally ignored because clients can spoof it.
@@ -25,7 +32,7 @@ export function proxy(request: NextRequest) {
   if ((pathname === "/magazin" || pathname === "/magazin/") && searchParams.has("rest_route")) {
     const destination = new URL(request.nextUrl.href);
     destination.pathname = "/magazin/index.php";
-    return NextResponse.rewrite(destination);
+    return NextResponse.rewrite(withEmbedValue(destination));
   }
   // Länderpfade des WordPress-kompatiblen Endpunkts (/ch/magazin/wp-json/...): ebenfalls ohne Schrägstrich-Umleitung.
   if (/^\/(?:de|ch|at)\/magazin\/(?:wp-json(?:\/.*)?|index\.php)$/.test(pathname)) {
@@ -33,7 +40,7 @@ export function proxy(request: NextRequest) {
     if (rest.action === "rewrite") {
       const destination = request.nextUrl.clone();
       destination.pathname = rest.destination;
-      return NextResponse.rewrite(destination);
+      return NextResponse.rewrite(withEmbedValue(destination));
     }
     return new NextResponse("Not Found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
   }
@@ -71,7 +78,7 @@ export function proxy(request: NextRequest) {
 
   const destination = request.nextUrl.clone();
   destination.pathname = resolution.destination;
-  return NextResponse.rewrite(destination);
+  return NextResponse.rewrite(withEmbedValue(destination));
 }
 
 export const config = {
