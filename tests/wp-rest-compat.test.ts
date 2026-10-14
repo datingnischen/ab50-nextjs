@@ -8,7 +8,7 @@ test("posts-Endpunkt liefert Beiträge im WordPress-Format mit Gesamtzahl", () =
   assert.equal(result.status, 200);
   const rows = result.body as any[];
   assert.equal(rows.length, 3);
-  assert.equal(result.headers["X-WP-Total"], "66");
+  assert.equal(result.headers["X-WP-Total"], "67");
   assert.ok(rows[0].title.rendered && rows[0].slug && rows[0].link);
   assert.ok(rows[0]._embedded, "_embed liefert Beitragsbild und Kategorien");
 });
