@@ -59,7 +59,7 @@ export default function UeberUnsPage() {
         <LightHero
           crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns" }]}
           eyebrow={<><HeartIcon />Hinter den Kulissen</>}
-          title="Über ab50.de"
+          title="Über ab50.de – Singlebörse für Menschen ab 50"
           lead="ab50.de: Kostenlos Singles 50+ kennenlernen, Nachrichten schreiben, erste Dates planen. Ohne versteckte Kosten, mit echten, verifizierten Profilen."
           aside={
             <figure className="abi-frame">

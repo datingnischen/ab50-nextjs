@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { categoryHeading } from "@/lib/heading-overrides";
 import { clampMetaDescription } from "@/lib/meta-description";
 import { staticAsset } from "@/lib/static-asset";
 import { notFound } from "next/navigation";
@@ -68,7 +69,7 @@ export default async function CategoryPage({ params }: PageProps) {
               <span aria-current="page">{category.name}</span>
             </nav>
             <span className="ab-badge"><ThemeIconView icon={theme.icon} />Themenwelt</span>
-            <h1>{category.name}</h1>
+            <h1>{categoryHeading(category.slug, category.name)}</h1>
             <p className="ab-lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
             <ul className="ab-chips">
               <li><strong>{category.count ?? category.posts.length}</strong> Beiträge</li>

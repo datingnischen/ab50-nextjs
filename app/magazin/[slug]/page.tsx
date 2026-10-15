@@ -11,6 +11,7 @@ import { buildMagazineArticleGraph } from "@/lib/site-entities";
 import { staticAsset } from "@/lib/static-asset";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { seoTitle } from "@/lib/seo-title";
+import { magazineHeading } from "@/lib/heading-overrides";
 import { clampMetaDescription } from "@/lib/meta-description";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
@@ -489,7 +490,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
             <div className="ab-wrap abg-ahero-inner">
               <Crumbs title={title} />
               <span className="abg-kind">{isAuthor ? "Autorenprofil" : "Ratgeber"}</span>
-              <h1>{title}</h1>
+              <h1>{magazineHeading(page.slug, title)}</h1>
             </div>
           </header>
           <div className={`ab-wrap abg-layout${pageToc.length >= 3 ? "" : " abg-layout-solo"}`}>
@@ -567,7 +568,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
           <div className="ab-wrap abg-ahero-inner">
             <Crumbs title={title} category={category} />
             {category ? <a className="abg-kind" href={categoryPath(category.slug)}><ThemeIconView icon={theme.icon} />{category.name}</a> : null}
-            <h1>{title}</h1>
+            <h1>{magazineHeading(post.slug, title)}</h1>
             {lead ? <p className="ab-light-lead">{lead}</p> : null}
             <div className="abg-meta">
               <span className="abg-meta-author">

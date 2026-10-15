@@ -36,7 +36,7 @@ export function AboutHistoryPage() {
         <LightHero
           crumbs={[{ label: "Magazin", href: "/magazin/" }, { label: "Über uns", href: "/ueber-uns/" }, { label: "Geschichte" }]}
           eyebrow={<><CalendarIcon />Unsere Reise</>}
-          title="Unsere Geschichte"
+          title="Unsere Geschichte: Wie ab50.de gewachsen ist"
           lead="Anhand ausgewählter Wayback-Snapshots wird sichtbar, wie sich ab50.de über die Jahre verändert hat – von sehr frühen Web-Spuren bis zu einer klaren 50plus-Plattform mit Magazin, Vertrauen und modernen Einstiegen."
         >
           <nav className="abi-years" aria-label="Jahresnavigation">
