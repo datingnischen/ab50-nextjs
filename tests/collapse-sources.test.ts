@@ -35,6 +35,12 @@ test("weitere Quellenformate: 📚-Überschrift und Absatz-Label", () => {
   assert.match(para, /<p>BZgA, Destatis<\/p>/);
   assert.match(para, /href="https:\/\/www\.bzga\.de"/);
   assert.doesNotMatch(para, /<p><strong>Quellen:/);
+
+  const italic = collapseSourceSections("<p>Text</p> <p><em><strong>Quellen:</strong></em></p> <ul> <li>https://www.example.org/a</li> </ul><p>Schluss</p>");
+  assert.match(italic, /<details class="magazine-sources">/);
+  assert.ok(italic.indexOf("Schluss") < italic.indexOf("magazine-sources"));
+  assert.match(italic, /<li>https:\/\/www\.example\.org\/a<\/li>/);
+  assert.doesNotMatch(italic, /<\/em>/);
 });
 
 test("Ratgeberfragen, Fließtext und einzelne Bildnachweise bleiben unverändert", () => {

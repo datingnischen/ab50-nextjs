@@ -8,7 +8,8 @@ const SOURCE_HEADING = /<h([234])\b[^>]*>((?:(?!<\/h\1>)[\s\S])*?Quell(?:en|e)\b
 const SOURCE_TITLE = /^(?:[^\p{L}\p{N}]+)?(?:Stand,\s*)?(?:Genutzte\s+|Verwendete\s+|Weitere\s+)?Quellen?[^?]*$/iu;
 // Absatz-Label nur im Plural („Quellen:“, „📚Quellen & Datenstand:“), damit
 // einzelne Bild- oder Grafiknachweise („Quelle: Statista“) an ihrem Platz bleiben.
-const SOURCE_PARAGRAPH = /<p\b[^>]*>\s*<(strong|b)\b[^>]*>((?:(?!<\/\1>)[\s\S])*?Quellen\b(?:(?!<\/\1>)[\s\S])*?)<\/\1>\s*:?\s*((?:(?!<\/p>)[\s\S])*?)<\/p>(\s*<(ul|ol)\b[\s\S]*?<\/\5>)?/gi;
+// Auch kursiv umschlossen: „<p><em><strong>Quellen:</strong></em></p>“.
+const SOURCE_PARAGRAPH = /<p\b[^>]*>\s*(?:<(?:em|i)\b[^>]*>\s*)?<(strong|b)\b[^>]*>((?:(?!<\/\1>)[\s\S])*?Quellen\b(?:(?!<\/\1>)[\s\S])*?)<\/\1>\s*:?\s*(?:<\/(?:em|i)>\s*)?((?:(?!<\/p>)[\s\S])*?)<\/p>(\s*<(ul|ol)\b[\s\S]*?<\/\5>)?/gi;
 const PARAGRAPH_TITLE = /^(?:[^\p{L}\p{N}]+)?(?:Stand,\s*)?(?:Genutzte\s+|Verwendete\s+|Weitere\s+)?Quellen\b[^?]*$/iu;
 
 function headingText(inner: string) {
@@ -59,7 +60,7 @@ function findParagraphSection(html: string): Found | null {
   while ((match = SOURCE_PARAGRAPH.exec(html))) {
     const label = headingText(match[2]).replace(/:$/, "");
     if (!PARAGRAPH_TITLE.test(label)) continue;
-    const rest = match[3].replace(/^(?:\s|<br\s*\/?>)+/i, "").trim();
+    const rest = match[3].replace(/^(?:\s|<br\s*\/?>)+/i, "").replace(/^((?:(?!<(?:em|i)\b)[\s\S])*)<\/(?:em|i)>\s*$/i, "$1").trim();
     const body = [
       `<p class="magazine-sources__label">${match[2].trim().replace(/:$/, "")}</p>`,
       rest ? `<p>${rest}</p>` : "",
