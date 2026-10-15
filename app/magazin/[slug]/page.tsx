@@ -9,6 +9,7 @@ import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
 import { buildMagazineArticleGraph } from "@/lib/site-entities";
 import { staticAsset } from "@/lib/static-asset";
+import { collapseSourceSections } from "@/lib/collapse-sources";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { seoTitle } from "@/lib/seo-title";
 import { magazineHeading } from "@/lib/heading-overrides";
@@ -110,7 +111,8 @@ function slugifyHeading(value: string) {
 }
 
 function extractTocItems(html?: string | null): TocItem[] {
-  const source = html || "";
+  // Quellen sind kein Kapitel: vor dem Inhaltsverzeichnis einklappen.
+  const source = collapseSourceSections(html || "");
   const seen = new Map<string, number>();
   return Array.from(source.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi))
     .map((match) => stripHtml(match[1]))
@@ -156,7 +158,7 @@ function injectInlineCta(html: string) {
 }
 
 function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], withCta = true) {
-  const cleaned = (html || "")
+  const cleaned = collapseSourceSections(html || "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     // Lazy-Load-Plugin aus WordPress: echte Quelle statt 1×1-Platzhalter
