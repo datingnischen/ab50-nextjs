@@ -598,12 +598,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
 
         <div className={`ab-wrap abg-layout${tocItems.length >= 3 ? "" : " abg-layout-solo"}`}>
           <div className="abg-body">
-            {tocItems.length >= 3 ? (
-              <details className="abg-toc-mobile">
-                <summary><BookIcon />In diesem Beitrag</summary>
-                <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
-              </details>
-            ) : null}
+            {/* Inhaltsverzeichnis nur einmal im DOM (Seobility „doppelte Textblöcke“): das der Seitenleiste rückt mobil per CSS über den Artikel. */}
             <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
             {/* Banner nur einmal im DOM (Seobility „doppelte Textblöcke“): mit Seitenleiste steht er dort, mobil rückt die Seitenleiste unter den Artikel. */}
             {tocItems.length >= 3 ? null : <TopicBanner banner={banner} placement="article" />}

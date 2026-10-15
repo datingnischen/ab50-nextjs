@@ -134,7 +134,7 @@ export function IconyIframeSinglesWidget({
   const cityLabel = escapeHtml(city);
   const widgetEyebrow = eyebrow || "Singles entdecken";
   const widgetTitle = title || `Neue Singles in ${city}`;
-  const widgetText = text || "Wähle, ob du Frauen oder Männer sehen möchtest. Wenn du den Umkreis erweitern willst, kannst du direkt ausführlicher suchen.";
+  const widgetText = text || `Wähle, ob du Frauen oder Männer aus ${city} sehen möchtest. Wenn du den Umkreis erweitern willst, kannst du direkt ausführlicher suchen.`;
   const widgetCtaLabel = ctaLabel || `Ausführlicher in ${city} suchen`;
   const widgetNote = note || "Kostenlos starten · Umkreis selbst erweitern · diskret stöbern";
 

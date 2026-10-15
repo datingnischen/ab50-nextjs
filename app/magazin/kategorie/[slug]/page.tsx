@@ -109,7 +109,8 @@ export default async function CategoryPage({ params }: PageProps) {
         <div>
           <p className="ab-eyebrow">Von Christian M. Haas</p>
           <h2>Warum diese Tipps wirklich helfen</h2>
-          <p>Die Artikel in dieser Rubrik sind aus echten Fragen und Erfahrungen entstanden – damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
+          {/* Rubrikname im Text: derselbe Absatz stand sonst auf allen Kategorieseiten (Seobility „Inhalt auf mehreren Seiten“). */}
+          <p>Die Artikel in der Rubrik „{category.name}“ sind aus echten Fragen und Erfahrungen entstanden – damit du Antworten findest, die wirklich passen und umsetzbar sind.</p>
           <a className="ab-btn ab-btn-outline ab-btn-small" href="/magazin/christian-m-haas/">Mehr zum Autorenprofil <ArrowIcon /></a>
         </div>
       </section>
@@ -127,7 +128,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 <div key={item.slug} className={`abg-theme abg-tone-${itemTheme.tone}`}>
                   <ThemeIconView icon={itemTheme.icon} />
                   <strong><a className="card-link" href={categoryPath(item.slug)}>{item.name}</a></strong>
-                  <span>{item.description || `Praktische Tipps zum Thema ${item.name.toLowerCase()}.`}</span>
+                  {/* Ohne Beschreibung: sie ist der Einleitungstext der jeweiligen Kategorieseite und stand sonst auf allen anderen Kategorieseiten noch einmal. */}
                   <em aria-hidden="true">Thema öffnen <ArrowIcon /></em>
                 </div>
               );
@@ -139,7 +140,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <CtaBand
         eyebrow="Mehr entdecken"
         title="Vom Lesen ins Kennenlernen"
-        text="Wenn du lieber direkt aktiv werden willst, kannst du kostenlos starten oder weitere Themen in Ruhe durchstöbern."
+        text={`Du hast genug über ${category.name} gelesen und möchtest lieber direkt aktiv werden? Dann kannst du kostenlos starten oder weitere Themen in Ruhe durchstöbern.`}
         primary={{ label: "Kostenlos starten", href: siteConfig.links.registrationCommon }}
         secondary={{ label: "Zum Magazin", href: "/magazin/" }}
       />

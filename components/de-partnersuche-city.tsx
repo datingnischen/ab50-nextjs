@@ -116,7 +116,7 @@ function inlineCityCta(cityName: string) {
     <aside class="article-inline-cta" aria-label="ab50 Registrierung">
       <p class="eyebrow">Direkt weitermachen</p>
       <h2>Wenn du magst, kannst du jetzt neue Kontakte in ${cityName} entdecken.</h2>
-      <p>Starte kostenlos auf ab50.de und schau dich in Ruhe nach passenden Begegnungen in deiner Region um.</p>
+      <p>Starte kostenlos auf ab50.de und schau dich in Ruhe nach passenden Begegnungen in und um ${cityName} um.</p>
       <a class="button-primary" href="${cityRegistrationLink()}">Kostenlos starten</a>
     </aside>
   `;
@@ -317,16 +317,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+function reviewLabel(cityName?: string, reviewedAt?: string | null) {
+  const date = reviewedAt && /^\d{4}-\d{2}-\d{2}$/.test(reviewedAt)
+    ? new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Berlin" }).format(new Date(`${reviewedAt}T12:00:00Z`))
+    : null;
+  return cityName ? `${cityName}${date ? `, Stand ${date}` : ""}: ` : "";
+}
+
 function SourceBox({
   sources,
   intro,
   reviewNote,
+  reviewedAt,
   displayMode,
   cityName,
 }: {
   sources: WpSourceItem[];
   intro?: string | null;
   reviewNote?: string | null;
+  reviewedAt?: string | null;
   displayMode?: string | null;
   cityName?: string;
 }) {
@@ -335,8 +344,9 @@ function SourceBox({
   return (
     <details className="abc-sources" aria-label="Quellen und Aktualität">
       <summary>Quellen, Bilder &amp; Aktualität</summary>
-      {intro ? <p>{intro}</p> : <p>Die Daten und Fakten stammen aus öffentlichen Quellen und zeigen die Situation in {cityName} für Singles ab 50.</p>}
-      {reviewNote ? <p className="abc-sources-note">{reviewNote}</p> : null}
+      {/* Intro und Prüfhinweis stehen auf vielen Stadtseiten gleich (Seobility „Inhalt auf mehreren Seiten“): Stadt und Prüfdatum ergänzen. */}
+      {intro ? <p>{intro.replace("Die auf dieser Seite verwendeten Kennzahlen und Orte", `Die für ${cityName} verwendeten Kennzahlen und Orte`)}</p> : <p>Die Daten und Fakten stammen aus öffentlichen Quellen und zeigen die Situation in {cityName} für Singles ab 50.</p>}
+      {reviewNote ? <p className="abc-sources-note">{reviewLabel(cityName, reviewedAt)}{reviewNote}</p> : null}
       {sources.length ? (
         <ul>
           {sources.map((source, index) => (
@@ -388,7 +398,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const tocItems = extractTocItems(city.content);
   const safeHtml = sanitizeContent(city.content, tocItems, cityName, city.featuredImage?.sourceUrl);
   const singles50Plus = getSingles50PlusEstimate(city.slug);
-  const sources = mergeSources(normalizeSources(city.acf?.sources), singles50Plus?.sources || []);
+  // Bundesweite Statistikquellen der Singles-Schätzung stehen auf jeder Stadtseite: Stadtbezug in der Notiz, sonst wäre der Eintrag überall identisch.
+  const sources = mergeSources(normalizeSources(city.acf?.sources), (singles50Plus?.sources || []).map((source) => ({ ...source, note: `${source.note ? `${source.note} ` : ""}Hier angewendet auf ${cityName}.` })));
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
   const iconyLocation = getIconyWidgetLocationForRoute(slug, 49);
@@ -404,7 +415,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const overview = marketPartnersuchePath("de");
   const finalCtaEyebrow = city.acf?.city_cta_eyebrow || "Nächster Schritt";
   const finalCtaTitle = city.acf?.city_cta_title || `Starte kostenlos und entdecke neue Kontakte in ${cityName}.`;
-  const finalCtaText = city.acf?.city_cta_text || "Oder schau dir weitere Städte und Magazin-Themen in Ruhe an.";
+  const finalCtaText = city.acf?.city_cta_text || `Oder schau dir neben ${cityName} weitere Städte und Magazin-Themen in Ruhe an.`;
   const citySignals = uniqueNonEmpty([
     city.acf?.city_hero_claim,
     ...trustPoints,
@@ -558,6 +569,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             sources={sources}
             intro={city.acf?.sources_intro || null}
             reviewNote={city.acf?.content_review_note}
+            reviewedAt={city.acf?.content_reviewed_at}
             displayMode={city.acf?.sources_display_mode || "auto"}
             cityName={cityName}
           />
