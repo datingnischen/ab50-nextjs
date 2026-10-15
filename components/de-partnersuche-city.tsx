@@ -510,7 +510,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
         <StatCardsSection
           cityName={cityName}
           cards={statCards.map((card) => ({ label: card.label || "Kennzahl", value: String(card.value || cityName), description: card.description }))}
-          note={city.acf?.content_review_note}
+          // Prüfhinweis nur einmal: er steht im Quellen-Block (sonst doppelter Textblock je Stadtseite, Seobility).
         />
         <SignalSection cityName={cityName} strengths={splitTips.strengths} weaknesses={splitTips.weaknesses} />
         <PlacesSection

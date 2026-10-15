@@ -950,6 +950,22 @@
     display: none;
   }
 
+  /* Artikel: Seitenleiste mobil unter dem Text zeigen, damit der Themen-Banner nur einmal im DOM steht;
+     ihr Inhaltsverzeichnis bleibt verborgen (oben gibt es das aufklappbare). */
+  .abg-side.abg-side-article {
+    display: grid;
+    position: static;
+  }
+
+  .abg-side-article .abg-toc {
+    display: none;
+  }
+
+  .abg-side-article .abg-topic-banner {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
   .abg-toc-mobile {
     display: block;
     margin-bottom: 26px;

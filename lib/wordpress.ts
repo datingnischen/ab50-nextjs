@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { staticAsset } from "./static-asset";
+import { publicCitySlug } from "./city-slugs";
 import { siteConfig } from "@/data/site";
 import postsData from "@/data/wp/posts.json";
 import pagesData from "@/data/wp/pages.json";
@@ -217,8 +218,9 @@ export function categoryPath(slug: string) {
   return `/magazin/kategorie/${slug}/`;
 }
 
+/** Öffentlicher Stadtpfad; München und Düsseldorf immer mit Umlaut (eine Adresse je Stadt, siehe lib/city-slugs.ts). */
 export function cityPath(slug: string) {
-  return `/partnersuche/${slug}/`;
+  return `/partnersuche/${publicCitySlug(slug)}/`;
 }
 
 export function normalizeCitySlug(slug: string) {

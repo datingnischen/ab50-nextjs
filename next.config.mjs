@@ -72,6 +72,13 @@ export default function nextConfig(phase) {
     },
     async redirects() {
       return [
+        // Eine Adresse je Stadt: ASCII-Schreibweise auf die öffentliche Umlaut-Adresse (Duplicate Content, lib/city-slugs.ts).
+        ...[["singles-muenchen", "singles-m%C3%BCnchen"], ["singles-duesseldorf", "singles-d%C3%BCsseldorf"]].flatMap(([from, to]) => [
+          { source: `/partnersuche/${from}/:path*`, destination: `/partnersuche/${to}/:path*`, permanent: true },
+          { source: `/partnersuche/${from}`, destination: `/partnersuche/${to}/`, permanent: true },
+          { source: `/:market(de)/partnersuche/${from}/:path*`, destination: `/partnersuche/${to}/:path*`, permanent: true },
+          { source: `/:market(de)/partnersuche/${from}`, destination: `/partnersuche/${to}/`, permanent: true },
+        ]),
         {
           source: "/magazin/muslimische-partnersuche-ab-50/:path*",
           destination: "/magazin/muslimische-partnersuche/:path*",

@@ -605,7 +605,8 @@ export default async function MagazinSlugPage({ params }: PageProps) {
               </details>
             ) : null}
             <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
-            <TopicBanner banner={banner} placement="article" />
+            {/* Banner nur einmal im DOM (Seobility „doppelte Textblöcke“): mit Seitenleiste steht er dort, mobil rückt die Seitenleiste unter den Artikel. */}
+            {tocItems.length >= 3 ? null : <TopicBanner banner={banner} placement="article" />}
 
             <section className="abg-author" aria-label="Autor">
               <span className="abg-author-avatar" aria-hidden="true">
@@ -622,7 +623,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
           </div>
 
           {tocItems.length >= 3 ? (
-            <aside className="abg-side">
+            <aside className="abg-side abg-side-article">
               <nav className="abg-toc" aria-label="Inhaltsverzeichnis">
                 <span><BookIcon />In diesem Beitrag</span>
                 <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
