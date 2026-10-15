@@ -471,7 +471,8 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
             <FlirtDial
               cityName={cityName}
               score={score}
-              headline={score !== null ? scoreHeadline(score) : (city.acf?.city_profile_card_title || `Neue Kontakte in ${cityName}`)}
+              // Kurzurteil („Aktiv und lebendig“); der ganze Satz ist die H2 im Flirt-Faktor-Abschnitt (sonst doppelter Textblock).
+              headline={score !== null ? scoreHeadline(score).split(":")[0] : (city.acf?.city_profile_card_title || `Neue Kontakte in ${cityName}`)}
               text={city.acf?.city_profile_card_text || city.acf?.flirt_factor_text || city.acf?.city_dating_angle}
             />
           }

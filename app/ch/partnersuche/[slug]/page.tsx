@@ -129,7 +129,8 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
             <FlirtDial
               cityName={city.name}
               score={facts?.flirtFaktor ?? null}
-              headline={facts ? flirtFactorHeadline(facts.flirtFaktor) : `Neue Kontakte in ${city.name}`}
+              // Kurzurteil; der ganze Satz ist die H2 im Flirt-Faktor-Abschnitt (sonst doppelter Textblock).
+              headline={facts ? flirtFactorHeadline(facts.flirtFaktor).split(":")[0] : `Neue Kontakte in ${city.name}`}
               text={facts?.flirtFaktorText}
             />
           }
