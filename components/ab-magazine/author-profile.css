@@ -76,7 +76,7 @@
   line-height: 1.4;
 }
 
-.abp-facts strong {
+.abp-facts strong, .abp-facts .sx-strong {
   color: var(--ab-red);
   font-family: var(--ab-display), Georgia, serif;
   font-size: 1.2rem;

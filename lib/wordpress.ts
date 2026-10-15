@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { staticAsset } from "./static-asset";
 import { publicCitySlug } from "./city-slugs";
+import { limitStrong, withoutHeadingSkips } from "./html-cleanup";
 import { siteConfig } from "@/data/site";
 import postsData from "@/data/wp/posts.json";
 import pagesData from "@/data/wp/pages.json";
@@ -257,7 +258,7 @@ const MISSING_AUDIO_BLOCK = /<h2>Artikel kurz anhören<\/h2>\s*<p>Die wichtigste
 export function fixContentHtml(html: string | null | undefined, title: string): string | null {
   if (!html) return html ?? null;
   const alt = title.replace(/"/g, "&quot;");
-  return html
+  const fixed = html
     .replace(MISSING_AUDIO_BLOCK, "")
     // Überschriften ohne Text: nur ein Bild → Absatz, ganz leer (&nbsp;, <br>) → weg (Seobility „leere Überschrift“).
     .replace(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (heading, _level: string, inner: string) => {
@@ -272,7 +273,18 @@ export function fixContentHtml(html: string | null | undefined, title: string): 
     .replace('<a href="https://ab50.de/magazin/serioese-singleboerse/">Online-Dating</a> nicht als letzten Ausweg', '<a href="https://ab50.de/magazin/online-dating/">Online-Dating</a> nicht als letzten Ausweg')
     .replace('Gerade beim <a href="https://ab50.de/magazin/erste-dates/">Dating ab 50</a> hilft eine entspannte Haltung', 'Gerade beim <a href="https://ab50.de/magazin/entspanntes-dating/">Dating ab 50</a> hilft eine entspannte Haltung')
     .replace(/beim <a href="https:\/\/ab50\.de\/magazin\/erwartungen-beim-dating\/">Dating ab 50<\/a>/g, '<a href="https://ab50.de/magazin/erwartungen-beim-dating/">beim Dating ab 50</a>')
+    // „Partnersuche“ zeigt in Navigation und Über uns auf die Städteübersicht, nicht auf die Startseite.
+    .replace(/<a href="https:\/\/ab50\.de\/"([^>]*)>Partnersuche<\/a>/g, '<a href="https://ab50.de/partnersuche/"$1>Partnersuche</a>')
+    // Startseiten-Link mit Artikeltext („Partnersuche ab 50“ verlinkt sonst einen Ratgeber) und Fremdtitel als Linktext entfallen.
+    .replace(/<a href="https:\/\/ab50\.de\/"[^>]*>Partnersuche ab 50<\/a>/g, "Partnersuche ab 50")
+    .replace(/<a href="https:\/\/ab50\.de\/magazin\/singles-ab-50\/"[^>]*>Single Frauen ab 50<\/a>/g, "Single Frauen ab 50")
+    // Einleitungssatz des Audio-Blocks stand wortgleich in 66 Artikeln (Seobility „Textblöcke mehrfach“); Überschrift und Player bleiben.
+    .replace(/(<h2>Artikel kurz anhören<\/h2>)\s*<p>Die wichtigsten Punkte kurz und verständlich zusammengefasst\.<\/p>/g, "$1")
+    // Interne Links mit Umlauten statt Prozent-Kodierung (sonst zwei URLs für dieselbe Stadtseite).
+    .replace(/href="(https:\/\/ab50\.de\/[^"]*%[0-9A-Fa-f]{2}[^"]*)"/g, (_m, href: string) => { try { return `href="${decodeURI(href)}"`; } catch { return `href="${href}"`; } })
     .replace(/\/magazin\/wp-content\/uploads\/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist\.png/g, "/magazin/wp-content/uploads/2026/03/Warum-Verifizierung-beim-Online-Dating-sinnvoll-ist-1024x683.jpg");
+  // Seobility: keine übersprungenen Überschriften-Ebenen, höchstens vier (nicht doppelte, nicht überlange) Hervorhebungen.
+  return limitStrong(withoutHeadingSkips(fixed));
 }
 
 function normalizeImage(raw: any): WpImage | null {

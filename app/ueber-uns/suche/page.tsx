@@ -157,7 +157,7 @@ export default async function SiteSearchPage({ searchParams }: PageProps) {
                 const inner = (
                   <>
                     <span className="abi-area">{result.area}</span>
-                    <strong>{result.title}</strong>
+                    <span className="sx-strong">{result.title}</span>
                     {result.excerpt ? <span className="abi-result-excerpt">{result.excerpt}</span> : null}
                     <em>Öffnen <ArrowIcon /></em>
                   </>

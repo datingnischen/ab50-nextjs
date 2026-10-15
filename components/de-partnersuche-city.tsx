@@ -351,7 +351,7 @@ function SourceBox({
         <ul>
           {sources.map((source, index) => (
             <li key={`${source.title || source.url || "source"}-${index}`}>
-              {source.url ? <a href={source.url} rel="nofollow noopener noreferrer" target="_blank">{source.title || source.url}</a> : <strong>{source.title || source.publisher || "Quelle"}</strong>}
+              {source.url ? <a href={source.url} rel="nofollow noopener noreferrer" target="_blank">{source.title || source.url}</a> : <span className="sx-strong">{source.title || source.publisher || "Quelle"}</span>}
               {[source.publisher, source.date].filter(Boolean).length ? <span>{[source.publisher, source.date].filter(Boolean).join(" · ")}</span> : null}
               {source.note ? <em>{source.note}</em> : null}
             </li>

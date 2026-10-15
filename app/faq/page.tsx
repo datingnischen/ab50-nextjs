@@ -89,9 +89,9 @@ export default function FaqPage() {
           lead={<div dangerouslySetInnerHTML={{ __html: faq.introHtml }} />}
         >
           <ul className="abi-chips">
-            <li><strong>{questionCount}</strong> Antworten</li>
-            <li><strong>{sections.length}</strong> Themen</li>
-            <li><strong>0 €</strong> Registrierung</li>
+            <li><span className="sx-strong">{questionCount}</span> Antworten</li>
+            <li><span className="sx-strong">{sections.length}</span> Themen</li>
+            <li><span className="sx-strong">0 €</span> Registrierung</li>
           </ul>
         </LightHero>
 
@@ -101,7 +101,7 @@ export default function FaqPage() {
           <div className="abi-tiles">
             {SERVICE.map(({ href, icon: Icon, title, text }) => (
               <div key={href} className="abi-tile">
-                <Icon /><strong><a className="card-link" href={href}>{title}</a></strong><span>{text}</span><em aria-hidden="true">Weiterlesen <ArrowIcon /></em>
+                <Icon /><span className="sx-strong"><a className="card-link" href={href}>{title}</a></span><span>{text}</span><em aria-hidden="true">Weiterlesen <ArrowIcon /></em>
               </div>
             ))}
           </div>

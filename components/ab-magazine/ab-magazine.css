@@ -142,7 +142,7 @@
   color: var(--tone);
 }
 
-.abg-theme strong {
+.abg-theme strong, .abg-theme .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.35rem;
   font-weight: 600;
@@ -301,7 +301,7 @@
   font-weight: 600;
 }
 
-.abg-card-body strong {
+.abg-card-body strong, .abg-card-body .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.3rem;
   font-weight: 600;
@@ -333,7 +333,7 @@
   height: 16px;
 }
 
-.abg-card-large .abg-card-body strong {
+.abg-card-large .abg-card-body strong, .abg-card-large .abg-card-body .sx-strong {
   font-size: 1.5rem;
 }
 
@@ -429,7 +429,7 @@
   text-transform: uppercase;
 }
 
-.abg-pages strong {
+.abg-pages strong, .abg-pages .sx-strong {
   font-size: 1.05rem;
 }
 
@@ -498,7 +498,7 @@
 }
 
 .abg-meta-author a,
-.abg-meta-author strong {
+.abg-meta-author strong, .abg-meta-author .sx-strong {
   color: var(--ab-ink);
   font-weight: 700;
   text-decoration: none;
@@ -745,7 +745,7 @@
   color: #fff;
 }
 
-.abg-side-cta strong {
+.abg-side-cta strong, .abg-side-cta .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.25rem;
   font-weight: 600;

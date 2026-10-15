@@ -65,14 +65,14 @@ export default function UeberUnsPage() {
             <figure className="abi-frame">
               {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
               <img src={AUTHOR_IMAGE} alt="Christian M. Haas, Autor und Dating-Experte bei ab50.de" width={243} height={300} />
-              <figcaption><strong>Christian M. Haas</strong><span>Autor &amp; Dating-Experte</span></figcaption>
+              <figcaption><span className="sx-strong">Christian M. Haas</span><span>Autor &amp; Dating-Experte</span></figcaption>
             </figure>
           }
         >
           <ul className="abi-chips">
-            <li><strong>2011</strong> gegründet</li>
-            <li><strong>4,6</strong> / 5 auf Trustpilot</li>
-            <li><strong>0 €</strong> Registrierung</li>
+            <li><span className="sx-strong">2011</span> gegründet</li>
+            <li><span className="sx-strong">4,6</span> / 5 auf Trustpilot</li>
+            <li><span className="sx-strong">0 €</span> Registrierung</li>
           </ul>
           <div className="abi-search">
             <SiteSearchForm label="Magazin-Artikel und Stadtseiten durchsuchen" />
@@ -88,7 +88,7 @@ export default function UeberUnsPage() {
           </div>
           <div className="abi-values">
             {VALUES.map(({ icon: Icon, title, text }) => (
-              <article key={title}><Icon /><strong>{title}</strong><p>{text}</p></article>
+              <article key={title}><Icon /><span className="sx-strong">{title}</span><p>{text}</p></article>
             ))}
           </div>
         </section>
@@ -102,7 +102,7 @@ export default function UeberUnsPage() {
             <figcaption>
               {/* eslint-disable-next-line @next/next/no-img-element -- Autorenfoto aus WordPress */}
               <img src={AUTHOR_IMAGE} alt="Christian M. Haas" width={56} height={69} loading="lazy" />
-              <span><strong>Christian M. Haas</strong><small>Autor &amp; Dating-Experte bei ab50.de</small></span>
+              <span><span className="sx-strong">Christian M. Haas</span><small>Autor &amp; Dating-Experte bei ab50.de</small></span>
             </figcaption>
           </figure>
         </section>
@@ -119,17 +119,17 @@ export default function UeberUnsPage() {
             <div className="abi-ratings-grid">
               <div className="abi-rating">
                 <small>Trustpilot</small>
-                <strong>4,6<span> / 5</span></strong>
+                <span className="sx-strong">4,6<span> / 5</span></span>
                 <span className="ab-stars" style={{ ["--rating" as string]: 4.6 }} role="img" aria-label="4,6 von 5 Sternen" />
               </div>
               <div className="abi-rating">
                 <small>Singlebörsen-Überblick</small>
-                <strong>4,5<span> / 5</span></strong>
+                <span className="sx-strong">4,5<span> / 5</span></span>
                 <span className="ab-stars" style={{ ["--rating" as string]: 4.5 }} role="img" aria-label="4,5 von 5 Sternen" />
               </div>
               <div className="abi-rating abi-rating-text">
                 <small>Seit 2011</small>
-                <strong>Singles 50+</strong>
+                <span className="sx-strong">Singles 50+</span>
                 <span>{reviews.cards?.[0]?.title}</span>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function UeberUnsPage() {
           <div className="abi-tiles">
             {MORE.map(({ href, icon: Icon, title, text, cta }) => (
               <div key={href} className="abi-tile">
-                <Icon /><strong><a className="card-link" href={href}>{title}</a></strong><span>{text}</span><em aria-hidden="true">{cta} <ArrowIcon /></em>
+                <Icon /><span className="sx-strong"><a className="card-link" href={href}>{title}</a></span><span>{text}</span><em aria-hidden="true">{cta} <ArrowIcon /></em>
               </div>
             ))}
           </div>

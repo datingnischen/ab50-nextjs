@@ -33,7 +33,7 @@ export function ChFlirtFactorCard({ cityName, score, text }: { cityName: string;
     <div className="flirt-factor-card" aria-label={`Flirt-Faktor ${cityName}`}>
       <div>
         <span className="flirt-factor-kicker">Flirt-Faktor</span>
-        <strong>{safeScore}/100</strong>
+        <span className="sx-strong">{safeScore}/100</span>
         <p>{text}</p>
       </div>
       <div className="flirt-meter" aria-hidden="true">
@@ -74,7 +74,7 @@ export function ChCityStats({ cityName, facts }: { cityName: string; facts: ChCi
       {cards.map((card) => (
         <article className="city-stat-card" key={card.label}>
           <span>{card.label}</span>
-          <strong>{card.value}</strong>
+          <span className="sx-strong">{card.value}</span>
           <p>{card.description}</p>
         </article>
       ))}

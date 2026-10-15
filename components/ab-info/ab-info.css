@@ -57,7 +57,7 @@
   font-weight: 600;
 }
 
-.abi-chips strong {
+.abi-chips strong, .abi-chips .sx-strong {
   color: var(--ab-red);
   font-family: var(--ab-display), serif;
   font-size: 1.15rem;
@@ -99,7 +99,7 @@
   text-align: center;
 }
 
-.abi-frame figcaption strong {
+.abi-frame figcaption strong, .abi-frame figcaption .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.25rem;
 }
@@ -214,7 +214,7 @@
 .abi-values article:nth-child(2) svg { background: var(--ab-blue-soft); color: var(--ab-blue); }
 .abi-values article:nth-child(3) svg { background: var(--ab-gold-soft); color: #9a6c12; }
 
-.abi-values strong {
+.abi-values strong, .abi-values .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.35rem;
   font-weight: 600;
@@ -333,13 +333,13 @@
   text-transform: uppercase;
 }
 
-.abi-rating strong {
+.abi-rating strong, .abi-rating .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 3rem;
   line-height: 1;
 }
 
-.abi-rating strong span {
+.abi-rating strong span, .abi-rating .sx-strong span {
   color: rgba(255, 255, 255, 0.55);
   font-size: 1.2rem;
 }
@@ -349,7 +349,7 @@
   background: linear-gradient(90deg, var(--ab-gold) calc(var(--rating) / 5 * 100%), rgba(255, 255, 255, 0.2) 0);
 }
 
-.abi-rating-text strong {
+.abi-rating-text strong, .abi-rating-text .sx-strong {
   font-size: 2rem;
 }
 
@@ -396,7 +396,7 @@
 .abi-tile:nth-child(3n + 2) > svg { background: var(--ab-rose); color: var(--ab-red); }
 .abi-tile:nth-child(3n + 3) > svg { background: var(--ab-gold-soft); color: #9a6c12; }
 
-.abi-tile strong {
+.abi-tile strong, .abi-tile .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.3rem;
   font-weight: 600;
@@ -464,13 +464,13 @@ a.abi-review:hover {
   gap: 12px;
 }
 
-.abi-review-score strong {
+.abi-review-score strong, .abi-review-score .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 2.2rem;
   line-height: 1;
 }
 
-.abi-review-score strong span {
+.abi-review-score strong span, .abi-review-score .sx-strong span {
   color: var(--ab-muted);
   font-size: 1rem;
 }
@@ -631,7 +631,7 @@ a.abi-review:hover {
   text-transform: uppercase;
 }
 
-.abi-channel strong {
+.abi-channel strong, .abi-channel .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.45rem;
   font-weight: 600;
@@ -851,7 +851,7 @@ a.abi-review:hover {
   text-transform: uppercase;
 }
 
-.abi-result strong {
+.abi-result strong, .abi-result .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.25rem;
   font-weight: 600;

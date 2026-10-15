@@ -14,7 +14,7 @@ export function TopicBanner({ banner, placement }: { banner: MagazineBanner; pla
       <div className="abg-topic-copy">
         <span className="ab-eyebrow">Neue Kontakte auf ab50.de</span>
         {/* Der Banner steht nur noch einmal im DOM (Seitenleiste oder, ohne Seitenleiste, im Text). */}
-        <h2>{banner.title}</h2>
+        <p className="abg-topic-title">{banner.title}</p>
         <p>{banner.text}</p>
         <a className="ab-btn ab-btn-primary" href={siteConfig.links.registrationCommon}>Kostenlos anmelden <ArrowIcon /></a>
       </div>

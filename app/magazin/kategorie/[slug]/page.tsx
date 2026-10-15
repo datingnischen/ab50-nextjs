@@ -72,7 +72,7 @@ export default async function CategoryPage({ params }: PageProps) {
             <h1>{categoryHeading(category.slug, category.name)}</h1>
             <p className="ab-lead">{category.description || `Alle Beiträge aus dem 50plus Magazin zum Thema ${category.name}.`}</p>
             <ul className="ab-chips">
-              <li><strong>{category.count ?? category.posts.length}</strong> Beiträge</li>
+              <li><span className="sx-strong">{category.count ?? category.posts.length}</span> Beiträge</li>
               <li>Für Singles ab 50</li>
             </ul>
           </div>
@@ -127,7 +127,7 @@ export default async function CategoryPage({ params }: PageProps) {
               return (
                 <div key={item.slug} className={`abg-theme abg-tone-${itemTheme.tone}`}>
                   <ThemeIconView icon={itemTheme.icon} />
-                  <strong><a className="card-link" href={categoryPath(item.slug)}>{item.name}</a></strong>
+                  <span className="sx-strong"><a className="card-link" href={categoryPath(item.slug)}>{item.name}</a></span>
                   {/* Ohne Beschreibung: sie ist der Einleitungstext der jeweiligen Kategorieseite und stand sonst auf allen anderen Kategorieseiten noch einmal. */}
                   <em aria-hidden="true">Thema öffnen <ArrowIcon /></em>
                 </div>

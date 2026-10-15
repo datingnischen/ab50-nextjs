@@ -64,7 +64,7 @@ export function FlirtDial({ score, headline, text, cityName }: { score: number |
               strokeDasharray={`${(safe / 100) * circumference} ${circumference}`}
             />
           </svg>
-          <strong>{formatScore(safe)}<small>/100</small></strong>
+          <span className="sx-strong">{formatScore(safe)}<small>/100</small></span>
         </div>
       ) : null}
       <b className="abc-dial-city">{cityName}</b>
@@ -134,7 +134,7 @@ export function FactStrip({ facts }: { facts: { icon: "spark" | "users" | "clock
       <ul className="ab-facts">
         {facts.slice(0, 4).map((fact) => {
           const Icon = icons[fact.icon];
-          return <li key={fact.label}><Icon /><span><small>{fact.label}</small><strong>{fact.value}</strong></span></li>;
+          return <li key={fact.label}><Icon /><span><small>{fact.label}</small><span className="sx-strong">{fact.value}</span></span></li>;
         })}
       </ul>
     </div>
@@ -154,7 +154,7 @@ export function StatCardsSection({ cityName, cards, note }: { cityName: string; 
         {cards.map((card, index) => (
           <article className="abc-stat" key={`${card.label}-${index}`}>
             <span>{card.label}</span>
-            <strong>{card.value}</strong>
+            <span className="sx-strong">{card.value}</span>
             {card.description ? <p>{card.description}</p> : null}
           </article>
         ))}
@@ -178,7 +178,7 @@ export function SignalSection({ cityName, strengths, weaknesses }: { cityName: s
             <span className="abc-signal-kicker">Das hilft dir in {cityName}</span>
             <ul>
               {strengths.map((tip, index) => (
-                <li key={`plus-${index}`}><span className="abc-signal-mark" aria-hidden="true">+</span><div>{tip.title ? <strong>{tip.title}</strong> : null}{tip.text ? <p>{tip.text}</p> : null}</div></li>
+                <li key={`plus-${index}`}><span className="abc-signal-mark" aria-hidden="true">+</span><div>{tip.title ? <span className="sx-strong">{tip.title}</span> : null}{tip.text ? <p>{tip.text}</p> : null}</div></li>
               ))}
             </ul>
           </article>
@@ -188,7 +188,7 @@ export function SignalSection({ cityName, strengths, weaknesses }: { cityName: s
             <span className="abc-signal-kicker">Darauf solltest du achten</span>
             <ul>
               {weaknesses.map((tip, index) => (
-                <li key={`minus-${index}`}><span className="abc-signal-mark" aria-hidden="true">!</span><div>{tip.title ? <strong>{tip.title}</strong> : null}{tip.text ? <p>{tip.text}</p> : null}</div></li>
+                <li key={`minus-${index}`}><span className="abc-signal-mark" aria-hidden="true">!</span><div>{tip.title ? <span className="sx-strong">{tip.title}</span> : null}{tip.text ? <p>{tip.text}</p> : null}</div></li>
               ))}
             </ul>
           </article>
@@ -246,7 +246,7 @@ export function TipsSection({ cityName, tips, eyebrow, title, intro }: { cityNam
         {tips.map((tip, index) => (
           <article className="abc-tip" key={`tip-${index}`}>
             <span className="abc-tip-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-            {tip.title ? <strong>{tip.title}</strong> : null}
+            {tip.title ? <span className="sx-strong">{tip.title}</span> : null}
             {tip.text ? <p>{tip.text}</p> : null}
           </article>
         ))}
@@ -263,7 +263,7 @@ export function GuideSection({ cityName, toc, sidebar, children }: { cityName: s
         {toc.length ? (
           <nav className="abc-toc" aria-label="Inhaltsverzeichnis">
             <span className="abc-toc-kicker"><BookIcon />Stadtporträt</span>
-            <strong>Dating ab 50 in {cityName}</strong>
+            <span className="sx-strong">Dating ab 50 in {cityName}</span>
             <ol>{toc.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
           </nav>
         ) : null}
@@ -281,7 +281,7 @@ export function AuthorBox({ name, role, imageSrc, href, text, tags }: { name: st
       <img src={imageSrc} alt={name} width={96} height={118} loading="lazy" decoding="async" />
       <div>
         <p className="ab-eyebrow">Von {name}</p>
-        <strong>{role}</strong>
+        <span className="sx-strong">{role}</span>
         <p>{text}</p>
         {tags?.length ? <div className="abc-author-tags">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div> : null}
         <a className="abc-author-link" href={href}>Mehr von Christian lesen <ArrowIcon /></a>

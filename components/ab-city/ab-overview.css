@@ -288,7 +288,7 @@
   font-weight: 600;
 }
 
-.abm .post-card-body strong {
+.abm .post-card-body strong, .abm .post-card-body .sx-strong {
   display: block;
   margin: 4px 0 8px;
   color: var(--ab-ink);

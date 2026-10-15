@@ -84,7 +84,7 @@ export function CityFurtherCities({ tiles, totalCities, overviewHref, overviewPr
             <span className="city-further-shade" aria-hidden="true" />
             <span className="city-further-label">
               <small>Singles in</small>
-              <strong>{tile.name}</strong>
+              <span className="sx-strong">{tile.name}</span>
             </span>
             <span className="city-further-arrow" aria-hidden="true">→</span>
           </TileLink>

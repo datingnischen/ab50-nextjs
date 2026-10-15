@@ -611,3 +611,24 @@ body > main {
     height: 44px;
   }
 }
+
+/* Footer-Titel als Absatz statt h2 (Seobility „zu viele Überschriften“), Optik wie .ab-footer-cta h2 / .ab-footer-column h2. */
+.ab-footer-cta p.ab-footer-cta-title {
+  max-width: none;
+  margin: 6px 0 8px;
+  color: #fff;
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.ab-footer-column .ab-footer-title {
+  margin: 0 0 14px;
+  color: #ffb4b0;
+  font-family: var(--ab-body), sans-serif;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

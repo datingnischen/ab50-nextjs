@@ -39,7 +39,7 @@ export function PostCard({ post, categories = [], large = false }: { post: WpPos
       </span>
       <span className="abg-card-body">
         <small>{formatUpdatedLabel(post)}</small>
-        <strong><a className="card-link" href={postPath(post.slug)}>{title}</a></strong>
+        <span className="sx-strong"><a className="card-link" href={postPath(post.slug)}>{title}</a></span>
         <span className="abg-card-excerpt">{excerptText(post.excerpt)}</span>
         <em aria-hidden="true">Beitrag lesen <ArrowIcon /></em>
       </span>

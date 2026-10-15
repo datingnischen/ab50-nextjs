@@ -108,7 +108,7 @@
   stroke: var(--ab-sand);
 }
 
-.abc-dial strong {
+.abc-dial strong, .abc-dial .sx-strong {
   position: absolute;
   left: 0;
   right: 0;
@@ -120,7 +120,7 @@
   line-height: 1;
 }
 
-.abc-dial strong small {
+.abc-dial strong small, .abc-dial .sx-strong small {
   color: var(--ab-muted);
   font-family: var(--ab-body), sans-serif;
   font-size: 1rem;
@@ -288,7 +288,7 @@
   text-transform: uppercase;
 }
 
-.abc-stat strong {
+.abc-stat strong, .abc-stat .sx-strong {
   color: var(--ab-blue);
   font-family: var(--ab-display), serif;
   font-size: 2.1rem;
@@ -365,7 +365,7 @@
   font-weight: 800;
 }
 
-.abc-signal-card strong {
+.abc-signal-card strong, .abc-signal-card .sx-strong {
   display: block;
   font-size: 1.08rem;
 }
@@ -508,7 +508,7 @@
   line-height: 1;
 }
 
-.abc-tip strong {
+.abc-tip strong, .abc-tip .sx-strong {
   font-size: 1.12rem;
 }
 
@@ -563,7 +563,7 @@
   height: 18px;
 }
 
-.abc-toc > strong {
+.abc-toc > strong, .abc-toc > .sx-strong {
   font-family: var(--ab-display), serif;
   font-size: 1.4rem;
   font-weight: 600;
@@ -793,7 +793,7 @@
   background: var(--ab-blue-soft);
 }
 
-.abc-author strong {
+.abc-author strong, .abc-author .sx-strong {
   display: block;
   margin-top: 4px;
   font-family: var(--ab-display), serif;

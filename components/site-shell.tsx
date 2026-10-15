@@ -232,7 +232,7 @@ export function SiteFooter() {
         <section className="ab-footer-cta" aria-label="Registrierung">
           <div>
             <p className="ab-eyebrow">Dating ab 50 – entspannt und sicher</p>
-            <h2>Treffe passende Singles {market === "ch" ? "in der Schweiz" : "in Deutschland"} und starte neu.</h2>
+            <p className="ab-display ab-footer-cta-title">Treffe passende Singles {market === "ch" ? "in der Schweiz" : "in Deutschland"} und starte neu.</p>
             <p>Profil kostenlos anlegen, seriöse Kontakte entdecken und in deinem eigenen Tempo neue Menschen kennenlernen.</p>
           </div>
           <a className="ab-btn ab-footer-cta-button" href={register}>Kostenlos starten <ArrowIcon /></a>
@@ -251,7 +251,7 @@ export function SiteFooter() {
           <nav className="ab-footer-nav" aria-label="Footer Navigation">
             {columns.map((column) => (
               <div key={column.title} className="ab-footer-column">
-                <h2>{column.title}</h2>
+                <p className="ab-footer-title">{column.title}</p>
                 <ul>
                   {column.links.map((link) => <li key={`${column.title}-${link.label}`}><FooterAnchor market={market} link={link} /></li>)}
                 </ul>

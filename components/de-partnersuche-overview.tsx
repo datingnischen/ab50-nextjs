@@ -67,8 +67,8 @@ export default async function PartnersucheOverviewPage() {
             <h1>Singles ab 50 in deiner Stadt finden</h1>
             <p className="ab-lead">Hier findest du unsere regionalen Stadtseiten für Menschen, die neue Kontakte, Gespräche und echte Begegnungen in ihrer Nähe suchen.</p>
             <ul className="ab-chips">
-              <li><strong>{entries.length}</strong> Städte</li>
-              <li><strong>{regions.length}</strong> Bundesländer</li>
+              <li><span className="sx-strong">{entries.length}</span> Städte</li>
+              <li><span className="sx-strong">{regions.length}</span> Bundesländer</li>
               <li>Mit Flirt-Faktor und Date-Orten</li>
             </ul>
             <div className="ab-actions">
@@ -110,7 +110,7 @@ export default async function PartnersucheOverviewPage() {
                   <div className="post-card-body">
                     <span>Regionale Partnersuche</span>
                     {/* Nur der Stadtname ist verlinkt; die Karte bleibt über .card-link::after komplett klickbar. */}
-                    <strong><a className="card-link" href={cityPath(publicSlug)}>{city.acf?.city_name ? `Singles ab 50 aus ${city.acf.city_name}` : stripHtml(city.title)}</a></strong>
+                    <span className="sx-strong"><a className="card-link" href={cityPath(publicSlug)}>{city.acf?.city_name ? `Singles ab 50 aus ${city.acf.city_name}` : stripHtml(city.title)}</a></span>
                     <p>{cityCardCopy("de", city.slug)}</p>
                     <em className="card-read-more city-card-button" aria-hidden="true">Stadtseite ansehen</em>
                   </div>

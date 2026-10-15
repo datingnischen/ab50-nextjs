@@ -84,8 +84,8 @@ export default async function MagazinOverviewPage() {
               <h1>Dating ab 50: Sicherheit, Klarheit und <em>echte Verbindungen.</em></h1>
               <p className="ab-lead">Tipps zu Profil, ersten Gesprächen, Sicherheit und neuen Kontakten – für Singles ab 50, die es direkt angehen wollen.</p>
               <ul className="ab-chips">
-                <li><strong>{posts.length}</strong> Beiträge</li>
-                <li><strong>{categories.length}</strong> Themenwelten</li>
+                <li><span className="sx-strong">{posts.length}</span> Beiträge</li>
+                <li><span className="sx-strong">{categories.length}</span> Themenwelten</li>
                 <li>Von Christian M. Haas &amp; Redaktion</li>
               </ul>
               <div className="ab-actions">
@@ -119,7 +119,7 @@ export default async function MagazinOverviewPage() {
               return (
                 <div key={category.slug} className={`abg-theme abg-tone-${theme.tone}`}>
                   <ThemeIconView icon={theme.icon} />
-                  <strong><a className="card-link" href={categoryPath(category.slug)}>{category.name}</a></strong>
+                  <span className="sx-strong"><a className="card-link" href={categoryPath(category.slug)}>{category.name}</a></span>
                   <span>{category.description || `Beiträge zum Thema ${category.name}.`}</span>
                   <em aria-hidden="true">{category.count ? `${category.count} Beiträge` : "Thema öffnen"} <ArrowIcon /></em>
                 </div>
@@ -172,7 +172,7 @@ export default async function MagazinOverviewPage() {
                   <li key={page.slug}>
                     <a href={pagePath(page.slug)}>
                       {kind.icon}
-                      <span><small>{kind.label}</small><strong>{stripHtml(page.title)}</strong></span>
+                      <span><small>{kind.label}</small><span className="sx-strong">{stripHtml(page.title)}</span></span>
                       <ArrowIcon />
                     </a>
                   </li>

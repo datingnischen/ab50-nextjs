@@ -317,7 +317,7 @@ h1, h2, h3,
   font-weight: 600;
 }
 
-.ab-chips strong {
+.ab-chips strong, .ab-chips .sx-strong {
   color: #ffd27a;
 }
 
@@ -379,7 +379,7 @@ h1, h2, h3,
   text-transform: uppercase;
 }
 
-.ab-facts strong {
+.ab-facts strong, .ab-facts .sx-strong {
   display: block;
   font-size: 1.05rem;
   line-height: 1.3;
@@ -427,12 +427,12 @@ h1, h2, h3,
   text-decoration-color: currentColor;
 }
 
-.ab-rich strong {
+.ab-rich strong, .ab-rich .sx-strong {
   color: var(--ab-ink);
 }
 
 /* Fett gesetzter Linktext (z. B. Buttons aus dem CMS) behält die Linkfarbe – sonst dunkle Schrift auf dunklem Grund. */
-.ab-rich a strong,
+.ab-rich a strong, .ab-rich a .sx-strong,
 .ab-rich a b {
   color: inherit;
 }
@@ -727,7 +727,7 @@ h1, h2, h3,
     padding: 8px;
   }
 
-  .ab-facts strong {
+  .ab-facts strong, .ab-facts .sx-strong {
     font-size: 0.95rem;
   }
 
@@ -758,3 +758,9 @@ h1, h2, h3,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Hervorhebungen, die limitStrong (lib/html-cleanup.ts) aus <strong> in <span> umwandelt: gleiche Optik. */
+.em-strong { font-weight: 700; }
+
+/* Ehemalige <strong> der Vorlagen (Seobility „viele Strong-Tags“): gleiche Fettschrift wie vorher. */
+.sx-strong { font-weight: 700; }

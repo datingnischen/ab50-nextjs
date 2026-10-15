@@ -49,7 +49,7 @@ function ReviewsBody({ page }: { page: StandardPage }) {
                   <header>
                     {rating ? (
                       <div className="abi-review-score">
-                        <strong>{rating}<span> / 5</span></strong>
+                        <span className="sx-strong">{rating}<span> / 5</span></span>
                         <span className="ab-stars" style={{ ["--rating" as string]: Number(rating.replace(",", ".")) }} role="img" aria-label={`${rating} von 5 Sternen`} />
                       </div>
                     ) : null}
@@ -113,7 +113,7 @@ function SocialBody({ page }: { page: StandardPage }) {
           <a className={`abi-channel abi-channel-${link.platform}`} href={link.href} key={link.href} {...externalAttrs(link.external)}>
             <span className="abi-channel-icon"><SocialIcon platform={link.platform} /></span>
             <small>{link.platform === "facebook" ? "Facebook" : "YouTube"} · {link.kind}</small>
-            <strong>{link.label}</strong>
+            <span className="sx-strong">{link.label}</span>
             <span>{link.text}</span>
             <em>{getSocialActionLabel(link)} <ArrowIcon /></em>
           </a>
