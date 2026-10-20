@@ -1,5 +1,6 @@
 import { siteConfig } from "@/data/site";
 import { ABOUT_REVIEWS_PATH, ABOUT_SOCIAL_PATH } from "@/lib/about-pages";
+import { staticAsset } from "@/lib/static-asset";
 
 export type StandardPageSlug = "bewertungen-und-erfahrungen" | "social-media";
 
@@ -82,7 +83,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
     lead:
       "Wer eine Singlebörse ab 50 ausprobiert, möchte wissen, wie andere sie erleben. Hier findest du die wichtigsten Nutzerstimmen, externe Bewertungen und Vergleichsseiten auf einen Blick.",
     heroImageSrc:
-      "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
+      staticAsset("/ueber-uns/bewertungen-daumen-hoch.jpg"),
     heroImageAlt: "Frau mit Daumen hoch als Motiv für Bewertungen und Erfahrungen",
     primaryCtaLabel: "Zur kostenlosen Registrierung",
     primaryCtaHref: registrationHref,
@@ -111,7 +112,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
         href: "https://singleboersen-ueberblick.de/partnersuche/ab50/",
         label: "Vergleich ansehen",
         imageSrc:
-          "https://static-cms.icony-hosting.de/cms/0AAC065690E55C2E5C07C90516AFDAF309FBFA84E8003071E7240115A5B9F98D/empfohlen-siegel-45sterne-330x60.jpg",
+          staticAsset("/ueber-uns/empfohlen-siegel-45-sterne.jpg"),
         imageAlt: "Empfohlen-Siegel mit 4,5 Sternen",
       },
     ],
@@ -125,7 +126,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
           "Du möchtest von echten Nutzern hören, ob die Plattform zu dir passt – genau darum findest du hier aussagekräftige Bewertungen und unabhängige Einordnungen.",
         ],
         image: {
-          src: "https://static-cms.icony-hosting.de/cms/CA826BE1645060B73CFA05BDC578548B28A5BE368308A23F30870395AC91734A/400/bewertung-und-erfahrungen-pic.jpg",
+          src: staticAsset("/ueber-uns/bewertungen-daumen-hoch.jpg"),
           alt: "Frau zeigt mit erhobenem Daumen in die Kamera",
         },
       },
@@ -151,7 +152,7 @@ export const standardPages: Record<StandardPageSlug, StandardPage> = {
           "Solche Bewertungen helfen dir, einen breiteren Eindruck zu bekommen – von der Benutzerfreundlichkeit über die Erfolgsquoten bis hin zum Preis-Leistungs-Verhältnis.",
         ],
         image: {
-          src: "https://static-cms.icony-hosting.de/cms/0AAC065690E55C2E5C07C90516AFDAF309FBFA84E8003071E7240115A5B9F98D/empfohlen-siegel-45sterne-330x60.jpg",
+          src: staticAsset("/ueber-uns/empfohlen-siegel-45-sterne.jpg"),
           alt: "Empfohlen-Siegel mit Sternebewertung",
         },
         imagePosition: "left",

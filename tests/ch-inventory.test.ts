@@ -30,7 +30,8 @@ test("Swiss city inventory matches the complete live overview", () => {
 
 test("Swiss overview preserves hub editorial media and source provenance", () => {
   assert.equal(inventory.overview.sourceUrl, "https://ab50.ch/schweiz/");
-  assert.match(inventory.overview.heroImage.url, /^https:\/\/static-cms\.icony-hosting\.de\//);
+  assert.equal(inventory.overview.heroImage.url, "/city-images/ch/schweiz.jpg");
+  assert.match(inventory.overview.heroImage.sourceImageUrl, /^https:\/\/static-cms\.icony-hosting\.de\//);
   assert.ok(inventory.overview.contentHtml.length > 1500);
 });
 
@@ -41,7 +42,8 @@ test("every Swiss city is complete, sanitized, and market-routable", () => {
     assert.ok(city.description.length > 50);
     assert.ok(city.contentHtml.length > 1500);
     assert.match(city.sourceUrl, /^https:\/\/ab50\.ch\/singles\//);
-    assert.match(city.heroImage.url, /^https:\/\/static-cms\.icony-hosting\.de\//);
+    assert.equal(city.heroImage.url, `/city-images/ch/${city.slug}.jpg`);
+    assert.match(city.heroImage.sourceImageUrl, /^https:\/\/static-cms\.icony-hosting\.de\//);
     assert.doesNotMatch(city.contentHtml, /<(?:form|iframe|script)\b/i);
     assert.doesNotMatch(city.contentHtml, /cdn3\.icony-hosting\.de\/user-media/i);
     assert.doesNotMatch(city.contentHtml, /<h[1-6][^>]*>\s*<\/h[1-6]>/i);

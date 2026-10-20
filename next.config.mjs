@@ -52,19 +52,6 @@ export default function nextConfig(phase) {
         },
         {
           protocol: "https",
-          hostname: "static2.icony-hosting.de",
-        },
-        {
-          protocol: "https",
-          hostname: "cdn3.icony-hosting.de",
-        },
-        {
-          protocol: "https",
-          hostname: "static-cms.icony-hosting.de",
-          pathname: "/cms/**",
-        },
-        {
-          protocol: "https",
           hostname: assetHostname,
           pathname: `${assetPathPrefix}/**`,
         },
