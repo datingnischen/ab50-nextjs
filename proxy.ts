@@ -13,6 +13,8 @@ function withEmbedValue(destination: URL) {
   return destination;
 }
 
+const CH_REST_INTERNAL = /^(?:\/(?:de|ch|at))?\/magazin\/wp-json-ch(?:\/|$)/;
+
 export function proxy(request: NextRequest) {
   // Host is matched against the closed application allowlist before route-specific resolution.
   // X-Forwarded-Host is intentionally ignored because clients can spoof it.
@@ -26,6 +28,10 @@ export function proxy(request: NextRequest) {
   }
   // WordPress-kompatibler REST-Endpunkt für ICONY: ohne Schrägstrich erreichbar, ICONY folgt keiner Weiterleitung.
   const { pathname, searchParams } = request.nextUrl;
+  // Interner Pfad des CH-Knotens (app/magazin/wp-json-ch): nur über den Rewrite unten erreichbar.
+  if (CH_REST_INTERNAL.test(pathname)) {
+    return new NextResponse("Not Found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+  }
   if (pathname === "/magazin/wp-json" || pathname.startsWith("/magazin/wp-json/") || pathname === "/magazin/index.php") {
     return NextResponse.next();
   }
@@ -34,12 +40,21 @@ export function proxy(request: NextRequest) {
     destination.pathname = "/magazin/index.php";
     return NextResponse.rewrite(withEmbedValue(destination));
   }
-  // Länderpfade des WordPress-kompatiblen Endpunkts (/ch/magazin/wp-json/...): ebenfalls ohne Schrägstrich-Umleitung.
-  if (/^\/(?:de|ch|at)\/magazin\/(?:wp-json(?:\/.*)?|index\.php)$/.test(pathname)) {
+  // Länderpfade des WordPress-kompatiblen Endpunkts (/ch/magazin/wp-json/..., /ch/magazin/?rest_route=...):
+  // ebenfalls ohne Schrägstrich-Umleitung. nginx stellt ab50.ch-Aufrufen /ch voran; dieser Markt bekommt den
+  // CH-Knoten (drei größte Städteseiten, lib/wp-market-teasers.ts) unter dem internen Pfad /magazin/wp-json-ch.
+  const restRouteEntry = searchParams.has("rest_route") && /^\/(?:de|ch|at)\/magazin(?:\/index\.php)?\/?$/.test(pathname);
+  if (restRouteEntry || /^\/(?:de|ch|at)\/magazin\/(?:wp-json(?:\/.*)?|index\.php)$/.test(pathname)) {
     const rest = resolvePartnersucheRequest(requestHost, pathname);
     if (rest.action === "rewrite") {
-      const destination = request.nextUrl.clone();
-      destination.pathname = rest.destination;
+      const destination = new URL(request.nextUrl.href);
+      if (rest.market === "ch" && (restRouteEntry || !pathname.endsWith("/index.php"))) {
+        const route = restRouteEntry ? `/${(searchParams.get("rest_route") || "").replace(/^\/+/, "")}` : rest.destination.replace(/^\/magazin\/(?:wp-json|index\.php)/, "");
+        destination.pathname = `/magazin/wp-json-ch${route}`;
+        destination.searchParams.delete("rest_route");
+      } else {
+        destination.pathname = restRouteEntry ? "/magazin/index.php" : rest.destination;
+      }
       return NextResponse.rewrite(withEmbedValue(destination));
     }
     return new NextResponse("Not Found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });

@@ -2,6 +2,7 @@ import categoriesData from "../data/wp/categories.json" with { type: "json" };
 import postsData from "../data/wp/posts.json" with { type: "json" };
 
 import { teaserImageUrl } from "./teaser-image.ts";
+import { loadMarketTeaserPosts, type MarketTeaserCode } from "./wp-market-teasers.ts";
 /**
  * WordPress-kompatibler REST-Endpunkt für die Magazin-BEITRÄGE, erzeugt aus data/wp/posts.json.
  *
@@ -33,6 +34,16 @@ const NAMESPACE_ROUTES = ["/wp/v2/posts", "/wp/v2/categories"];
 const posts = (postsData as Json[]).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
 const categories = categoriesData as Json[];
 
+/** Datenquelle je Domain: ab50.de = Magazinbeiträge, ab50.ch = drei größte Städteseiten (lib/wp-market-teasers.ts). */
+type WpSource = { posts: Json[]; categories: Json[]; home: string; restRoot: string };
+
+const DE_SOURCE: WpSource = { posts, categories, home: "https://ab50.de", restRoot: "https://ab50.de/magazin/wp-json" };
+
+function sourceFor(market?: MarketTeaserCode): WpSource {
+  if (market === "ch") return { posts: loadMarketTeaserPosts("ch"), categories: [], home: "https://ab50.ch", restRoot: "https://ab50.ch/magazin/wp-json" };
+  return DE_SOURCE;
+}
+
 function error(status: number, code: string, message: string): WpRestResponse {
   return { status, body: { code, message, data: { status } }, headers: {} };
 }
@@ -50,11 +61,10 @@ function positiveInt(value: string | null, fallback: number, max = Number.MAX_SA
  * dieselbe Datei). source_url bleibt auf der eigenen Domain (https://ab50.de/magazin/wp-content/uploads/…), weil die
  * ICONY-Startseite Bilder nur von dort laden darf (CSP); nginx muss diesen Pfad an Vercel durchreichen.
  */
-function withImageSizes(media: Json): Json {
+function withImageSizes(media: Json, restRoot: string): Json {
   const details = (media.media_details && typeof media.media_details === "object" ? media.media_details : {}) as Json;
   const existing = details.sizes && typeof details.sizes === "object" && !Array.isArray(details.sizes) ? (details.sizes as Json) : {};
   if (typeof media.source_url !== "string") return media;
-  const restRoot = "https://ab50.de/magazin/wp-json";
   const sourceUrl = teaserImageUrl(restRoot, media.source_url);
   if (Object.keys(existing).length) {
     const sizes = Object.fromEntries(Object.entries(existing).map(([name, size]) => [name, { ...(size as Json), source_url: teaserImageUrl(restRoot, String((size as Json).source_url ?? media.source_url)) }]));
@@ -68,13 +78,13 @@ function withImageSizes(media: Json): Json {
   return { ...media, mime_type: mime, media_type: media.media_type ?? "image", source_url: sourceUrl, media_details: { ...details, file, sizes: Object.fromEntries(["thumbnail", "medium", "medium_large", "large", "full"].map((name) => [name, size])) } };
 }
 
-function postObject(post: Json, embed: boolean): Json {
+function postObject(post: Json, embed: boolean, restRoot: string): Json {
   const { _embedded, _links, ...rest } = post;
   if (!embed) return rest;
   const { author: _author, ...embedded } = (_embedded || {}) as Json;
   const { author: _authorLink, ...links } = (_links || {}) as Json;
   const featured = embedded["wp:featuredmedia"];
-  if (Array.isArray(featured)) embedded["wp:featuredmedia"] = featured.map((media) => withImageSizes(media as Json));
+  if (Array.isArray(featured)) embedded["wp:featuredmedia"] = featured.map((media) => withImageSizes(media as Json, restRoot));
   return { ...rest, _links: links, _embedded: embedded };
 }
 
@@ -96,18 +106,19 @@ function collection(rows: Json[], params: URLSearchParams, make: (row: Json) => 
   return { status: 200, body: slice, headers };
 }
 
-function postCollection(params: URLSearchParams): WpRestResponse {
-  let rows = posts;
+function postCollection(params: URLSearchParams, source: WpSource): WpRestResponse {
+  let rows = source.posts;
   const slug = params.get("slug");
   if (slug) rows = rows.filter((post) => slug.split(",").includes(post.slug));
   const ids = (params.get("categories") || "").split(",").map(Number).filter(Boolean);
   if (ids.length) rows = rows.filter((post) => ids.some((id) => (post.categories || []).includes(id)));
   if (params.get("order") === "asc") rows = rows.slice().reverse();
   const embed = params.has("_embed");
-  return collection(rows, params, (post) => postObject(post, embed));
+  return collection(rows, params, (post) => postObject(post, embed, source.restRoot));
 }
 
-export function handleWpRest(route: string, params: URLSearchParams): WpRestResponse {
+export function handleWpRest(route: string, params: URLSearchParams, market?: MarketTeaserCode): WpRestResponse {
+  const source = sourceFor(market);
   const parts = route.split("/").filter(Boolean);
 
   if (!parts.length) {
@@ -116,8 +127,8 @@ export function handleWpRest(route: string, params: URLSearchParams): WpRestResp
       body: {
         name: "50plus Magazin",
         description: "",
-        url: "https://ab50.de",
-        home: "https://ab50.de",
+        url: source.home,
+        home: source.home,
         namespaces: ["wp/v2"],
         authentication: {},
         routes: Object.fromEntries(NAMESPACE_ROUTES.map((path) => [path, { namespace: "wp/v2", methods: ["GET"] }])),
@@ -133,14 +144,14 @@ export function handleWpRest(route: string, params: URLSearchParams): WpRestResp
   if (parts.length > 4) return NO_ROUTE();
 
   if (resource === "posts") {
-    if (!idPart) return postCollection(params);
-    const post = /^\d+$/.test(idPart) ? posts.find((item) => item.id === Number(idPart)) : undefined;
+    if (!idPart) return postCollection(params, source);
+    const post = /^\d+$/.test(idPart) ? source.posts.find((item) => item.id === Number(idPart)) : undefined;
     if (!post) return error(404, "rest_post_invalid_id", "Ungültige Beitrags-ID.");
-    return { status: 200, body: applyFields(postObject(post, params.has("_embed")), params), headers: {} };
+    return { status: 200, body: applyFields(postObject(post, params.has("_embed"), source.restRoot), params), headers: {} };
   }
 
   if (resource === "categories") {
-    const visible = categories.filter((category) => (category.count ?? 0) > 0);
+    const visible = source.categories.filter((category) => (category.count ?? 0) > 0);
     if (!idPart) return collection(visible, params, (category) => category);
     const row = /^\d+$/.test(idPart) ? visible.find((item) => item.id === Number(idPart)) : undefined;
     if (!row) return error(404, "rest_term_invalid", "Begriff existiert nicht.");

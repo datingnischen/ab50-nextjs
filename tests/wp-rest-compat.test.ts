@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { handleWpRest } from "../lib/wp-rest-compat.ts";
+import { teaserImagePath } from "../lib/teaser-image.ts";
 
 test("posts-Endpunkt liefert Beiträge im WordPress-Format mit Gesamtzahl", () => {
   const result = handleWpRest("/wp/v2/posts", new URLSearchParams("per_page=3&_embed=1"));
@@ -46,4 +47,51 @@ test("Anwendungscode ruft WordPress nicht mehr ab", () => {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
     assert.ok(!/wp-json\/wp\/v2|WORDPRESS_REST|wordpressRestEndpoint/.test(source), `${file} enthält einen WordPress-Abruf`);
   }
+});
+
+// Heiko (2026-10-19): ab50.ch-Startseite lädt Teaser künftig von https://ab50.ch/magazin/wp-json/… – drei größte
+// Schweizer Städteseiten mit Link und Bild auf ab50.ch (lib/wp-market-teasers.ts).
+test("CH-Knoten liefert Zürich, Genf, Basel mit Links und Bildern auf ab50.ch", () => {
+  const result = handleWpRest("/wp/v2/posts", new URLSearchParams("per_page=3&_embed"), "ch");
+  assert.equal(result.status, 200);
+  assert.equal(result.headers["X-WP-Total"], "3");
+  const rows = result.body as any[];
+  assert.deepEqual(rows.map((row) => row.slug), ["zuerich", "genf", "basel"]);
+  for (const row of rows) {
+    assert.equal(row.link, `https://ab50.ch/partnersuche/${row.slug}/`);
+    assert.ok(row.title.rendered && row.excerpt.rendered && row.date);
+    assert.ok(row.featured_media > 0);
+    const media = row._embedded["wp:featuredmedia"][0];
+    const expected = `https://ab50.ch/magazin/wp-json/datingnischen/v1/bild/city-images/ch/${row.slug}~jpg`;
+    assert.equal(media.source_url, expected);
+    assert.equal(media.media_details.sizes.medium_large.source_url, expected);
+    assert.equal(media.media_details.sizes.medium_large.width, 1000);
+    assert.equal(media.media_details.sizes.medium_large.height, 563);
+    assert.equal(media.mime_type, "image/jpeg");
+    const path = teaserImagePath(["datingnischen", "v1", "bild", "city-images", "ch", `${row.slug}~jpg`]);
+    assert.equal(path, `/city-images/ch/${row.slug}.jpg`, "Teaserbild-Route gibt den Ordner frei");
+    assert.ok(existsSync(new URL(`../public${path}`, import.meta.url)), `${path} liegt in public/`);
+  }
+  const root = handleWpRest("/", new URLSearchParams(), "ch").body as any;
+  assert.equal(root.home, "https://ab50.ch");
+  assert.deepEqual(handleWpRest("/wp/v2/categories", new URLSearchParams(), "ch").body, []);
+});
+
+test("ohne Markt bleibt ab50.de bei den Magazinbeiträgen", () => {
+  const rows = handleWpRest("/wp/v2/posts", new URLSearchParams("per_page=3&_embed=1")).body as any[];
+  for (const row of rows) {
+    assert.match(row.link, /^https:\/\/ab50\.de\/magazin\//);
+    assert.match(row._embedded["wp:featuredmedia"][0].source_url, /^https:\/\/ab50\.de\/magazin\/wp-json\/datingnischen\/v1\/bild\//);
+  }
+});
+
+test("proxy: CH-Knoten nur über das Pfadpräfix /ch, interner Pfad von außen gesperrt", () => {
+  const source = readFileSync(new URL("../proxy.ts", import.meta.url), "utf8");
+  assert.ok(source.includes("destination.pathname = `/magazin/wp-json-ch${route}`"), "Rewrite auf den internen Pfad");
+  assert.ok(source.includes('if (rest.market === "ch"'), "nur für den Markt ch");
+  assert.ok(source.includes(String.raw`const CH_REST_INTERNAL = /^(?:\/(?:de|ch|at))?\/magazin\/wp-json-ch(?:\/|$)/;`), "direkter Aufruf = 404");
+  assert.ok(source.includes(String.raw`searchParams.has("rest_route") && /^\/(?:de|ch|at)\/magazin(?:\/index\.php)?\/?$/`), "/ch/magazin/?rest_route=… wird erkannt");
+  const route = readFileSync(new URL("../app/magazin/wp-json-ch/[[...route]]/route.ts", import.meta.url), "utf8");
+  assert.match(route, /handleWpRest\(`\/\$\{route\.join\("\/"\)\}`, params, "ch"\)/);
+  assert.match(route, /teaserImageResponse/);
 });
