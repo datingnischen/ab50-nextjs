@@ -251,15 +251,12 @@ export function localizeUploadUrls<T extends string | null | undefined>(value: T
  * Korrekturen am WordPress-Snapshot beim Laden (Seobility 2026-10-14):
  * - leere alt-Attribute im Text bekommen den Artikeltitel (Regel: kein <img> ohne Alt-Text),
  * - Links auf http://ab50.de und den Tippfehler-Slug /magazin/entspannte-dating/ zeigen auf die echte Adresse,
- * - Verweise auf Dateien, die es nicht mehr gibt, entfallen bzw. zeigen auf die vorhandene Bildvariante.
+ * - Verweise auf Bilddateien, die es nicht mehr gibt, zeigen auf die vorhandene Bildvariante.
  */
-const MISSING_AUDIO_BLOCK = /<h2>Artikel kurz anhören<\/h2>\s*<p>Die wichtigsten Punkte kurz und verständlich zusammengefasst\.<\/p>\s*<p><audio\b[^>]*><source src="[^"]*\/verifizierung-audio-zusammenfassung\.mp3"[\s\S]*?<\/audio>[\s\S]*?<\/p>\s*(?:<p><!-- audio-summary:end --><\/p>\s*)?/;
-
 export function fixContentHtml(html: string | null | undefined, title: string): string | null {
   if (!html) return html ?? null;
   const alt = title.replace(/"/g, "&quot;");
   const fixed = html
-    .replace(MISSING_AUDIO_BLOCK, "")
     // Überschriften ohne Text: nur ein Bild → Absatz, ganz leer (&nbsp;, <br>) → weg (Seobility „leere Überschrift“).
     .replace(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (heading, _level: string, inner: string) => {
       if (inner.replace(/<[^>]+>/g, "").replace(/&nbsp;| /g, " ").trim()) return heading;
