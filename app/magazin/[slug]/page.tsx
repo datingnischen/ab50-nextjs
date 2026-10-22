@@ -13,7 +13,7 @@ import { collapseSourceSections } from "@/lib/collapse-sources";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { seoTitle } from "@/lib/seo-title";
 import { magazineHeading } from "@/lib/heading-overrides";
-import { clampMetaDescription } from "@/lib/meta-description";
+import { clampMetaDescription, pageMetaDescription } from "@/lib/meta-description";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
 import { TopicBanner } from "@/components/ab-magazine/topic-banner";
@@ -401,7 +401,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = stripHtml(page.title);
     const description = page.slug === CHRISTIAN_SLUG
       ? CHRISTIAN_META_DESCRIPTION
-      : clampMetaDescription(stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`;
+      : pageMetaDescription(page.slug, stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`;
     return {
       title: seoTitle(title, page.slug),
       description,
@@ -470,7 +470,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
           magazineUrl: absoluteUrl("/magazin/"),
           url: absoluteUrl(pagePath(page.slug)),
           headline: title,
-          description: stripHtml(page.content).slice(0, 160) || `${title} im 50plus Magazin von ab50.de.`,
+          description: pageMetaDescription(page.slug, stripHtml(page.content)) || `${title} im 50plus Magazin von ab50.de.`,
         });
     if (isAuthor) {
       const authorContent = christianProfileContent(page.content);

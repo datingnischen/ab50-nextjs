@@ -10,11 +10,11 @@ import { marketPartnersuchePath } from "@/lib/markets";
 
 const FAQ_PATH = "/faq/";
 // Dieselbe FAQ für DE, AT und CH: /at/faq/ und /ch/faq/ zeigen den deutschen Text, Canonical ist die DE-Fassung.
-const TITLE = "Häufige Fragen zu ab50.de (FAQ)";
+const TITLE = "Häufige Fragen zur Partnersuche ab 50 (FAQ)";
 const DESCRIPTION = "Antworten zu Kosten, Sicherheit, Profil und Ablauf bei ab50.de, der Partnersuche für Singles ab 50.";
 
 export const metadata: Metadata = {
-  title: { absolute: TITLE },
+  title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: FAQ_PATH },
   openGraph: { title: TITLE, description: DESCRIPTION, url: absoluteUrl(FAQ_PATH), type: "website", locale: "de_DE" },

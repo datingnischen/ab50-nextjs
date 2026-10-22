@@ -47,6 +47,8 @@ export const SEO_TITLES: Record<string, string> = {
   fliegen: "Fliegen ab 50: Neue Horizonte entdecken",
   "neuanfang-tod-des-partners-verkraften": "Tod des Partners verkraften: Neuanfang finden",
   "christian-m-haas": "Christian M. Haas: Autor und Dating-Experte",
+  // Seobility: Wortwiederholung „Schritt für Schritt“.
+  "online-dating": "Online-Dating ab 50: So gelingt der Einstieg",
 };
 
 /** Liefert den Metadata-Titel: mit Vorlage, ohne Zusatz („absolute“) oder den kürzeren SEO-Titel. */

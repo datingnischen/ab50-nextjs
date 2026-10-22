@@ -11,13 +11,16 @@ import { AboutSubnav, LightHero } from "@/components/ab-info/info-parts";
 import { CtaBand } from "@/components/ab-city/city-parts";
 import { ArrowIcon, BookIcon, CalendarIcon, EyeIcon, HeartIcon, ShieldIcon, StarIcon, TagIcon, UserIcon, UsersIcon } from "@/components/ab-icons";
 
+const DESCRIPTION = "Wer hinter ab50.de steht, wie die Singlebörse für Menschen ab 50 arbeitet und wo du Bewertungen, unsere Geschichte und Social Media findest.";
+
 export const metadata: Metadata = {
-  title: { absolute: "Über ab50.de – Singlebörse für Menschen ab 50" },
-  description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+  // Domain nur über die Vorlage am Ende (Seobility: „Entferne die Domain aus dem Titel“).
+  title: "Über uns – Singlebörse für Menschen ab 50",
+  description: DESCRIPTION,
   alternates: { canonical: ABOUT_ROOT_PATH },
   openGraph: {
     title: "Über ab50.de",
-    description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+    description: DESCRIPTION,
     url: absoluteUrl(ABOUT_ROOT_PATH),
     type: "website",
     locale: "de_DE",
@@ -52,7 +55,7 @@ export default function UeberUnsPage() {
           type: "AboutPage",
           url: absoluteUrl(ABOUT_ROOT_PATH),
           name: "Über ab50.de",
-          description: "Hintergründe, Social Media und Bewertungen rund um ab50.de auf einen Blick.",
+          description: DESCRIPTION,
         }}
       />
       <article className="abi">

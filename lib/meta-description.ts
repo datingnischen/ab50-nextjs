@@ -25,3 +25,18 @@ export function clampMetaDescription(text?: string | null, max = META_DESCRIPTIO
   const words = (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:–—-]+$/, "");
   return `${words} …`;
 }
+
+/**
+ * Feste Magazinseiten, deren Seitentext keinen brauchbaren Anfang hat: Die Rätselseiten beginnen mit dem
+ * Ersatztext des Rätsel-iframes („Ihr Browser kann leider …“) und hatten dadurch dieselbe Description.
+ */
+export const PAGE_META_DESCRIPTIONS: Record<string, string> = {
+  "sudoku-online": "Sudoku online und kostenlos im Browser spielen, dazu Regeln, Tipps für Einsteiger, Varianten und die Geschichte des beliebten Zahlenrätsels.",
+  "online-kreuzwortraetsel": "Kreuzworträtsel online und kostenlos im Browser lösen, dazu Definition, Spielarten wie das Schwedenrätsel und praktische Tipps zum Lösen.",
+};
+
+/** Description einer festen Seite: eigener Text, sonst der Seitenanfang ohne iframe-Ersatztext. */
+export function pageMetaDescription(slug: string, text?: string | null): string {
+  if (PAGE_META_DESCRIPTIONS[slug]) return PAGE_META_DESCRIPTIONS[slug];
+  return clampMetaDescription(String(text || "").replace(/Ihr Browser kann leider keine eingebetteten Frames anzeigen:.*?aufrufen:\s*\S+\s*/s, ""));
+}
