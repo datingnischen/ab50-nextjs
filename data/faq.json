@@ -7,7 +7,7 @@
    "items": [
     {
      "question": "An wen richtet sich ab50.de?",
-     "answerHtml": "<p>Du m&ouml;chtest neue Leute kennen lernen, suchst einen Freizeitpartner f&uuml;r bestimmte Aktivit&auml;ten oder die gro&szlig;e Liebe f&uuml;rs Leben? Vielleicht suchst Du einen hei&szlig;en Flirt, aus dem mehr werden kann? <strong>ab50.de</strong> richtet sich an Menschen, die einfach und schnell Kontakt zu anderen Menschen finden m&ouml;chten &ndash; mit dem besonderen Fokus auf Singles ab 50.</p>\n<p><a href=\"https://ab50.de/hilfe/artikel.html?id=1\">Mehr dazu in der Hilfe</a></p>"
+     "answerHtml": "<p>Du m&ouml;chtest neue Leute kennen lernen, suchst einen Freizeitpartner f&uuml;r bestimmte Aktivit&auml;ten oder die gro&szlig;e Liebe f&uuml;rs Leben? Vielleicht suchst Du einen hei&szlig;en Flirt, aus dem mehr werden kann? <span class=\"sx-strong\">ab50.de</span> richtet sich an Menschen, die einfach und schnell Kontakt zu anderen Menschen finden m&ouml;chten &ndash; mit dem besonderen Fokus auf Singles ab 50.</p>\n<p><a href=\"https://ab50.de/hilfe/artikel.html?id=1\">Mehr dazu in der Hilfe</a></p>"
     },
     {
      "question": "Was ist das Besondere an ab50.de?",
@@ -34,7 +34,7 @@
     },
     {
      "question": "Ist ab50.de eine seriöse Plattform?",
-     "answerHtml": "<p><strong>Ja.</strong> Profile werden gepr&uuml;ft, Daten DSGVO-konform behandelt und Mitgliedschaften sind klar und transparent gestaltet. Viele Nutzer best&auml;tigen die Seriosit&auml;t und Zuverl&auml;ssigkeit von ab50.de.</p>"
+     "answerHtml": "<p><span class=\"sx-strong\">Ja.</span> Profile werden gepr&uuml;ft, Daten DSGVO-konform behandelt und Mitgliedschaften sind klar und transparent gestaltet. Viele Nutzer best&auml;tigen die Seriosit&auml;t und Zuverl&auml;ssigkeit von ab50.de.</p>"
     },
     {
      "question": "Gibt es Erfahrungsberichte?",
@@ -152,7 +152,7 @@
    "items": [
     {
      "question": "Ist ab50.de eine Abo-Abzocke?",
-     "answerHtml": "<p><strong>Nein.</strong> ab50.de arbeitet mit klar kommunizierten, markt&uuml;blichen Abomodellen. Laufzeiten, Preise und K&uuml;ndigungsbedingungen sind vor Abschluss jederzeit transparent einsehbar.</p>\n<p>Abonnements im Online-Dating sind branchen&uuml;blich, da Betrieb, Moderation, Support und Sicherheitsma&szlig;nahmen laufende Kosten verursachen. Ein kostenpflichtiger Zugang dient zudem dazu, die Qualit&auml;t der Community zu sichern und Missbrauch zu reduzieren.</p>"
+     "answerHtml": "<p><span class=\"sx-strong\">Nein.</span> ab50.de arbeitet mit klar kommunizierten, markt&uuml;blichen Abomodellen. Laufzeiten, Preise und K&uuml;ndigungsbedingungen sind vor Abschluss jederzeit transparent einsehbar.</p>\n<p>Abonnements im Online-Dating sind branchen&uuml;blich, da Betrieb, Moderation, Support und Sicherheitsma&szlig;nahmen laufende Kosten verursachen. Ein kostenpflichtiger Zugang dient zudem dazu, die Qualit&auml;t der Community zu sichern und Missbrauch zu reduzieren.</p>"
     },
     {
      "question": "Warum gibt es unterschiedliche Laufzeiten bei Abonnements?",
@@ -160,7 +160,7 @@
     },
     {
      "question": "Gibt es bei ab50.de aktive Frauen?",
-     "answerHtml": "<p><strong>Ja.</strong> ab50.de ist Teil eines gr&ouml;&szlig;eren, etablierten Dating-Netzwerks mit langj&auml;hrigen Medien- und Reichweitenpartnern. Dadurch profitieren unsere Mitglieder von einer gr&ouml;&szlig;eren Nutzerbasis, als es bei einer isolierten Plattform m&ouml;glich w&auml;re.</p>\n<p>Wie bei jeder seri&ouml;sen Dating-Plattform gilt: Nicht jedes Profil ist gleichzeitig aktiv, und nicht jede Anfrage f&uuml;hrt zu einer Antwort. Das entspricht der Realit&auml;t menschlicher Partnersuche &ndash; online wie offline.</p>"
+     "answerHtml": "<p><span class=\"sx-strong\">Ja.</span> ab50.de ist Teil eines gr&ouml;&szlig;eren, etablierten Dating-Netzwerks mit langj&auml;hrigen Medien- und Reichweitenpartnern. Dadurch profitieren unsere Mitglieder von einer gr&ouml;&szlig;eren Nutzerbasis, als es bei einer isolierten Plattform m&ouml;glich w&auml;re.</p>\n<p>Wie bei jeder seri&ouml;sen Dating-Plattform gilt: Nicht jedes Profil ist gleichzeitig aktiv, und nicht jede Anfrage f&uuml;hrt zu einer Antwort. Das entspricht der Realit&auml;t menschlicher Partnersuche &ndash; online wie offline.</p>"
     },
     {
      "question": "Warum antwortet nicht jede angeschriebene Person?",
@@ -168,7 +168,7 @@
     },
     {
      "question": "Gibt es bei ab50.de Fake-Profile oder Bots?",
-     "answerHtml": "<p><strong>Nein.</strong> ab50.de setzt keine Bots zur Simulation von Kontakten ein. Die Partnersuche erfolgt ausschlie&szlig;lich zwischen realen Menschen.</p>\n<p>Wie alle gr&ouml;&szlig;eren Dating-Plattformen stehen auch wir vor der Herausforderung, dass externe Akteure versuchen, missbr&auml;uchliche Profile anzulegen. Deshalb investieren wir kontinuierlich in technische und manuelle Pr&uuml;fmechanismen, um Fake-Profile zu erkennen und zu entfernen.</p>\n<p>Absolute Sicherheit gibt es im Internet nicht &ndash; unser Ziel ist es, Missbrauch bestm&ouml;glich zu minimieren.</p>"
+     "answerHtml": "<p><span class=\"sx-strong\">Nein.</span> ab50.de setzt keine Bots zur Simulation von Kontakten ein. Die Partnersuche erfolgt ausschlie&szlig;lich zwischen realen Menschen.</p>\n<p>Wie alle gr&ouml;&szlig;eren Dating-Plattformen stehen auch wir vor der Herausforderung, dass externe Akteure versuchen, missbr&auml;uchliche Profile anzulegen. Deshalb investieren wir kontinuierlich in technische und manuelle Pr&uuml;fmechanismen, um Fake-Profile zu erkennen und zu entfernen.</p>\n<p>Absolute Sicherheit gibt es im Internet nicht &ndash; unser Ziel ist es, Missbrauch bestm&ouml;glich zu minimieren.</p>"
     },
     {
      "question": "Sind Profile auf ab50.de aktuell oder „veraltet“?",

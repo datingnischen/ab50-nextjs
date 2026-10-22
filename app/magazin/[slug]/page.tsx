@@ -290,10 +290,10 @@ async function AuthorProfilePage({ title, contentHtml, tocItems }: { title: stri
               {profile.role && !title.includes("Dating-Experte") ? <p className="abp-role">{profile.role}</p> : null}
               <p className="abp-lead">{profile.fallbackDescription}</p>
               <ul className="abp-facts" aria-label="Kurz zu Christian M. Haas">
-                <li><strong>seit 2008</strong><span>Aufbau und Betrieb seriöser Singlebörsen</span></li>
-                <li><strong>seit 2016</strong><span>Partnerschaft mit Icony für Technik und Datenschutz</span></li>
-                {ownPosts.length ? <li><strong>{ownPosts.length} Beiträge</strong><span>im 50plus Magazin von ab50.de</span></li> : null}
-                <li><strong>Buch</strong><span><a href="#buch">„{CHRISTIAN_BOOK.title}“</a></span></li>
+                <li><span className="sx-strong">seit 2008</span><span>Aufbau und Betrieb seriöser Singlebörsen</span></li>
+                <li><span className="sx-strong">seit 2016</span><span>Partnerschaft mit Icony für Technik und Datenschutz</span></li>
+                {ownPosts.length ? <li><span className="sx-strong">{ownPosts.length} Beiträge</span><span>im 50plus Magazin von ab50.de</span></li> : null}
+                <li><span className="sx-strong">Buch</span><span><a href="#buch">„{CHRISTIAN_BOOK.title}“</a></span></li>
               </ul>
               <ul className="abp-profiles" aria-label="Profile von Christian M. Haas">
                 {CHRISTIAN_PROFILES.map((item) => (
@@ -577,7 +577,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
                 <span className="abg-avatar" aria-hidden="true">
                   {authorProfile?.imageSrc ? <Image src={authorProfile.imageSrc} alt={authorName} width={48} height={48} /> : initials}
                 </span>
-                {authorHref ? <a href={authorHref}>{authorName}</a> : <strong>{authorName}</strong>}
+                {authorHref ? <a href={authorHref}>{authorName}</a> : <span className="sx-strong">{authorName}</span>}
               </span>
               {updatedLabel ? <span><CalendarIcon />{updatedLabel}</span> : null}
               <span><ClockIcon />{readingMinutes} Min. Lesezeit</span>
