@@ -11,7 +11,7 @@ import { marketPartnersuchePath } from "@/lib/markets";
 const FAQ_PATH = "/faq/";
 // Dieselbe FAQ für DE, AT und CH: /at/faq/ und /ch/faq/ zeigen den deutschen Text, Canonical ist die DE-Fassung.
 const TITLE = "Häufige Fragen zur Partnersuche ab 50 (FAQ)";
-const DESCRIPTION = "Antworten zu Kosten, Sicherheit, Profil und Ablauf bei ab50.de, der Partnersuche für Singles ab 50.";
+const DESCRIPTION = "Antworten zu Kosten, Sicherheit, Profil und Ablauf bei ab50.de, der Partnersuche für Singles ab 50, übersichtlich nach Themen sortiert.";
 
 export const metadata: Metadata = {
   title: TITLE,

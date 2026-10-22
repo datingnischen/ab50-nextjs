@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { SEO_TITLES, TITLE_MAX_WIDTH, TITLE_SUFFIX, seoTitle, titleWidth } from "../lib/seo-title.ts";
-import { clampMetaDescription, META_DESCRIPTION_MAX, PAGE_META_DESCRIPTIONS, pageMetaDescription } from "../lib/meta-description.ts";
+import { clampMetaDescription, META_DESCRIPTION_MAX, PAGE_META_DESCRIPTIONS, POST_META_DESCRIPTIONS, pageMetaDescription } from "../lib/meta-description.ts";
 import { resolveMarketResourceRequest } from "../lib/market-router.ts";
 
 const decode = (value: string) => value
@@ -61,7 +61,7 @@ test("fixed magazine pages get their own description, never the iframe fallback 
     assert.doesNotMatch(description, /Ihr Browser kann leider/, pages[index].slug);
   }
   assert.equal(new Set(descriptions).size, descriptions.length);
-  for (const [slug, description] of Object.entries(PAGE_META_DESCRIPTIONS)) {
+  for (const [slug, description] of Object.entries({ ...PAGE_META_DESCRIPTIONS, ...POST_META_DESCRIPTIONS })) {
     assert.ok(description.length >= 110 && description.length <= META_DESCRIPTION_MAX, slug);
   }
 });
@@ -73,4 +73,11 @@ test("own page titles carry the domain only as the template suffix", () => {
     assert.doesNotMatch(readFileSync(file, "utf8").match(/const TITLE = "[^"]*"|  title: "[^"]*"/)?.[0] || "", /ab50\./, file);
   }
   assert.equal(SEO_TITLES["online-dating"], "Online-Dating ab 50: So gelingt der Einstieg");
+});
+
+test("FAQ and Über uns descriptions have search snippet length", () => {
+  for (const file of ["app/faq/page.tsx", "app/ueber-uns/page.tsx"]) {
+    const description = readFileSync(file, "utf8").match(/const DESCRIPTION = "([^"]*)"/)?.[1] || "";
+    assert.ok(description.length >= 110 && description.length <= 155, file);
+  }
 });

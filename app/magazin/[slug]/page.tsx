@@ -13,7 +13,7 @@ import { collapseSourceSections } from "@/lib/collapse-sources";
 import { excerptText, themeFor } from "@/lib/magazine-themes";
 import { seoTitle } from "@/lib/seo-title";
 import { magazineHeading } from "@/lib/heading-overrides";
-import { clampMetaDescription, pageMetaDescription } from "@/lib/meta-description";
+import { clampMetaDescription, pageMetaDescription, POST_META_DESCRIPTIONS } from "@/lib/meta-description";
 import { ArrowIcon, BookIcon, CalendarIcon, ClockIcon, HeartIcon, PinIcon, SparkIcon, UserIcon } from "@/components/ab-icons";
 import { PostCard, ThemeIconView } from "@/components/ab-magazine/post-card";
 import { TopicBanner } from "@/components/ab-magazine/topic-banner";
@@ -422,7 +422,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = stripHtml(post.title);
   // Der WordPress-Auszug ist oft nur ein abgeschnittener Halbsatz; dann den Artikelanfang nehmen.
   const excerpt = clampMetaDescription(excerptText(post.excerpt, 400), 400);
-  const description = clampMetaDescription(excerpt.length >= 120 ? excerpt : excerptText(post.content, 400));
+  const description = POST_META_DESCRIPTIONS[post.slug] || clampMetaDescription(excerpt.length >= 120 ? excerpt : excerptText(post.content, 400));
   return {
     title: seoTitle(title, post.slug),
     description,

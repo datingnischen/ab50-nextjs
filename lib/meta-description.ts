@@ -35,6 +35,11 @@ export const PAGE_META_DESCRIPTIONS: Record<string, string> = {
   "online-kreuzwortraetsel": "Kreuzworträtsel online und kostenlos im Browser lösen, dazu Definition, Spielarten wie das Schwedenrätsel und praktische Tipps zum Lösen.",
 };
 
+/** Artikel, deren Anfang als Description zu kurz ausfällt (unter 110 Zeichen). */
+export const POST_META_DESCRIPTIONS: Record<string, string> = {
+  "online-dating": "Online-Dating ab 50: wie Sie die passende Plattform wählen, ein ansprechendes Profil erstellen, ins Gespräch kommen und das erste Treffen planen.",
+};
+
 /** Description einer festen Seite: eigener Text, sonst der Seitenanfang ohne iframe-Ersatztext. */
 export function pageMetaDescription(slug: string, text?: string | null): string {
   if (PAGE_META_DESCRIPTIONS[slug]) return PAGE_META_DESCRIPTIONS[slug];
