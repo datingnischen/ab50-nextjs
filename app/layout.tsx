@@ -10,6 +10,7 @@ import { siteConfig } from "@/data/site";
 import { staticAsset, assetHost } from "@/lib/static-asset";
 import { Analytics } from "@vercel/analytics/next";
 import { vercelAnalyticsProps } from "@/lib/vercel-analytics";
+import { IconyGa4 } from "@/components/icony-ga4";
 
 // Überschriften: Fraunces (warme Serifenschrift), Fließtext: Source Sans 3 – gut lesbar für Singles ab 50.
 const display = Fraunces({ variable: "--ab-display", subsets: ["latin"], weight: ["500", "600", "700"], style: ["normal", "italic"] });
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteFooter />
         <StickyCTAButton />
         <Analytics {...vercelAnalyticsProps(assetHost)} />
+        <IconyGa4 />
       </body>
     </html>
   );
