@@ -112,7 +112,7 @@ export type MagazineArticleGraphInput = {
   datePublished?: string | null;
   dateModified?: string | null;
   /** A person with profile page, or the editorial team without one. */
-  author?: { name: string; profileUrl?: string | null; image?: string };
+  author?: { name: string; profileUrl?: string | null; image?: string; type?: "Person" | "Organization" };
   category?: { name: string; url: string } | null;
 };
 
@@ -132,8 +132,8 @@ export function buildMagazineArticleGraph(input: MagazineArticleGraphInput) {
     ? undefined
     : input.author.profileUrl
     ? {
-        "@type": "Person",
-        "@id": `${input.author.profileUrl}#person`,
+        "@type": input.author.type ?? "Person",
+        "@id": `${input.author.profileUrl}#${input.author.type === "Organization" ? "organization" : "person"}`,
         name: input.author.name,
         url: input.author.profileUrl,
         image: input.author.image,

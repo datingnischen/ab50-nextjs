@@ -109,3 +109,10 @@ test("magazine start, about pages and articles render the shared graphs", () => 
   }
   assert.match(readRepoFile("app/magazin/[slug]/page.tsx"), /buildMagazineArticleGraph\(/);
 });
+
+test("editorial teams with profile pages remain organizations", () => {
+ const graph = buildMagazineArticleGraph({ siteRoot, magazineName: "Magazin", magazineUrl: siteRoot + "magazin/", url: siteRoot + "magazin/test/", headline: "Test", description: "Test", author: { name: "Redaktion", type: "Organization", profileUrl: siteRoot + "magazin/redaktion/" } });
+ const article = (graph["@graph"] as Node[]).find(node => node["@type"] === "BlogPosting")!;
+ assert.equal(article.author["@type"], "Organization");
+ assert.equal(article.author.url, siteRoot + "magazin/redaktion/");
+});

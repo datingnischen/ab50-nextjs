@@ -535,8 +535,9 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const authorSlug = post.author?.slug || "redaktion";
   const authorProfile = getAuthorProfile(authorSlug);
   const authorPage = authorSlug ? await getPageBySlug(authorSlug) : null;
-  const authorHref = authorPage?.slug ? pagePath(authorPage.slug) : null;
-  const authorRole = authorProfile?.role || "Autor bei ab50.de";
+  const editorialAuthor = authorSlug === "redaktion" || /redaktion/i.test(authorName);
+  const authorHref = authorPage?.slug ? pagePath(authorPage.slug) : editorialAuthor ? "/ueber-uns/" : null;
+  const authorRole = authorProfile?.role || (editorialAuthor ? "Redaktion ab50.de" : "Autor bei ab50.de");
   const authorDescription = post.author?.description
     ? stripHtml(post.author.description)
     : (authorProfile?.fallbackDescription || "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah.");
@@ -557,13 +558,14 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     // Als Person nur bekannte Autoren mit Profilseite, sonst die Redaktion als Organisation.
     author: {
       name: authorName,
-      profileUrl: authorProfile && authorHref ? absoluteUrl(authorHref) : null,
+      type: editorialAuthor ? "Organization" : "Person",
+      profileUrl: (authorProfile || editorialAuthor) && authorHref ? absoluteUrl(authorHref) : null,
       image: authorProfile?.imageSrc,
     },
     category: category ? { name: category.name, url: absoluteUrl(categoryPath(category.slug)) } : null,
   });
-
   const faqSchema = buildMagazineFaqGraph(absoluteUrl(postPath(post.slug)), post.content);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
@@ -617,7 +619,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
                 <h2>{authorName}</h2>
                 <p className="abg-author-role">{authorRole}</p>
                 <p>{authorDescription}</p>
-                {authorHref ? <a className="abg-author-link" href={authorHref}>Zum Autorenprofil <ArrowIcon /></a> : null}
+                {authorHref ? <a className="abg-author-link" href={authorHref}>{editorialAuthor ? "Über die Verantwortlichen" : "Zum Autorenprofil"} <ArrowIcon /></a> : null}
               </div>
             </section>
           </div>
