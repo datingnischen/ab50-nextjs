@@ -563,13 +563,13 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     category: category ? { name: category.name, url: absoluteUrl(categoryPath(category.slug)) } : null,
   });
 
-  return (
   const faqSchema = buildMagazineFaqGraph(absoluteUrl(postPath(post.slug)), post.content);
+  return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+      {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} /> : null}
       <article className="abg abg-article">
         <header className={`ab-light-hero abg-ahero abg-tone-${theme.tone}`}>
-      {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} /> : null}
           <div className="ab-wrap abg-ahero-inner">
             <Crumbs title={title} category={category} />
             {category ? <a className="abg-kind" href={categoryPath(category.slug)}><ThemeIconView icon={theme.icon} />{category.name}</a> : null}
