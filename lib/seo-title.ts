@@ -30,6 +30,7 @@ export function titleWidth(title: string) {
 
 /** Kürzere Titel (nur <title>) für Artikel, deren Überschrift allein über 570 px liegt. */
 export const SEO_TITLES: Record<string, string> = {
+  "living-apart-together-ab-50": "Living Apart Together ab 50: Getrennt wohnen",
   "dating-nach-verwitwung": "Dating nach Verwitwung: Trauer, Nähe, Intimität",
   "freundeskreis-dating-ab50": "Dating ab 50: Warum Freunde und Netzwerk helfen",
   "romance-scams-ab-50": "Romance-Scams ab 50: Fake-Profile erkennen",

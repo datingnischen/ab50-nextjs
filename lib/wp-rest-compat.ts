@@ -31,7 +31,10 @@ const DEFAULT_PER_PAGE = 10;
 const MAX_PER_PAGE = 100;
 const NAMESPACE_ROUTES = ["/wp/v2/posts", "/wp/v2/categories"];
 
-const posts = (postsData as Json[]).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+// ICONY-Teaser brauchen ein Beitragsbild: Neue Beiträge erscheinen im Feed erst, wenn Codex das Titelbild geliefert hat.
+const posts = (postsData as Json[])
+  .filter((post) => Array.isArray(post._embedded?.["wp:featuredmedia"]) && post._embedded["wp:featuredmedia"].length > 0)
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 const categories = categoriesData as Json[];
 
 /** Datenquelle je Domain: ab50.de = Magazinbeiträge, ab50.ch = drei größte Städteseiten (lib/wp-market-teasers.ts). */

@@ -4,6 +4,7 @@ import { Fraunces, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import "./ab-base.css";
 import "./ab-shell.css";
+import "./magazine-blocks.css";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { StickyCTAButton } from "@/components/sticky-cta-button";
 import { siteConfig } from "@/data/site";

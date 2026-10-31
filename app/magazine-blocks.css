@@ -1,0 +1,533 @@
+/*
+ * Redaktionelle Bausteine im Magazin (Klassen mag-* im Beitrags-HTML), gleiche Klassen wie bei
+ * dich-mit-stich (dort docs/magazin-bausteine.md). Farben aus dem ab50-Logo: Blau und Rot.
+ */
+.ab-rich {
+  --mag-series-a: var(--ab-blue);
+  --mag-series-b: var(--ab-red);
+  --mag-radius: 18px;
+}
+
+.ab-rich .mag-stats,
+.ab-rich .mag-compare,
+.ab-rich .mag-studies,
+.ab-rich .mag-steps,
+.ab-rich .mag-chart,
+.ab-rich .mag-split,
+.ab-rich .mag-callout,
+.ab-rich .mag-verdict,
+.ab-rich .mag-faq,
+.ab-rich .mag-figure,
+.ab-rich .mag-table {
+  margin: 28px 0;
+}
+
+/* Kennzahlen */
+.ab-rich .mag-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-rich .mag-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 18px 18px 16px;
+  border-radius: var(--mag-radius);
+  background: var(--ab-blue-soft);
+  border: 1px solid rgba(28, 78, 149, 0.14);
+}
+
+.ab-rich .mag-stat-value {
+  font-family: var(--ab-display), Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1;
+  color: var(--ab-blue);
+}
+
+.ab-rich .mag-stat-label {
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--ab-ink);
+}
+
+.ab-rich .mag-stat-source,
+.ab-rich .mag-source {
+  display: block;
+  margin-top: auto;
+  font-size: 0.8rem;
+  color: var(--ab-muted);
+}
+
+/* Balkendiagramm */
+.ab-rich .mag-chart,
+.ab-rich .mag-split {
+  padding: 22px 22px 18px;
+  border-radius: var(--mag-radius);
+  border: 1px solid var(--ab-line);
+  background: #fff;
+}
+
+.ab-rich .mag-chart-title {
+  margin: 0 0 4px;
+  font-family: var(--ab-display), Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: var(--ab-blue);
+}
+
+.ab-rich .mag-chart-sub {
+  margin: 0 0 14px;
+  font-size: 0.92rem;
+  color: var(--ab-muted);
+}
+
+.ab-rich .mag-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+}
+
+.ab-rich .mag-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ab-rich .mag-legend::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--mag-series-a);
+}
+
+.ab-rich .mag-legend-b::before {
+  background: var(--mag-series-b);
+}
+
+.ab-rich .mag-legend-c::before {
+  background: #c9d3e3;
+}
+
+.ab-rich .mag-chart-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 150px) 1fr;
+  gap: 6px 14px;
+  align-items: center;
+  margin: 0 0 14px;
+}
+
+.ab-rich .mag-chart-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.ab-rich .mag-chart-bars {
+  display: grid;
+  gap: 5px;
+}
+
+.ab-rich .mag-bar-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ab-rich .mag-bar {
+  display: block;
+  height: 14px;
+  min-width: 4px;
+  border-radius: 999px;
+  background: var(--mag-series-a);
+}
+
+.ab-rich .mag-bar-b {
+  background: var(--mag-series-b);
+}
+
+.ab-rich .mag-bar-value {
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Gestapelter 100-%-Balken */
+.ab-rich .mag-split-bar {
+  display: flex;
+  overflow: hidden;
+  height: 34px;
+  margin: 6px 0 12px;
+  border-radius: 999px;
+  background: var(--ab-line);
+}
+
+.ab-rich .mag-split-bar .mag-bar {
+  height: 100%;
+  border-radius: 0;
+}
+
+.ab-rich .mag-bar-c {
+  background: #c9d3e3;
+}
+
+/* Vergleich zweier Gruppen */
+.ab-rich .mag-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.ab-rich .mag-compare-card,
+.ab-rich .mag-study {
+  margin: 0;
+  padding: 20px;
+  border-radius: var(--mag-radius);
+  border: 1px solid var(--ab-line);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(11, 33, 70, 0.06);
+}
+
+.ab-rich .mag-compare-card h3,
+.ab-rich .mag-study h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  color: var(--ab-blue);
+}
+
+.ab-rich .mag-effects {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-rich .mag-effects li {
+  position: relative;
+  margin: 0 0 8px;
+  padding-left: 34px;
+  line-height: 1.45;
+}
+
+.ab-rich .mag-effects li::before {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ab-rich .mag-effects .mag-up::before {
+  content: "↑";
+  color: #fff;
+  background: var(--ab-blue);
+}
+
+.ab-rich .mag-effects .mag-down::before {
+  content: "↓";
+  color: var(--ab-blue);
+  background: var(--ab-blue-soft);
+  border: 1px solid rgba(28, 78, 149, 0.3);
+}
+
+.ab-rich .mag-effects .mag-same::before {
+  content: "=";
+  color: var(--ab-muted);
+  background: #eceff4;
+}
+
+/* Studienkarten */
+.ab-rich .mag-studies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.ab-rich .mag-study {
+  display: flex;
+  flex-direction: column;
+}
+
+.ab-rich .mag-study-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 10px;
+}
+
+.ab-rich .mag-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ab-blue);
+  background: var(--ab-blue-soft);
+}
+
+.ab-rich .mag-study p {
+  margin: 0 0 10px;
+}
+
+/* Nummerierte Tipps */
+.ab-rich .mag-steps {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  list-style: none;
+  counter-reset: mag-step;
+}
+
+.ab-rich .mag-steps > li {
+  position: relative;
+  margin: 0;
+  padding: 18px 20px 16px 72px;
+  border-radius: var(--mag-radius);
+  background: #fff;
+  border: 1px solid var(--ab-line);
+  counter-increment: mag-step;
+}
+
+.ab-rich .mag-steps > li::before {
+  content: counter(mag-step);
+  position: absolute;
+  left: 18px;
+  top: 16px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-family: var(--ab-display), Georgia, serif;
+  font-size: 1.2rem;
+  color: #fff;
+  background: var(--ab-blue);
+}
+
+.ab-rich .mag-steps h3 {
+  margin: 0 0 6px;
+  font-size: 1.08rem;
+}
+
+.ab-rich .mag-steps p {
+  margin: 0;
+}
+
+/* Hinweis- und Tippboxen */
+.ab-rich .mag-callout {
+  padding: 18px 20px;
+  border-radius: var(--mag-radius);
+  border-left: 5px solid var(--ab-blue);
+  background: var(--ab-blue-soft);
+}
+
+.ab-rich .mag-callout-title {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: var(--ab-blue);
+}
+
+.ab-rich .mag-callout ul {
+  margin-bottom: 0;
+}
+
+.ab-rich .mag-callout > :last-child {
+  margin-bottom: 0;
+}
+
+/* Fazit */
+.ab-rich .mag-verdict {
+  padding: 26px 26px 20px;
+  border-radius: 22px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ab-night), var(--ab-blue));
+}
+
+.ab-rich .mag-verdict h2,
+.ab-rich .mag-verdict p,
+.ab-rich .mag-verdict li {
+  color: #fff;
+}
+
+.ab-rich .mag-verdict h2 {
+  margin: 0 0 10px;
+}
+
+.ab-rich .mag-verdict h2::before {
+  display: none;
+}
+
+.ab-rich .mag-verdict a {
+  color: #fff;
+}
+
+/* Tabellen */
+.ab-rich .mag-table {
+  overflow-x: auto;
+  border-radius: var(--mag-radius);
+  border: 1px solid var(--ab-line);
+}
+
+.ab-rich table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.ab-rich th,
+.ab-rich td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--ab-line);
+}
+
+.ab-rich thead th {
+  color: #fff;
+  background: var(--ab-blue);
+  font-weight: 700;
+}
+
+.ab-rich tbody tr:nth-child(even) {
+  background: #f6f8fc;
+}
+
+.ab-rich tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Aufklappbare Rohdaten unter Grafiken */
+.ab-rich .mag-data {
+  margin: -12px 0 24px;
+  font-size: 0.92rem;
+}
+
+.ab-rich .mag-data > summary {
+  cursor: pointer;
+  color: var(--ab-blue);
+  font-weight: 700;
+}
+
+.ab-rich .mag-data[open] > summary {
+  margin-bottom: 10px;
+}
+
+/* Bilder und Infografiken */
+.ab-rich .mag-figure img,
+.ab-rich figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--mag-radius);
+}
+
+.ab-rich .mag-figure figcaption {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--ab-muted);
+}
+
+/* FAQ-Akkordeon */
+.ab-rich .mag-faq h2 {
+  margin-top: 0;
+}
+
+.ab-rich .mag-faq-item {
+  margin: 0 0 10px;
+  border-radius: 14px;
+  border: 1px solid var(--ab-line);
+  background: #fff;
+}
+
+.ab-rich .mag-faq-item > summary {
+  position: relative;
+  padding: 16px 52px 16px 18px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1.4;
+  list-style: none;
+}
+
+.ab-rich .mag-faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ab-rich .mag-faq-item > summary::after {
+  content: "+";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-top: -13px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--ab-blue);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.ab-rich .mag-faq-item[open] > summary::after {
+  content: "–";
+}
+
+.ab-rich .mag-faq-item > summary:focus-visible {
+  outline: 3px solid rgba(28, 78, 149, 0.35);
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+
+.ab-rich .mag-faq-answer {
+  padding: 0 18px 14px;
+}
+
+.ab-rich .mag-faq-answer > :last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .ab-rich .mag-chart,
+  .ab-rich .mag-split,
+  .ab-rich .mag-verdict {
+    padding: 18px 16px 14px;
+  }
+
+  .ab-rich .mag-chart-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-rich .mag-steps > li {
+    padding: 64px 16px 14px;
+  }
+
+  .ab-rich .mag-steps > li::before {
+    top: 14px;
+    left: 16px;
+  }
+}
+
+.ab-rich .mag-stat-value,
+.ab-rich .mag-chart-title {
+  text-wrap: balance;
+}
+
+.ab-rich .mag-verdict h2 {
+  padding-left: 0;
+}
+
+/* ab50 setzt vor Listenpunkte ein Herz per Maske; in den Bausteinen gelten die eigenen Symbole. */
+.ab-rich .mag-effects > li::before {
+  -webkit-mask: none;
+  mask: none;
+}
