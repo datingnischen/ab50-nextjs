@@ -40,3 +40,18 @@ npm test
 ```
 
 Git-Autor und -Committer ausschließlich `christian@datingnischen.de`. Pushen, auf der Prüf-URL kontrollieren (Bild lädt, Infografik sichtbar) und das Ergebnis als Kommentar in die Trello-Karte schreiben.
+
+## Umsetzung durch Codex – 3. November 2026
+
+- Built-in ImageGen verwendet, beide Originale unter `$CODEX_HOME/generated_images/01a1a0fa-6e7b-7e20-8393-1439d1d3f870/` erhalten. WebP-Konvertierung mit Pillow.
+- Titelbild: `public/magazin/media/living-apart-together-ab-50.webp`, 1536 × 1024, 181.480 Bytes; Infografik: `public/magazin/media/living-apart-together-ab-50-infografik.webp`, 1200 × 1600, 151.926 Bytes. Beide Motive und sämtliche Beschriftungen visuell geprüft.
+- Quellenprüfung: Die ursprüngliche DZA-Veröffentlichung wurde zurückgezogen. Die korrigierte Fassung vom Juni 2025 bestätigt alle hier verwendeten gerundeten Zahlen: https://www.dza.de/fileadmin/dza/Dokumente/DZA_Aktuell/DZAAktuell_02_2024_Living-apart_together-vs2.pdf (S. 11–12, 16–18). Artikelquelle auf diese Fassung geändert. Gesamtstichprobe 4.992; Wunsch/Möglichkeit beruhen auf LAT-Teilstichproben, in der Grafik ausdrücklich gekennzeichnet.
+- Featured Media 1111 ergänzt, Infografik nach „Kurz gesagt“, KI-Bildnachweis im automatisch zugeklappten Quellenbereich. Bestehende HTML-Diagramme und Datentabelle bleiben erhalten. WP-REST-Gesamtzahl nun 68.
+
+### Finale ImageGen-Prompts
+
+**Titelbild:** Use case: photorealistic-natural. Editorial hero photo for German relationship article Living Apart Together age 50+. Landscape 1536x1024. A loving couple around 60 saying a warm goodbye at the entrance of a modest elegant apartment building; one person wearing a jacket holding a small weekend travel bag outside, the other smiling in the doorframe. Natural affectionate gestures, plausible hands and faces, authentic mature people, warm evening light, tasteful real-life photography. No text, no logos, no watermark.
+
+**Infografik:** Use case: infographic-diagram. Polished German editorial infographic, portrait approximately 1200x1600, large mobile-readable typography. Cream #faf7f2 background, navy #0b2146 typography, blue #1c4e95 and muted red #ad1d1d accents, pale blue cards #e8eff9, generous spacing. No logos. Title „Living Apart Together auf einen Blick“, subtitle „Zusammen sein, getrennt wohnen“. Big 6 % with label „der Menschen ab 43 leben in einer Partnerschaft mit zwei Haushalten“. Section „LAT nach Alter“: proportional bars 43–55 Jahre 10 %, 56–65 Jahre 5 %, 66–75 Jahre 4 %, Über 75 Jahre 2 %. Section „Wunsch zusammenzuziehen“: 43–65 Jahre 62 %, Über 65 Jahre 20 %, label „Menschen in LAT-Partnerschaften“. Section „Zusammenziehen in den nächsten drei Jahren“: 51 % „einfach oder gut möglich“, 49 % „schwierig oder kaum möglich“. Footer „Quelle: DZA Aktuell 02/2024 (korrigiert 2025), Deutscher Alterssurvey 2023 (n = 4.992)“. Note „Wunsch und Möglichkeit: Teilstichproben der LAT-Partnerschaften. Gerundete Werte.“ No extra numbers.
+
+Prüfungen vor Veröffentlichung: `npm test` erfolgreich (2 Python-Tests und 113 Node-Tests); `npm run build` erfolgreich einschließlich TypeScript und 152 generierten Seiten; `git diff --check` ohne Fehler. Das vorhandene Lint-Skript `next lint` ist bei Next.js 16 kein unterstützter Prüfbefehl; deshalb Build/TypeScript als relevante Codeprüfung verwendet.
