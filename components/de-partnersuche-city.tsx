@@ -51,6 +51,16 @@ const placeTypeLabels: Record<string, string> = {
   other: "Ort",
 };
 
+/** Redaktioneller Hinweis auf eine eigene Verteilerseite, nur für einzelne Städte (nie für alle Stadtseiten). */
+const cityNicheHints: Record<string, { before: string; anchor: string; href: string; after: string }> = {
+  "singles-kassel": {
+    before: "Sie möchten wissen, welche Kasseler Singlebörsen außer ab50.de noch zu Ihren Interessen passen? Der ",
+    anchor: "Single-Check für Kassel",
+    href: "https://kasseler-singles.de/#quiz",
+    after: " auf kasseler-singles.de beantwortet das mit drei kurzen Fragen.",
+  },
+};
+
 const cityAuthor = {
   name: "Christian M. Haas",
   role: "Autor & Dating-Experte bei ab50.de",
@@ -403,6 +413,7 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
   const heroChips = linesFromTextarea(city.acf?.city_hero_chips);
   const trustPoints = linesFromTextarea(city.acf?.city_trust_points);
   const iconyLocation = getIconyWidgetLocationForRoute(slug, 49);
+  const nicheHint = cityNicheHints[normalizeCitySlug(slug)];
   const singlesSearchUrl = citySearchUrl("de", slug);
   const score = normalizeScore(city.acf?.flirt_factor_score);
   const statCards = withSingles50PlusCard(normalizeStatCards(city.acf?.local_stat_cards), singles50Plus);
@@ -565,6 +576,11 @@ export default async function PartnersucheCityPage({ params }: PageProps) {
           }
         >
           <div className="abc-content ab-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
+          {nicheHint ? (
+            <div className="abc-content ab-rich">
+              <p className="mag-callout">{nicheHint.before}<a href={nicheHint.href}>{nicheHint.anchor}</a>{nicheHint.after}</p>
+            </div>
+          ) : null}
           <SourceBox
             sources={sources}
             intro={city.acf?.sources_intro || null}
