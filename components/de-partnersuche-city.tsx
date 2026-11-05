@@ -12,6 +12,8 @@ import { citySearchUrl } from "@/lib/city-search";
 import { siteConfig } from "@/data/site";
 import { staticAsset } from "@/lib/static-asset";
 import { clampMetaDescription } from "@/lib/meta-description";
+import { seoTitle } from "@/lib/seo-title";
+import citySeo from "@/data/city-seo.json";
 import { marketPartnersuchePath } from "@/lib/markets";
 import { getSingles50PlusEstimate, type Singles50PlusEstimate } from "@/lib/city-singles-50plus";
 import { AuthorBox, CityHero, CtaBand, FactStrip, FlirtDial, GuideSection, PlacesSection, SignalSection, StatCardsSection, TipsSection } from "@/components/ab-city/city-parts";
@@ -308,11 +310,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const city = await getCityByPublicSlug(slug);
   if (!city) return {};
   const cityName = city.acf?.city_name || sanitizeTitle(city.title);
-  const title = city.acf?.hero_title || sanitizeTitle(city.title);
-  const description = clampMetaDescription(cityLead(city)) || `Partnersuche ab 50 in ${cityName}: echte Singles, erste Date-Ideen, Treffpunkte. Kostenlos Profile ansehen und Nachrichten schreiben.`;
+  // Individueller SEO-Titel je Stadt (data/city-seo.json); die H1 bleibt beim importierten hero_title.
+  const seo = (citySeo as Record<string, { metaTitle: string; description: string }>)[city.slug];
+  const title = seo?.metaTitle || city.acf?.hero_title || sanitizeTitle(city.title);
+  const description = seo?.description || clampMetaDescription(cityLead(city)) || `Partnersuche ab 50 in ${cityName}: echte Singles, erste Date-Ideen, Treffpunkte. Kostenlos Profile ansehen und Nachrichten schreiben.`;
 
   return {
-    title,
+    title: seo ? seoTitle(title) : title,
     description,
     alternates: { canonical: cityPath(slug) },
     openGraph: {
