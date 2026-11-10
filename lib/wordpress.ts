@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { staticAsset } from "./static-asset";
 import { publicCitySlug } from "./city-slugs";
+import { publicMarketUrl } from "./markets";
 import { limitStrong, withoutHeadingSkips } from "./html-cleanup";
 import { siteConfig } from "@/data/site";
 import postsData from "@/data/wp/posts.json";
@@ -222,6 +223,14 @@ export function categoryPath(slug: string) {
 /** Öffentlicher Stadtpfad; München und Düsseldorf immer mit Umlaut (eine Adresse je Stadt, siehe lib/city-slugs.ts). */
 export function cityPath(slug: string) {
   return `/partnersuche/${publicCitySlug(slug)}/`;
+}
+
+/**
+ * Absolute Adresse einer deutschen Stadtseite. Für Links in Bereichen, die auch unter ab50.ch ausgeliefert werden
+ * (Magazin, Über uns, Suche, 404-Seite): relativ zeigten sie dort auf /partnersuche/singles-…/ der Schweiz (404).
+ */
+export function cityUrl(slug: string) {
+  return publicMarketUrl("de", cityPath(slug));
 }
 
 export function normalizeCitySlug(slug: string) {

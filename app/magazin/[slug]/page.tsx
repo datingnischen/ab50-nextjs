@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { marketPartnersuchePath, withSlashedPageLinks } from "@/lib/markets";
-import { categoryPath, cityPath, getAllCities, getAllPageSlugs, getAllPostSlugs, getCategories, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml, type WpCategory, type WpPostCard } from "@/lib/wordpress";
+import { categoryPath, cityUrl, getAllCities, getAllPageSlugs, getAllPostSlugs, getCategories, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml, type WpCategory, type WpPostCard } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
@@ -266,7 +266,7 @@ async function AuthorProfilePage({ title, contentHtml, tocItems }: { title: stri
   const cityLinks = CHRISTIAN_HERO_CITIES
     .map((slug) => cities.find((city) => city.slug === slug))
     .filter((city): city is NonNullable<typeof city> => Boolean(city))
-    .map((city) => ({ href: cityPath(city.slug), name: stripHtml(city.title).replace(/^Singles ab 50 aus\s+/i, "") }));
+    .map((city) => ({ href: cityUrl(city.slug), name: stripHtml(city.title).replace(/^Singles ab 50 aus\s+/i, "") }));
   const sideToc: TocItem[] = [
     ...tocItems,
     ...(latest.length ? [{ id: "neueste-beitraege", label: "Neueste Beiträge" }] : []),

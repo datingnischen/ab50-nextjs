@@ -125,6 +125,20 @@ export function resolveSectionRequest(hostnameInput: string, pathname: string): 
   return { action: "redirect", destination: publicMarketUrl(hostMarket, match[2]) };
 }
 
+/**
+ * Seitenpfade der gespiegelten deutschen Bereiche, die für ab50.ch (Markt ch) eine eigene Route unter app/ch/
+ * bekommen: gleiche Inhalte, aber noindex statt Canonical auf ab50.de (lib/mirror-metadata.ts). REST-Knoten,
+ * Sitemaps und andere Dateien bleiben beim gemeinsamen Ziel.
+ */
+const MIRRORED_SECTION_PATTERN = /^\/(?:magazin|ueber-uns|faq)(?:\/|$)/;
+const MIRROR_EXCLUDED_PATTERN = /^\/magazin\/(?:wp-json|wp-json-ch|index\.php)(?:\/|$)|\/[^/]*\.[a-z0-9]+$/i;
+
+export function mirrorRouteDestination(destination: string, market?: RouteMarket): string {
+  if (market !== "ch") return destination;
+  if (!MIRRORED_SECTION_PATTERN.test(destination) || MIRROR_EXCLUDED_PATTERN.test(destination)) return destination;
+  return `/ch${destination}`;
+}
+
 export function resolvePartnersucheRequest(hostnameInput: string, pathname: string): PartnersucheResolution {
   const section = resolveSectionRequest(hostnameInput, pathname);
   if (section) return section;

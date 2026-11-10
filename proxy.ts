@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  mirrorRouteDestination,
   resolveHostRequest,
   resolveMarketResourceRequest,
   resolvePartnersucheRequest,
@@ -92,7 +93,8 @@ export function proxy(request: NextRequest) {
   if (resolution.action === "pass") return NextResponse.next();
 
   const destination = request.nextUrl.clone();
-  destination.pathname = resolution.destination;
+  // ab50.ch-Spiegel von Magazin, FAQ und Über uns: eigene Route unter app/ch/ mit noindex statt Canonical auf ab50.de.
+  destination.pathname = mirrorRouteDestination(resolution.destination, resolution.market);
   return NextResponse.rewrite(withEmbedValue(destination));
 }
 

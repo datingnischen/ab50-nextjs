@@ -43,6 +43,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+function placesIntro(cityName: string, names: string[]) {
+  const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} und ${names[names.length - 1]}` : names.join("");
+  return `${list}: Diese Orte in ${cityName} nennt auch das Stadtporträt weiter unten. Sie eignen sich für ein erstes Kennenlernen oder einen entspannten nächsten Schritt.`;
+}
+
 /** Stadtporträt-Überschriften für das Inhaltsverzeichnis (ohne IDs im Import: werden hier ergänzt). */
 function withHeadingIds(html: string) {
   const toc: { id: string; label: string }[] = [];
@@ -179,7 +184,8 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
         {facts ? (
           <PlacesSection
             cityName={city.name}
-            intro="Diese Treffpunkte nennt auch das Stadtporträt weiter unten – sie eignen sich für ein erstes Kennenlernen oder einen entspannten nächsten Schritt."
+            // Stadtbezogener Einstieg statt eines Satzes, der auf allen 18 Seiten gleich lautete (Seobility: doppelter Textblock).
+            intro={placesIntro(city.name, facts.treffpunkte.map((place) => place.name))}
             places={facts.treffpunkte.map((place) => ({
               name: place.name,
               typeLabel: place.typ,

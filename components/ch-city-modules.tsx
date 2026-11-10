@@ -152,8 +152,8 @@ export function ChFlirtFactorNote({ cityName, score }: { cityName: string; score
     <details className="city-source-box" aria-label="Wie der Flirt-Faktor entsteht">
       <summary>Flirt-Faktor {cityName}: Hintergrund und Quellen</summary>
       <p>
-        Der Flirt-Faktor ({score}/100) ist eine redaktionelle Einschätzung von ab50.ch. Er berücksichtigt die
-        Kontaktbasis der Stadt, die Vielfalt der Quartiere und die Qualität der Treffpunkte für entspannte Dates
+        Der Flirt-Faktor für {cityName} ({score}/100) ist eine redaktionelle Einschätzung von ab50.ch. Er berücksichtigt die
+        Kontaktbasis von {cityName}, die Vielfalt der Quartiere und die Qualität der Treffpunkte für entspannte Dates
         ab 50 – er ist keine amtliche Statistik. Einwohner-, Quartiers- und Treffpunktangaben stammen aus dem
         Stadtporträt auf dieser Seite.
       </p>

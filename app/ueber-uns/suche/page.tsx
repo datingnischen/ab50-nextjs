@@ -78,7 +78,9 @@ async function loadDocuments(): Promise<SiteSearchDocument[]> {
       title: cityName ? `Singles ab 50 aus ${cityName}` : stripHtml(city.title),
       excerpt: shortExcerpt(cardCopy || content),
       text: `${stripHtml(city.title)} ${cityName} ${content.slice(0, 4000)}`,
-      href: cityPath(publicSlug),
+      // Absolut: Die Suche läuft auch unter ab50.ch, dort wäre /partnersuche/singles-…/ eine 404.
+      href: publicMarketUrl("de", cityPath(publicSlug)),
+      previewHref: marketPreviewPath("de", cityPath(publicSlug)),
     };
   });
 

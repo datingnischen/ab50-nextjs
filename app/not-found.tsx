@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import { CompassIcon, PinIcon } from "@/components/ab-icons";
 import { CtaBand } from "@/components/ab-city/city-parts";
 import { siteConfig } from "@/data/site";
+import { publicCitySlug } from "@/lib/city-slugs";
+import { publicMarketUrl } from "@/lib/markets";
 import "@/components/ab-city/ab-city.css";
 
 export const metadata: Metadata = {
   title: "Seite nicht gefunden",
   robots: { index: false, follow: true },
+  // Kein geerbtes Canonical aus dem Layout (zeigte auf ab50.de/magazin/, auch auf ab50.ch).
+  alternates: { canonical: null },
 };
 
 const CITIES = [
@@ -36,7 +40,8 @@ export default function NotFound() {
         <h2 id="abc-nf-title">Beliebte Stadtseiten</h2>
         <ul>
           {CITIES.map(([name, slug]) => (
-            <li key={slug}><a href={`/partnersuche/${slug}/`}><PinIcon />Singles ab 50 in {name}</a></li>
+            // Absolut auf ab50.de: Die 404-Seite erscheint auch unter ab50.ch, wo es diese Stadtseiten nicht gibt.
+            <li key={slug}><a href={publicMarketUrl("de", `/partnersuche/${publicCitySlug(slug)}/`)}><PinIcon />Singles ab 50 in {name}</a></li>
           ))}
         </ul>
       </section>
