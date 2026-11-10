@@ -8,6 +8,7 @@ import postsData from "@/data/wp/posts.json";
 import pagesData from "@/data/wp/pages.json";
 import categoriesData from "@/data/wp/categories.json";
 import citiesData from "@/data/wp/stadt.json";
+import swissMagazineData from "@/data/ch-magazin.json";
 
 export type WpImage = {
   sourceUrl: string;
@@ -399,6 +400,27 @@ export const getPageBySlug = cache(async (slug: string) => {
 });
 
 export const getAllPostSlugs = cache(async () => rawPosts.map((post) => post.slug).filter(Boolean) as string[]);
+
+/**
+ * Eigene Beiträge nur für ab50.ch (data/ch-magazin.json, gleiche Form wie data/wp/posts.json). Sie stehen bewusst
+ * nicht in rawPosts: Auf ab50.de tauchen sie damit in keiner Liste, Kategorie, Sitemap, REST-Antwort oder Suche
+ * auf, und /magazin/<slug>/ liefert dort 404. Ausgeliefert werden sie über app/ch/magazin/[slug] mit Self-Canonical.
+ */
+const rawSwissPosts = (swissMagazineData as any[]).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+export const getSwissPosts = cache(async () => rawSwissPosts.map(normalizePost));
+
+export const getSwissPostBySlug = cache(async (slug: string) => {
+  const post = rawSwissPosts.find((entry) => entry.slug === slug);
+  return post ? normalizePost(post) : null;
+});
+
+export const getAllSwissPostSlugs = cache(async () => rawSwissPosts.map((post) => post.slug).filter(Boolean) as string[]);
+
+/** Öffentliche Adresse eines ab50.ch-Beitrags. */
+export function swissPostUrl(slug: string) {
+  return publicMarketUrl("ch", postPath(slug));
+}
 
 export const getAllPageSlugs = cache(async () => rawPages.map((page) => page.slug).filter(Boolean) as string[]);
 

@@ -2,8 +2,8 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
-import { marketPartnersuchePath, withSlashedPageLinks } from "@/lib/markets";
-import { categoryPath, cityUrl, getAllCities, getAllPageSlugs, getAllPostSlugs, getCategories, getLatestPosts, getPageBySlug, getPostBySlug, pagePath, postPath, stripHtml, type WpCategory, type WpPostCard } from "@/lib/wordpress";
+import { marketPartnersuchePath, publicMarketUrl, registrationUrl, withSlashedPageLinks, type MarketCode } from "@/lib/markets";
+import { categoryPath, cityUrl, getAllCities, getAllPageSlugs, getAllPostSlugs, getCategories, getLatestPosts, getPageBySlug, getPostBySlug, getSwissPostBySlug, pagePath, postPath, stripHtml, swissPostUrl, type WpCategory, type WpPostCard } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
@@ -23,7 +23,8 @@ import "@/components/ab-magazine/ab-magazine.css";
 import "@/components/ab-magazine/author-profile.css";
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
+  // market "ch": eigener ab50.ch-Beitrag (data/ch-magazin.json), aufgerufen von app/ch/magazin/[slug].
+  params: Promise<{ slug: string; market?: "ch" }>;
 };
 
 type TocItem = { id: string; label: string };
@@ -138,27 +139,30 @@ function addHeadingIds(html: string, tocItems: TocItem[]) {
   });
 }
 
-function inlineArticleCta() {
+function inlineArticleCta(market: MarketCode = "de") {
+  // Eigene ab50.ch-Beiträge: Marke und Anmeldung für ab50.ch.
+  const brand = market === "ch" ? "ab50.ch" : "ab50.de";
+  const registration = market === "ch" ? registrationUrl("ch", "magazin") : siteConfig.links.registrationCommon;
   return `
     <aside class="article-inline-cta" aria-label="ab50 Registrierung">
-      <p class="eyebrow">ab50.de Tipp</p>
+      <p class="eyebrow">${brand} Tipp</p>
       <h2>Aus dem Lesen in den echten Kontakt</h2>
-      <p>Wenn dich das Thema gerade bewegt, kannst du auf ab50.de kostenlos starten und in Ruhe neue Menschen kennenlernen.</p>
-      <a class="button-primary" href="${siteConfig.links.registrationCommon}">Kostenlos starten</a>
+      <p>Wenn dich das Thema gerade bewegt, kannst du auf ${brand} kostenlos starten und in Ruhe neue Menschen kennenlernen.</p>
+      <a class="button-primary" href="${registration}">Kostenlos starten</a>
     </aside>
   `;
 }
 
-function injectInlineCta(html: string) {
+function injectInlineCta(html: string, market: MarketCode = "de") {
   let headingCount = 0;
   return html.replace(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi, (match) => {
     headingCount += 1;
-    if (headingCount === 3) return `${inlineArticleCta()}${match}`;
+    if (headingCount === 3) return `${inlineArticleCta(market)}${match}`;
     return match;
   });
 }
 
-function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], withCta = true) {
+function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], withCta = true, market: MarketCode = "de") {
   const cleaned = collapseSourceSections(html || "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
@@ -172,7 +176,7 @@ function sanitizeContent(html?: string | null, tocItems: TocItem[] = [], withCta
     .replace(/<img(?![^>]*decoding=)/gi, '<img decoding="async"');
 
   const linked = addHeadingIds(withSlashedPageLinks(cleaned), tocItems);
-  return withCta ? injectInlineCta(linked) : linked;
+  return withCta ? injectInlineCta(linked, market) : linked;
 }
 
 function estimateReadingTime(html?: string | null) {
@@ -208,21 +212,22 @@ function Crumbs({ title, category }: { title: string; category?: { name: string;
   );
 }
 
-function RadarCta() {
-  const partnersuche = marketPartnersuchePath("de");
+function RadarCta({ market = "de" }: { market?: MarketCode }) {
+  const partnersuche = marketPartnersuchePath(market);
+  const registration = market === "ch" ? registrationUrl("ch", "magazin") : siteConfig.links.registrationCommon;
   return (
     <section className="ab-wrap ab-section" aria-label="Kostenlos starten">
       <div className="abg-radar">
         <div>
           <p className="ab-eyebrow"><PinIcon />Umkreissuche</p>
           <h2>Lerne neue Menschen kennen – mit mehr Ruhe, Klarheit und echtem Interesse.</h2>
-          <p>Starte kostenlos auf ab50.de und schau dich in deinem Tempo um, wer in deiner Nähe ebenfalls neu anfangen möchte.</p>
+          <p>Starte kostenlos auf {market === "ch" ? "ab50.ch" : "ab50.de"} und schau dich in deinem Tempo um, wer in deiner Nähe ebenfalls neu anfangen möchte.</p>
           <div className="ab-actions">
-            <a className="ab-btn ab-btn-primary" href={siteConfig.links.registrationCommon}>Kostenlos starten</a>
+            <a className="ab-btn ab-btn-primary" href={registration}>Kostenlos starten</a>
             <a className="ab-btn ab-btn-ghost" href={partnersuche.publicUrl}>Singles in deiner Stadt</a>
           </div>
         </div>
-        <a className="abg-radar-card" href={siteConfig.links.registrationCommon} tabIndex={-1} aria-hidden="true">
+        <a className="abg-radar-card" href={registration} tabIndex={-1} aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element -- statische SVG-Grafik */}
           <img src={staticAsset("/umkreissuche-radar.svg")} alt="Umkreissuche: Singles ab 50 in deiner Nähe" width={320} height={480} loading="lazy" decoding="async" />
         </a>
@@ -395,9 +400,33 @@ export async function generateStaticParams() {
   return Array.from(new Set([...postSlugs, ...pageSlugs])).map((slug) => ({ slug }));
 }
 
+/** Eigener ab50.ch-Beitrag: indexierbar mit Self-Canonical auf ab50.ch, Titel mit ab50.ch statt ab50.de. */
+async function swissPostMetadata(slug: string): Promise<Metadata> {
+  const post = await getSwissPostBySlug(slug);
+  if (!post) return {};
+  const title = stripHtml(post.title);
+  const description = clampMetaDescription(excerptText(post.excerpt, 400), 155);
+  const url = swissPostUrl(post.slug);
+  return {
+    title: { absolute: `${title} | ab50.ch` },
+    description,
+    alternates: { canonical: url },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      locale: "de_CH",
+      siteName: "ab50.ch",
+      images: post.featuredImage?.sourceUrl ? [{ url: post.featuredImage.sourceUrl, alt: post.featuredImage.altText || title }] : undefined,
+    },
+  };
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const page = await getPageBySlug(slug);
+  const { slug, market } = await params;
+  const page = market === "ch" ? null : await getPageBySlug(slug);
   if (page) {
     const title = stripHtml(page.title);
     const description = page.slug === CHRISTIAN_SLUG
@@ -417,6 +446,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     };
   }
+
+  if (market === "ch") return swissPostMetadata(slug);
 
   const post = await getPostBySlug(slug);
   if (!post) return {};
@@ -441,9 +472,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function MagazinSlugPage({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, market } = await params;
+  const swiss = market === "ch";
 
-  const page = await getPageBySlug(slug);
+  const page = swiss ? null : await getPageBySlug(slug);
   if (page) {
     const title = stripHtml(page.title);
     const profileGraph = buildChristianBookProfileGraph({
@@ -520,8 +552,13 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     );
   }
 
-  const post = await getPostBySlug(slug);
+  const post = swiss ? await getSwissPostBySlug(slug) : await getPostBySlug(slug);
   if (!post) notFound();
+  // ab50.ch-Beiträge: Schema, CTA und Banner mit ab50.ch-Adressen.
+  const postUrl = swiss ? swissPostUrl(post.slug) : absoluteUrl(postPath(post.slug));
+  const siteRoot = swiss ? publicMarketUrl("ch", "/") : absoluteUrl("/");
+  const magazineUrl = swiss ? publicMarketUrl("ch", "/magazin/") : absoluteUrl("/magazin/");
+  const brand = swiss ? "ab50.ch" : "ab50.de";
 
   const latestPosts = await getLatestPosts(12);
   const relatedPosts = rotateRelated(latestPosts, post.slug, 3);
@@ -530,14 +567,14 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const lead = excerptText(post.excerpt || post.content, 260);
   const readingMinutes = estimateReadingTime(post.content);
   const updatedLabel = formatUpdatedLabel(post);
-  const safeHtml = sanitizeContent(post.content, tocItems);
+  const safeHtml = sanitizeContent(post.content, tocItems, true, swiss ? "ch" : "de");
   const authorName = post.author?.name || "ab50.de Redaktion";
   const authorSlug = post.author?.slug || "redaktion";
   const authorProfile = getAuthorProfile(authorSlug);
   const authorPage = authorSlug ? await getPageBySlug(authorSlug) : null;
   const editorialAuthor = authorSlug === "redaktion" || /redaktion/i.test(authorName);
   const authorHref = authorPage?.slug ? pagePath(authorPage.slug) : editorialAuthor ? "/ueber-uns/" : null;
-  const authorRole = authorProfile?.role || (editorialAuthor ? "Redaktion ab50.de" : "Autor bei ab50.de");
+  const authorRole = (authorProfile?.role || (editorialAuthor ? "Redaktion ab50.de" : "Autor bei ab50.de")).replace("ab50.de", brand);
   const authorDescription = post.author?.description
     ? stripHtml(post.author.description)
     : (authorProfile?.fallbackDescription || "Die ab50.de Redaktion schreibt über Dating ab 50, Nähe, Lebensphasen, Sicherheit und neue Kontakte – ruhig, verständlich und alltagsnah.");
@@ -546,10 +583,10 @@ export default async function MagazinSlugPage({ params }: PageProps) {
   const theme = themeFor(category?.slug);
   const initials = authorName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || "AB";
   const schema = buildMagazineArticleGraph({
-    siteRoot: absoluteUrl("/"),
+    siteRoot,
     magazineName: siteConfig.magazineName,
-    magazineUrl: absoluteUrl("/magazin/"),
-    url: absoluteUrl(postPath(post.slug)),
+    magazineUrl,
+    url: postUrl,
     headline: title,
     description: lead,
     image: post.featuredImage?.sourceUrl || undefined,
@@ -562,9 +599,9 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       profileUrl: (authorProfile || editorialAuthor) && authorHref ? absoluteUrl(authorHref) : null,
       image: authorProfile?.imageSrc,
     },
-    category: category ? { name: category.name, url: absoluteUrl(categoryPath(category.slug)) } : null,
+    category: category ? { name: category.name, url: swiss ? publicMarketUrl("ch", categoryPath(category.slug)) : absoluteUrl(categoryPath(category.slug)) } : null,
   });
-  const faqSchema = buildMagazineFaqGraph(absoluteUrl(postPath(post.slug)), post.content);
+  const faqSchema = buildMagazineFaqGraph(postUrl, post.content);
 
   return (
     <>
@@ -608,7 +645,7 @@ export default async function MagazinSlugPage({ params }: PageProps) {
             {/* Inhaltsverzeichnis nur einmal im DOM (Seobility „doppelte Textblöcke“): das der Seitenleiste rückt mobil per CSS über den Artikel. */}
             <div className="article-content ab-rich abg-rich" dangerouslySetInnerHTML={{ __html: safeHtml }} />
             {/* Banner nur einmal im DOM (Seobility „doppelte Textblöcke“): mit Seitenleiste steht er dort, mobil rückt die Seitenleiste unter den Artikel. */}
-            {tocItems.length >= 3 ? null : <TopicBanner banner={banner} placement="article" />}
+            {tocItems.length >= 3 ? null : <TopicBanner banner={banner} placement="article" market={swiss ? "ch" : "de"} />}
 
             <section className="abg-author" aria-label="Autor">
               <span className="abg-author-avatar" aria-hidden="true">
@@ -630,12 +667,12 @@ export default async function MagazinSlugPage({ params }: PageProps) {
                 <span><BookIcon />In diesem Beitrag</span>
                 <ol>{tocItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.label}</a></li>)}</ol>
               </nav>
-              <TopicBanner banner={banner} placement="sidebar" />
+              <TopicBanner banner={banner} placement="sidebar" market={swiss ? "ch" : "de"} />
             </aside>
           ) : null}
         </div>
 
-        <RadarCta />
+        <RadarCta market={swiss ? "ch" : "de"} />
 
         {relatedPosts.length ? (
           <section className="ab-wrap ab-section" aria-labelledby="abg-related-title">

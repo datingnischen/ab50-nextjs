@@ -3,7 +3,7 @@ import { MarketHtml } from "@/components/market-html";
 import { MarketLink } from "@/components/market-link";
 import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { swissPartnersuche } from "@/lib/ch-partnersuche";
-import { marketPartnersuchePath, registrationUrl } from "@/lib/markets";
+import { marketPartnersuchePath, marketPreviewPath, publicMarketUrl, registrationUrl } from "@/lib/markets";
 import { cityCardCopy } from "@/lib/city-card-copy";
 import { buildMap, cityGeo } from "@/lib/city-geo";
 import { getChCityFacts } from "@/data/ch-city-facts";
@@ -15,6 +15,9 @@ import { HeartIcon, PinIcon } from "@/components/ab-icons";
 import "@/components/ab-city/ab-overview.css";
 
 const overviewPath = marketPartnersuchePath("ch");
+// Eigener ab50.ch-Beitrag (data/ch-magazin.json); auf Vorschau-Hosts über den /ch-Pfad.
+const TOP10_PATH = "/magazin/top-10-staedte-singles-ab-50-schweiz/";
+const top10Path = { publicUrl: publicMarketUrl("ch", TOP10_PATH), previewPath: marketPreviewPath("ch", TOP10_PATH) };
 
 export const metadata: Metadata = {
   title: { absolute: "Partnersuche ab 50 in der Schweiz | ab50.ch" },
@@ -109,6 +112,17 @@ export default function SwissPartnersucheOverviewPage() {
           </div>
         </div>
       </div>
+
+      <section className="ab-wrap ab-section" aria-labelledby="ch-top10-title">
+        <div className="ab-head">
+          <p className="ab-eyebrow"><HeartIcon />Rangliste</p>
+          <h2 id="ch-top10-title">Welche Städte vorn liegen</h2>
+          <p>
+            Zürich, Genf und Basel führen beim Flirt-Faktor. Die ganze Rangliste mit je drei Treffpunkten pro Stadt steht im Beitrag{" "}
+            <MarketLink href={top10Path.publicUrl} previewHref={top10Path.previewPath}>Die 10 besten Städte für Singles ab 50 in der Schweiz</MarketLink>.
+          </p>
+        </div>
+      </section>
 
       <section className="ab-wrap ab-section" aria-label="Partnersuche ab 50 in der Schweiz">
         <div className="abm-story ab-rich">

@@ -40,9 +40,18 @@ export const markets: Record<MarketCode, MarketConfig> = {
   },
 };
 
+/**
+ * Slugs der eigenen ab50.ch-Beiträge (data/ch-magazin.json; Test hält beide Listen gleich). Hier als kurze Liste,
+ * damit der Client-Rahmen (Kopf, Fuss, Anmeldelinks) nicht den ganzen Beitragstext mitlädt.
+ */
+export const SWISS_MAGAZINE_SLUGS: readonly string[] = ["top-10-staedte-singles-ab-50-schweiz"];
+
 export function marketFromPathname(pathname: string): MarketCode {
-  // Nur die Partnersuche hat ein eigenes Schweizer Gesicht; /ch/magazin/ und /ch/ueber-uns/ zeigen die deutschen Inhalte im DE-Rahmen.
+  // Die Partnersuche und eigene ab50.ch-Beiträge haben ein Schweizer Gesicht; die übrigen Seiten unter /ch/magazin/
+  // und /ch/ueber-uns/ zeigen die deutschen Inhalte im DE-Rahmen.
   if (/^\/ch\/partnersuche(?:\/|$)/.test(pathname)) return "ch";
+  const swissPost = pathname.match(/^\/ch\/magazin\/([^/]+)\/?$/);
+  if (swissPost && SWISS_MAGAZINE_SLUGS.includes(swissPost[1])) return "ch";
   return "de";
 }
 
