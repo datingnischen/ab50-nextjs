@@ -135,6 +135,8 @@ const MIRROR_EXCLUDED_PATTERN = /^\/magazin\/(?:wp-json|wp-json-ch|index\.php)(?
 
 export function mirrorRouteDestination(destination: string, market?: RouteMarket): string {
   if (market !== "ch") return destination;
+  // ab50.ch/magazin/sitemap.xml: Schweizer Sitemap (CH-Stadtseiten und eigene CH-Beiträge) statt der deutschen.
+  if (destination === "/magazin/sitemap.xml") return "/ch/sitemap.xml";
   if (!MIRRORED_SECTION_PATTERN.test(destination) || MIRROR_EXCLUDED_PATTERN.test(destination)) return destination;
   return `/ch${destination}`;
 }

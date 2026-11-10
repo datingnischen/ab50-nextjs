@@ -66,8 +66,8 @@ test("ab50.ch-Spiegel von Magazin, FAQ und Über uns bekommt eigene Routen statt
   assert.equal(mirrorRouteDestination("/magazin/kategorie/leben/", "ch"), "/ch/magazin/kategorie/leben/");
   assert.equal(mirrorRouteDestination("/faq/", "ch"), "/ch/faq/");
   assert.equal(mirrorRouteDestination("/ueber-uns/suche/", "ch"), "/ch/ueber-uns/suche/");
-  // Dateien und REST-Knoten bleiben beim gemeinsamen Ziel, andere Märkte unverändert.
-  assert.equal(mirrorRouteDestination("/magazin/sitemap.xml", "ch"), "/magazin/sitemap.xml");
+  // Die Magazin-Sitemap wird auf ab50.ch zur Schweizer Sitemap; REST-Knoten bleibt beim gemeinsamen Ziel, andere Märkte unverändert.
+  assert.equal(mirrorRouteDestination("/magazin/sitemap.xml", "ch"), "/ch/sitemap.xml");
   assert.equal(mirrorRouteDestination("/magazin/wp-json/wp/v2/posts", "ch"), "/magazin/wp-json/wp/v2/posts");
   assert.equal(mirrorRouteDestination("/magazin/", "de"), "/magazin/");
   assert.equal(mirrorRouteDestination("/magazin/", "at"), "/magazin/");
