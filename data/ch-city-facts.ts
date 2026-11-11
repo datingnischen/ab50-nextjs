@@ -659,3 +659,11 @@ export const chCityFacts: Record<string, ChCityFacts> = {
 export function getChCityFacts(slug: string): ChCityFacts | null {
   return chCityFacts[slug] ?? null;
 }
+
+/** Rangplatz nach Flirt-Faktor (gleiche Punktzahl = gleicher Platz) und Anzahl bewerteter Städte. */
+export function getChFlirtRank(slug: string): { rank: number; total: number } | null {
+  const own = chCityFacts[slug];
+  if (!own) return null;
+  const scores = Object.values(chCityFacts).map((facts) => facts.flirtFaktor);
+  return { rank: scores.filter((score) => score > own.flirtFaktor).length + 1, total: scores.length };
+}

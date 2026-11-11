@@ -7,14 +7,18 @@ import { CityFurtherCities } from "@/components/city-further-cities";
 import { CityImageDialog } from "@/components/city-image-dialog";
 import { IconyIframeSinglesWidget } from "@/components/icony-iframe-singles-widget";
 import { MarketHtml } from "@/components/market-html";
+import { MarketLink } from "@/components/market-link";
 import { getIconyWidgetLocationForRoute } from "@/data/city-widget-locations";
-import { getChCityFacts } from "@/data/ch-city-facts";
+import { getChCityFacts, getChFlirtRank } from "@/data/ch-city-facts";
 import { cityArtAltText, cityArtImageSrc } from "@/lib/city-art";
 import { getSwissCity, getSwissCitySlugs, swissPartnersuche } from "@/lib/ch-partnersuche";
 import { citySearchUrl } from "@/lib/city-search";
 import { pickFurtherCities } from "@/lib/further-cities";
 import { jsonLd } from "@/lib/seo";
-import { marketPartnersuchePath, publicMarketUrl, registrationUrl } from "@/lib/markets";
+import { marketPartnersuchePath, marketPreviewPath, publicMarketUrl, registrationUrl } from "@/lib/markets";
+
+// Eigener ab50.ch-Beitrag mit der Rangliste (data/ch-magazin.json).
+const TOP10_PATH = "/magazin/top-10-staedte-singles-ab-50-schweiz/";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -67,6 +71,7 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
   if (!city) notFound();
 
   const facts = getChCityFacts(city.slug);
+  const rank = getChFlirtRank(city.slug);
   const route = marketPartnersuchePath("ch", city.slug);
   const overviewRoute = marketPartnersuchePath("ch");
   const furtherCities = pickFurtherCities(
@@ -217,6 +222,12 @@ export default async function SwissPartnersucheCityPage({ params }: PageProps) {
           <div className="abc-content ab-rich">
             <MarketHtml market="ch" html={guide.html} />
           </div>
+          {facts && rank ? (
+            <p className="ch-rank-note">
+              Mit {facts.flirtFaktor} von 100 Punkten liegt {city.name} beim Flirt-Faktor auf Platz {rank.rank} von {rank.total} Schweizer Städten.{" "}
+              <MarketLink href={publicMarketUrl("ch", TOP10_PATH)} previewHref={marketPreviewPath("ch", TOP10_PATH)}>Die 10 besten Städte für Singles ab 50 in der Schweiz</MarketLink>
+            </p>
+          ) : null}
           {facts ? <ChFlirtFactorNote cityName={city.name} score={facts.flirtFaktor} /> : null}
           <AuthorBox
             name={chCityAuthor.name}

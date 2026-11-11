@@ -5,7 +5,7 @@ import swissMagazine from "../data/ch-magazin.json" with { type: "json" };
 import germanPosts from "../data/wp/posts.json" with { type: "json" };
 import germanPages from "../data/wp/pages.json" with { type: "json" };
 import inventory from "../data/ch-partnersuche.json" with { type: "json" };
-import { chCityFacts } from "../data/ch-city-facts.ts";
+import { chCityFacts, getChFlirtRank } from "../data/ch-city-facts.ts";
 import { TITLE_MAX_WIDTH, titleWidth } from "../lib/seo-title.ts";
 
 // Eigener ab50.ch-Beitrag „Die 10 besten Städte für Singles ab 50 in der Schweiz“ (2026-11-10).
@@ -123,4 +123,15 @@ test("Anmelde-Hinweise im Schweizer Beitrag zeigen auf ab50.ch", () => {
   assert.match(page, /<RadarCta market=\{swiss \? "ch" : "de"\} \/>/);
   assert.match(page, /<TopicBanner banner=\{banner\} placement="sidebar" market=\{swiss \? "ch" : "de"\} \/>/);
   assert.match(page, /const registration = market === "ch" \? registrationUrl\("ch", "magazin"\)/);
+});
+
+test("jede CH-Stadtseite nennt ihren Rangplatz und verlinkt die Rangliste", () => {
+  assert.deepEqual(getChFlirtRank("zuerich"), { rank: 1, total: Object.keys(chCityFacts).length });
+  assert.equal(getChFlirtRank("st-gallen")?.rank, 9);
+  assert.equal(getChFlirtRank("biel-bienne")?.rank, 9);
+  assert.equal(getChFlirtRank("thun")?.rank, 11);
+  assert.equal(getChFlirtRank("gibt-es-nicht"), null);
+  const page = readFileSync(new URL("../app/ch/partnersuche/[slug]/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /getChFlirtRank\(city\.slug\)/);
+  assert.match(page, /TOP10_PATH = "\/magazin\/top-10-staedte-singles-ab-50-schweiz\/"/);
 });
