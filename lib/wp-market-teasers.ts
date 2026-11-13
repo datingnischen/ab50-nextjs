@@ -32,8 +32,8 @@ const TEASER_CITIES: Record<MarketTeaserCode, { slug: string; width: number; hei
 
 // Feste Datumswerte: Reihenfolge = Einwohnerzahl (neuester „Beitrag“ zuerst). Bewusst unregelmäßige Uhrzeiten,
 // keine runden Stunden (Christian, 2026-11-13: nach außen nie der Eindruck automatischer Erzeugung).
-const DATES = ["2026-10-20T16:47:23", "2026-10-20T14:12:51", "2026-10-20T10:38:09"];
-const DATES_GMT = ["2026-10-20T14:47:23", "2026-10-20T12:12:51", "2026-10-20T08:38:09"];
+const DATES = ["2026-10-20T16:47:23", "2026-10-17T14:12:51", "2026-10-15T10:38:09"];
+const DATES_GMT = ["2026-10-20T14:47:23", "2026-10-17T12:12:51", "2026-10-15T08:38:09"];
 const ID_BASE: Record<MarketTeaserCode, number> = { ch: 920_000 };
 const MEDIA_ID_OFFSET = 1_000_000;
 
