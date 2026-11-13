@@ -81,13 +81,24 @@ function withImageSizes(media: Json, restRoot: string): Json {
   return { ...media, mime_type: mime, media_type: media.media_type ?? "image", source_url: sourceUrl, media_details: { ...details, file, sizes: Object.fromEntries(["thumbnail", "medium", "medium_large", "large", "full"].map((name) => [name, size])) } };
 }
 
+/**
+ * Interne AIOSEO-Verwaltungsdaten (Analyse-/Anlagezeitpunkte des Plugins) gehören nicht in die öffentliche Antwort:
+ * ICONY braucht sie nicht, und die Sammel-Zeitstempel der Migration sollen nicht nach außen (Christian, 2026-11-13).
+ */
+function withoutPluginMeta(row: Json): Json {
+  const { aioseo_meta_data: _meta, ...rest } = row;
+  return rest;
+}
+
 function postObject(post: Json, embed: boolean, restRoot: string): Json {
-  const { _embedded, _links, ...rest } = post;
+  const { _embedded, _links, ...rest } = withoutPluginMeta(post);
   if (!embed) return rest;
   const { author: _author, ...embedded } = (_embedded || {}) as Json;
   const { author: _authorLink, ...links } = (_links || {}) as Json;
   const featured = embedded["wp:featuredmedia"];
-  if (Array.isArray(featured)) embedded["wp:featuredmedia"] = featured.map((media) => withImageSizes(media as Json, restRoot));
+  if (Array.isArray(featured)) embedded["wp:featuredmedia"] = featured.map((media) => withImageSizes(withoutPluginMeta(media as Json), restRoot));
+  const terms = embedded["wp:term"];
+  if (Array.isArray(terms)) embedded["wp:term"] = terms.map((group) => (Array.isArray(group) ? group.map((term) => withoutPluginMeta(term as Json)) : group));
   return { ...rest, _links: links, _embedded: embedded };
 }
 
@@ -155,10 +166,10 @@ export function handleWpRest(route: string, params: URLSearchParams, market?: Ma
 
   if (resource === "categories") {
     const visible = source.categories.filter((category) => (category.count ?? 0) > 0);
-    if (!idPart) return collection(visible, params, (category) => category);
+    if (!idPart) return collection(visible, params, (category) => withoutPluginMeta(category));
     const row = /^\d+$/.test(idPart) ? visible.find((item) => item.id === Number(idPart)) : undefined;
     if (!row) return error(404, "rest_term_invalid", "Begriff existiert nicht.");
-    return { status: 200, body: applyFields(row, params), headers: {} };
+    return { status: 200, body: applyFields(withoutPluginMeta(row), params), headers: {} };
   }
 
   return NO_ROUTE();
