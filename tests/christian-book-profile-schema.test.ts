@@ -29,9 +29,9 @@ test("builds the Christian CMS-gated profile and book graph", () => {
   const profile = graph["@graph"][1] as { mainEntity: Record<string, unknown> };
   const person = graph["@graph"][2];
   const book = graph["@graph"][3] as { author: Record<string, unknown> } & Record<string, unknown>;
-  assert.equal(profile.mainEntity["@id"], `${canonicalUrl}#person`);
-  assert.equal(person["@id"], `${canonicalUrl}#person`);
-  assert.equal(book.author["@id"], `${canonicalUrl}#person`);
+  assert.equal(profile.mainEntity["@id"], "https://datingnischen.de/christian/#person");
+  assert.equal(person["@id"], "https://datingnischen.de/christian/#person");
+  assert.equal(book.author["@id"], "https://datingnischen.de/christian/#person");
   assert.equal(book.name, "Dating ohne Bullshit");
   assert.equal(book.alternateName, "Der ungeschönte Insiderblick ins Online-Dating-Business");
   assert.equal(book.isbn, "9783696371210");

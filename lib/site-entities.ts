@@ -1,3 +1,5 @@
+import { CHRISTIAN_NAME, christianPerson } from "./christian-person.ts";
+
 export const BRAND_NAME = "ab50.de";
 
 export const PLATFORM_OPERATOR = {
@@ -130,6 +132,8 @@ export function buildMagazineArticleGraph(input: MagazineArticleGraphInput) {
   const isPost = (input.kind ?? "post") === "post";
   const author = !input.author
     ? undefined
+    : input.author.type !== "Organization" && input.author.name === CHRISTIAN_NAME && input.author.profileUrl
+    ? { ...christianPerson(), image: input.author.image }
     : input.author.profileUrl
     ? {
         "@type": input.author.type ?? "Person",

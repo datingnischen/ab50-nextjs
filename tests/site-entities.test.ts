@@ -57,7 +57,7 @@ test("magazine posts get a BlogPosting with linked author, operator and category
   const article = byType.BlogPosting;
   assert.equal(article["@id"], `${url}#article`);
   assert.equal(article.mainEntityOfPage["@id"], `${url}#webpage`);
-  assert.equal(article.author["@id"], "https://ab50.de/magazin/christian-m-haas/#person");
+  assert.equal(article.author["@id"], "https://datingnischen.de/christian/#person");
   assert.equal(article.publisher["@id"], "https://ab50.de/#operator");
   assert.equal(article.isPartOf["@id"], "https://ab50.de/#website");
   assert.equal(article.datePublished, "2026-10-14T14:30:26+02:00");

@@ -49,7 +49,7 @@ const knownAuthorProfiles: Record<string, KnownAuthorProfile> = {
 const CHRISTIAN_SLUG = "christian-m-haas";
 const CHRISTIAN_META_DESCRIPTION =
   "Christian M. Haas betreibt seit 2008 Singlebörsen und schreibt im 50plus Magazin über Online-Dating ab 50, Profil, Sicherheit und Nähe.";
-// Profile aus dem Abschnitt „Kontakt & Profile“ der Seite; zugleich sameAs im Person-Markup.
+// Sichtbare Links aus dem Abschnitt „Kontakt & Profile“ der Seite.
 const CHRISTIAN_PROFILES = [
   { label: "Autorenseite bei Amazon", href: "https://www.amazon.com/author/christian-m-haas" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/christian-m-haas-457323379" },
@@ -487,7 +487,6 @@ export default async function MagazinSlugPage({ params }: PageProps) {
       profileDescription: CHRISTIAN_META_DESCRIPTION,
       profileImage: knownAuthorProfiles["christian-m-haas"].imageSrc,
       jobTitle: knownAuthorProfiles["christian-m-haas"].role,
-      sameAs: CHRISTIAN_PROFILES.map((item) => item.href),
       knowsAbout: CHRISTIAN_KNOWS_ABOUT,
       breadcrumbRootName: siteConfig.magazineName,
       breadcrumbRootUrl: absoluteUrl("/magazin/"),

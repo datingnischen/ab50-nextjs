@@ -1,4 +1,6 @@
 import { assetBaseUrl } from "./static-asset.ts";
+import { CHRISTIAN_PERSON_ID, christianPerson } from "./christian-person.ts";
+
 export type StructuredDataNode = Record<string, unknown>;
 
 type ChristianBookProfileInput = {
@@ -10,7 +12,6 @@ type ChristianBookProfileInput = {
   profileDescription: string;
   profileImage?: string;
   jobTitle?: string;
-  sameAs?: string[];
   knowsAbout?: string[];
   breadcrumbRootName: string;
   breadcrumbRootUrl: string;
@@ -54,7 +55,7 @@ export function buildChristianBookProfileGraph(input: ChristianBookProfileInput)
   const bookImage = extractBoundedBookImage(input.content);
   if (!bookImage) return null;
 
-  const personId = `${input.canonicalUrl}#person`;
+  const personId = CHRISTIAN_PERSON_ID;
   const bookId = `${input.canonicalUrl}#book-9783696371210`;
 
   return {
@@ -76,14 +77,10 @@ export function buildChristianBookProfileGraph(input: ChristianBookProfileInput)
         mainEntity: { "@id": personId },
       },
       {
-        "@type": "Person",
-        "@id": personId,
-        name: input.profileName,
+        ...christianPerson(),
         description: input.profileDescription,
-        url: input.canonicalUrl,
         image: input.profileImage,
         jobTitle: input.jobTitle,
-        sameAs: input.sameAs,
         knowsAbout: input.knowsAbout,
       },
       {
