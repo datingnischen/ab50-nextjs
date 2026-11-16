@@ -3061,3 +3061,11 @@ details.city-source-box summary { cursor: pointer; font-size: .8125rem; font-wei
 .card-link:focus-visible {
   outline: none;
 }
+
+.faq-hero-image {
+  display: block;
+  width: 100%;
+  max-width: 42rem;
+  height: auto;
+  border-radius: 1rem;
+}

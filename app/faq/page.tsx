@@ -8,6 +8,11 @@ import { siteConfig } from "@/data/site";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { marketPartnersuchePath } from "@/lib/markets";
 
+import { staticAsset } from "@/lib/static-asset";
+
+const FAQ_IMAGE = staticAsset("/pages/faq.webp");
+const FAQ_IMAGE_ALT = "Paar um 60 im Gespräch an einem Caféhaustisch – Fragen und Antworten zu ab50.de";
+
 const FAQ_PATH = "/faq/";
 // Dieselbe FAQ für DE, AT und CH: /at/faq/ und /ch/faq/ zeigen den deutschen Text, Canonical ist die DE-Fassung.
 const TITLE = "Häufige Fragen zur Partnersuche ab 50 (FAQ)";
@@ -17,7 +22,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: FAQ_PATH },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: absoluteUrl(FAQ_PATH), type: "website", locale: "de_DE" },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: absoluteUrl(FAQ_PATH), type: "website", locale: "de_DE", images: [{ url: FAQ_IMAGE, width: 1200, height: 675, alt: FAQ_IMAGE_ALT }] },
 };
 
 function slugify(title: string) {
@@ -87,6 +92,7 @@ export default function FaqPage() {
           eyebrow={<><HeartIcon />Fragen &amp; Antworten</>}
           title={faq.h1}
           lead={<div dangerouslySetInnerHTML={{ __html: faq.introHtml }} />}
+          aside={<img className="faq-hero-image" src={FAQ_IMAGE} alt={FAQ_IMAGE_ALT} width={1200} height={675} loading="eager" decoding="async" />}
         >
           <ul className="abi-chips">
             <li><span className="sx-strong">{questionCount}</span> Antworten</li>
