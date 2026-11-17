@@ -7,7 +7,7 @@ import { categoryPath, cityUrl, getAllCities, getAllPageSlugs, getAllPostSlugs, 
 import { siteConfig } from "@/data/site";
 import { formatUpdatedLabel } from "@/lib/format";
 import { buildChristianBookProfileGraph } from "@/lib/christian-book-profile-schema";
-import { buildMagazineArticleGraph } from "@/lib/site-entities";
+import { buildMagazineArticleGraph, withBerlinOffset } from "@/lib/site-entities";
 import { staticAsset } from "@/lib/static-asset";
 import { collapseSourceSections } from "@/lib/collapse-sources";
 import { buildMagazineFaqGraph } from "@/lib/magazine-faq";
@@ -589,8 +589,8 @@ export default async function MagazinSlugPage({ params }: PageProps) {
     headline: title,
     description: lead,
     image: post.featuredImage?.sourceUrl || undefined,
-    datePublished: post.date,
-    dateModified: post.modified,
+    datePublished: withBerlinOffset(post.date, post.slug),
+    dateModified: withBerlinOffset(post.modified || post.date, post.slug),
     // Als Person nur bekannte Autoren mit Profilseite, sonst die Redaktion als Organisation.
     author: {
       name: authorName,

@@ -3,7 +3,7 @@ import { staticAsset } from "@/lib/static-asset";
 import { absoluteUrl, jsonLd } from "@/lib/seo";
 import { categoryPath, getAllPages, getCategories, getLatestPosts, pagePath, postPath, stripHtml } from "@/lib/wordpress";
 import { siteConfig } from "@/data/site";
-import { siteEntityIds } from "@/lib/site-entities";
+import { siteEntityIds, withBerlinOffset } from "@/lib/site-entities";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { themeFor } from "@/lib/magazine-themes";
 import { marketPartnersuchePath } from "@/lib/markets";
@@ -60,15 +60,15 @@ export default async function MagazinOverviewPage() {
       "@type": "BlogPosting",
       headline: stripHtml(post.title),
       url: absoluteUrl(postPath(post.slug)),
-      datePublished: post.date,
-      dateModified: post.modified,
+      datePublished: withBerlinOffset(post.date, post.slug),
+      dateModified: withBerlinOffset(post.modified || post.date, post.slug),
       image: post.featuredImage?.sourceUrl,
     })),
     hasPart: visiblePages.map((page) => ({
       "@type": "WebPage",
       name: stripHtml(page.title),
       url: absoluteUrl(pagePath(page.slug)),
-      dateModified: page.modified,
+      dateModified: withBerlinOffset(page.modified, page.slug),
     })),
   };
 
