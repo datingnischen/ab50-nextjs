@@ -145,8 +145,11 @@ test("Auf ab50.ch gerendertes HTML enthält keine relativen Links auf deutsche S
     assert.doesNotMatch(source, /href="\/partnersuche\/singles-/, file);
   }
   // Nach einem Build zusätzlich das fertige HTML/RSC der CH-Routen und der gemeinsamen Seiten prüfen.
+  // .next/server/app/ entsteht schon beim Kompilieren; BUILD_ID schreibt Next erst nach dem Prerender.
+  // Ohne diese Datei liegt kein (oder ein abgebrochener) Build vor und die HTML-Prüfung entfaellt –
+  // im Buero bricht `next build` an gesperrten Google Fonts ab, auf Vercel laeuft er durch.
   const built = new URL("../.next/server/app/", import.meta.url);
-  if (!existsSync(built)) return;
+  if (!existsSync(new URL("../.next/BUILD_ID", import.meta.url)) || !existsSync(built)) return;
   const files: URL[] = [];
   const walk = (dir: URL) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
