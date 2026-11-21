@@ -27,7 +27,10 @@ function frameDocument({ city, platformId, location, gender, profileClickUrl, fa
     country: location.country,
     zip: location.zip || "",
     count: 6,
+    // age_max muss mitgegeben werden: ICONY setzt sonst den Standardwert 55, dann endet die Vorschau auf einer
+    // 50plus-Seite bei 55 Jahren. age_min bleibt bei 48, damit der Einstieg knapp unter 50 nicht wegfaellt.
     ageMin: 48,
+    ageMax: 99,
     affiliate: "location",
     profileClickUrl,
     fallbackSearchUrl,
@@ -94,6 +97,7 @@ function frameDocument({ city, platformId, location, gender, profileClickUrl, fa
     country: options.country,
     zip: options.zip,
     age_min: options.ageMin,
+    age_max: options.ageMax,
     affiliate: options.affiliate,
     use_thumbnails: 0,
     blurred: 0
